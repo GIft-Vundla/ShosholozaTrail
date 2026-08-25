@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive ShosholozaTrail passenger journey prototype for the Pretoria to Cape Town rail corridor.">
+  <title>ShosholozaTrail — Interactive Prototype</title>
+  <style>
+    :root {
+      --navy-950: #101d35;
+      --navy-900: #172845;
+      --navy-800: #20375d;
+      --coral: #c55444;
+      --coral-dark: #9f3f32;
+      --gold: #e6aa35;
+      --gold-soft: #faedc9;
+      --cream: #f4f0e9;
+      --paper: #fffefd;
+      --canvas: #e9e9e6;
+      --ink: #20252d;
+      --muted: #68707d;
+      --line: #d7d8d8;
+      --green: #39754b;
+      --green-soft: #e6f2e9;
+      --red-soft: #f8e7e3;
+      --shadow: 0 20px 55px rgba(16, 29, 53, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, select, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; }
+    [hidden] { display: none !important; }
+
+    .prototype {
+      width: min(1480px, calc(100% - 32px));
+      margin: 16px auto 44px;
+    }
+
+    .prototype-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px 24px;
+      color: #fff;
+      background: var(--navy-950);
+      border-radius: 22px 22px 0 0;
+    }
+
+    .brand-lockup { display: flex; align-items: center; gap: 14px; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      color: var(--navy-950);
+      background: var(--gold);
+      border-radius: 50% 50% 50% 8px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    .brand-title { margin: 0; font-family: Georgia, serif; font-size: 25px; letter-spacing: 0.02em; }
+    .brand-subtitle { margin: 3px 0 0; color: #b9c2d1; font-size: 12px; }
+
+    .prototype-badge {
+      padding: 8px 13px;
+      color: var(--gold);
+      border: 1px solid rgba(230, 170, 53, 0.55);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .frame-nav {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(130px, 1fr));
+      background: #fff;
+      border: 1px solid #d8d8d5;
+      border-top: 0;
+      overflow-x: auto;
+    }
+
+    .frame-nav button {
+      min-height: 68px;
+      padding: 10px 12px;
+      color: var(--muted);
+      background: #fff;
+      border: 0;
+      border-right: 1px solid #ecece9;
+      text-align: left;
+      transition: color .18s ease, background .18s ease;
+    }
+    .frame-nav button:last-child { border-right: 0; }
+    .frame-nav button:hover { background: #f7f5f1; }
+    .frame-nav button[aria-current="step"] {
+      color: var(--navy-900);
+      background: var(--gold-soft);
+      box-shadow: inset 0 -4px 0 var(--gold);
+    }
+    .nav-number { display: block; margin-bottom: 4px; color: var(--coral); font-size: 10px; font-weight: 900; letter-spacing: 0.12em; }
+    .nav-label { display: block; font-size: 12px; font-weight: 800; }
+
+    .browser-frame {
+      min-height: 860px;
+      background: var(--paper);
+      border: 1px solid #d3d3d0;
+      border-top: 0;
+      border-radius: 0 0 22px 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .browser-chrome {
+      display: grid;
+      grid-template-columns: 88px 1fr 88px;
+      align-items: center;
+      gap: 16px;
+      height: 48px;
+      padding: 0 18px;
+      background: #f5f5f3;
+      border-bottom: 1px solid #dededb;
+    }
+    .browser-dots { display: flex; gap: 7px; }
+    .browser-dots span { width: 10px; height: 10px; border-radius: 50%; background: #c8c8c5; }
+    .browser-dots span:first-child { background: #d86b5e; }
+    .browser-dots span:nth-child(2) { background: #e5b955; }
+    .browser-dots span:nth-child(3) { background: #72a77c; }
+    .address-bar {
+      padding: 8px 14px;
+      color: #757b84;
+      background: #fff;
+      border: 1px solid #dededb;
+      border-radius: 9px;
+      font-size: 11px;
+      text-align: center;
+    }
+    .chrome-status { color: #8a8f97; font-size: 10px; font-weight: 700; text-align: right; }
+
+    .frame {
+      min-height: 810px;
+      padding: 24px 28px 30px;
+      background:
+        radial-gradient(circle at 80% 18%, rgba(230, 170, 53, 0.10), transparent 25%),
+        linear-gradient(135deg, #fff 0%, #faf9f6 100%);
+    }
+
+    .frame-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+    .frame-kicker { margin: 0 0 5px; color: var(--coral); font-size: 11px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; }
+    .frame-title { margin: 0; color: var(--navy-950); font-family: Georgia, serif; font-size: clamp(28px, 3vw, 42px); line-height: 1.08; }
+    .frame-purpose { max-width: 440px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; text-align: right; }
+
+    .frame-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.82fr) minmax(390px, 1.35fr) minmax(260px, 0.95fr);
+      gap: 22px;
+      align-items: stretch;
+      min-height: 680px;
+    }
+
+    .context-card, .decision-card {
+      min-width: 0;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(16, 29, 53, 0.06);
+    }
+    .context-card h3, .decision-card h3 { margin: 0 0 14px; color: var(--navy-900); font-size: 14px; }
+    .context-card p, .decision-card p { color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .context-list { display: grid; gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+    .context-list li { padding-top: 12px; border-top: 1px solid #ecece9; }
+    .context-list strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 11px; }
+    .context-list span { color: var(--muted); font-size: 11px; line-height: 1.45; }
+
+    .evidence-box {
+      margin-top: 18px;
+      padding: 13px 14px;
+      background: var(--cream);
+      border-left: 4px solid var(--coral);
+      border-radius: 8px;
+    }
+    .evidence-box strong { display: block; margin-bottom: 4px; color: var(--navy-900); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .evidence-box span { color: #555d69; font-size: 11px; line-height: 1.45; }
+
+    .app-stage {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      padding: 18px;
+      background: var(--navy-950);
+      border-radius: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .app-stage::before {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 320px;
+      height: 320px;
+      border: 1px solid rgba(230, 170, 53, 0.28);
+      border-radius: 50%;
+      box-shadow: 0 0 0 48px rgba(230, 170, 53, 0.04), 0 0 0 96px rgba(230, 170, 53, 0.03);
+    }
+
+    .phone {
+      position: relative;
+      z-index: 1;
+      width: min(410px, 100%);
+      min-height: 626px;
+      max-height: 654px;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+      border: 7px solid #0a1426;
+      border-radius: 30px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+    }
+
+    .phone-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 17px 9px;
+      color: #fff;
+      background: var(--navy-950);
+      font-size: 10px;
+    }
+    .phone-notch { width: 86px; height: 6px; background: #2c3a52; border-radius: 999px; }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 16px;
+      color: #fff;
+      background: var(--navy-900);
+    }
+    .app-brand { font-family: Georgia, serif; font-size: 16px; font-weight: 800; }
+    .app-meta { color: #bfc8d7; font-size: 9px; }
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+    }
+
+    .screen-body {
+      flex: 1;
+      min-height: 0;
+      padding: 16px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    .screen-body h2 { margin: 0; color: var(--navy-950); font-size: 20px; }
+    .screen-body .lead { margin: 5px 0 16px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+
+    .route-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 13px;
+      color: #fff;
+      background: var(--navy-800);
+      border-radius: 14px;
+    }
+    .route-summary strong { display: block; font-size: 12px; }
+    .route-summary span { color: #c8d0dc; font-size: 9px; }
+    .route-arrow { color: var(--gold); font-size: 22px; }
+
+    .field-label { display: block; margin: 13px 0 6px; color: var(--navy-900); font-size: 10px; font-weight: 800; }
+    .select-field {
+      width: 100%;
+      padding: 11px 12px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      outline: none;
+    }
+    .select-field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(230, 170, 53, .18); }
+
+    .choice-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+    .choice-button {
+      padding: 10px 7px;
+      color: var(--muted);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .choice-button.is-selected { color: var(--navy-950); background: var(--gold-soft); border-color: var(--gold); }
+
+    .pack-card {
+      margin-top: 15px;
+      padding: 14px;
+      background: var(--cream);
+      border: 1px solid #dfd8cb;
+      border-radius: 14px;
+    }
+    .pack-card-top { display: flex; justify-content: space-between; gap: 14px; }
+    .pack-card strong { display: block; color: var(--navy-900); font-size: 12px; }
+    .pack-card small { color: var(--muted); font-size: 9px; }
+    .pack-size { color: var(--coral); font-weight: 900; white-space: nowrap; }
+    .progress-track { height: 7px; margin-top: 12px; background: #d9d5ce; border-radius: 999px; overflow: hidden; }
+    .progress-fill { width: 0; height: 100%; background: var(--gold); border-radius: inherit; transition: width .25s ease; }
+    .pack-note { margin: 9px 0 0; color: var(--muted); font-size: 9px; line-height: 1.4; }
+
+    .primary-button, .secondary-button, .danger-button {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 11px;
+      font-size: 11px;
+      font-weight: 900;
+      transition: transform .15s ease, opacity .15s ease, background .15s ease;
+    }
+    .primary-button { color: #fff; background: var(--coral); border: 1px solid var(--coral); }
+    .primary-button:hover:not(:disabled) { background: var(--coral-dark); transform: translateY(-1px); }
+    .secondary-button { color: var(--navy-900); background: #fff; border: 1px solid var(--navy-900); }
+    .secondary-button:hover:not(:disabled) { background: #eef1f5; }
+    .danger-button { color: var(--coral-dark); background: var(--red-soft); border: 1px solid #df9d92; }
+    button:disabled { opacity: .48; }
+    .button-stack { display: grid; gap: 8px; margin-top: 14px; }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 14px;
+      color: #fff;
+      background: var(--green);
+      font-size: 9px;
+      font-weight: 800;
+    }
+    .status-dot { display: inline-block; width: 7px; height: 7px; margin-right: 5px; background: #fff; border-radius: 50%; }
+
+    .route-map { position: relative; min-height: 340px; margin: 10px 0 12px; padding-left: 54px; }
+    .route-line { position: absolute; left: 27px; top: 25px; bottom: 35px; width: 4px; background: #c9ced6; border-radius: 999px; }
+    .route-progress { position: absolute; left: 27px; top: 25px; height: 38%; width: 4px; background: var(--coral); border-radius: 999px; }
+    .stop {
+      position: relative;
+      min-height: 70px;
+      width: 100%;
+      padding: 10px 10px 9px 18px;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      text-align: left;
+    }
+    .stop::before {
+      content: "";
+      position: absolute;
+      left: -36px;
+      top: 18px;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border: 3px solid #a7adb6;
+      border-radius: 50%;
+    }
+    .stop.is-passed::before, .stop.is-current::before { border-color: var(--coral); }
+    .stop.is-current { color: var(--ink); background: var(--cream); border-radius: 12px; }
+    .stop.is-current::before { background: var(--coral); box-shadow: 0 0 0 5px rgba(197, 84, 68, .15); }
+    .stop strong { display: block; color: var(--navy-900); font-size: 11px; }
+    .stop small { font-size: 9px; }
+
+    .next-card { padding: 13px; background: var(--gold-soft); border: 1px solid #e5c978; border-radius: 13px; }
+    .next-card small { color: #81611d; font-size: 9px; font-weight: 800; }
+    .next-card strong { display: block; margin: 4px 0; color: var(--navy-950); font-size: 12px; }
+    .next-card span { color: var(--muted); font-size: 9px; }
+
+    .bottom-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 8px 10px;
+      background: #fff;
+      border-top: 1px solid var(--line);
+    }
+    .bottom-nav button { padding: 7px 3px; color: var(--muted); background: transparent; border: 0; font-size: 8px; font-weight: 700; }
+    .bottom-nav button.is-active { color: var(--coral); }
+
+    .hero-media {
+      position: relative;
+      min-height: 138px;
+      display: flex;
+      align-items: flex-end;
+      padding: 14px;
+      color: #fff;
+      background:
+        linear-gradient(to top, rgba(16, 29, 53, .90), rgba(16, 29, 53, .10)),
+        linear-gradient(135deg, #bd8d56, #374b64 58%, #8e5e3b);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .hero-media::before, .hero-media::after { content: ""; position: absolute; bottom: 0; width: 160px; height: 72px; background: rgba(255,255,255,.10); transform: skewX(-25deg); }
+    .hero-media::before { left: -38px; }
+    .hero-media::after { right: -38px; }
+    .hero-media-content { position: relative; z-index: 1; }
+    .hero-media small { color: var(--gold); font-size: 9px; font-weight: 900; text-transform: uppercase; }
+    .hero-media h3 { margin: 4px 0 0; font-family: Georgia, serif; font-size: 18px; }
+
+    .audio-player { margin-top: 12px; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: 13px; }
+    .audio-row { display: grid; grid-template-columns: 34px 1fr auto; gap: 9px; align-items: center; }
+    .play-button { display: grid; place-items: center; width: 34px; height: 34px; color: #fff; background: var(--coral); border: 0; border-radius: 50%; font-size: 12px; }
+    .audio-title { color: var(--navy-900); font-size: 10px; font-weight: 800; }
+    .audio-time { color: var(--muted); font-size: 9px; }
+    .audio-progress { height: 5px; margin-top: 9px; background: #dedfdf; border-radius: 999px; overflow: hidden; }
+    .audio-progress span { display: block; width: 0; height: 100%; background: var(--coral); border-radius: inherit; }
+
+    .story-copy { margin: 12px 0; color: #4e5662; font-family: Georgia, serif; font-size: 12px; line-height: 1.55; }
+    .credit-card { padding: 12px; background: var(--cream); border: 1px solid #ddd4c5; border-radius: 13px; }
+    .credit-card strong { display: block; color: var(--navy-900); font-size: 10px; }
+    .credit-card span { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; line-height: 1.4; }
+    details { margin-top: 10px; }
+    summary { color: var(--coral); font-size: 9px; font-weight: 800; cursor: pointer; }
+    details p { margin: 7px 0 0; color: var(--muted); font-size: 9px; line-height: 1.4; }
+
+    .delay-banner { padding: 13px; color: #6d4a00; background: var(--gold-soft); border: 1px solid #dfbf68; border-radius: 13px; }
+    .delay-banner strong { display: block; font-size: 12px; }
+    .delay-banner span { font-size: 9px; }
+    .duration-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0; }
+    .duration-button { padding: 8px; color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 9px; font-size: 9px; font-weight: 800; }
+    .duration-button.is-selected { color: var(--navy-950); background: var(--gold-soft); border-color: var(--gold); }
+    .content-list { display: grid; gap: 8px; }
+    .content-card { padding: 12px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 12px; text-align: left; }
+    .content-card:hover { border-color: var(--gold); }
+    .content-card strong { display: block; color: var(--navy-900); font-size: 10px; }
+    .content-card span { color: var(--muted); font-size: 9px; }
+    .offline-note { margin-top: 10px; padding: 9px; color: var(--green); background: var(--green-soft); border: 1px solid #b9d5c1; border-radius: 10px; font-size: 9px; font-weight: 800; text-align: center; }
+
+    .safety-banner { padding: 13px; color: var(--coral-dark); background: var(--red-soft); border: 1px solid #dda399; border-radius: 13px; }
+    .safety-banner.is-safe { color: var(--green); background: var(--green-soft); border-color: #acd0b6; }
+    .safety-banner strong { display: block; font-size: 12px; }
+    .safety-banner span { font-size: 9px; }
+    .place-card { margin-top: 11px; padding: 13px; background: #fff; border: 1px solid var(--line); border-radius: 13px; }
+    .place-card-head { display: flex; justify-content: space-between; gap: 10px; }
+    .place-card h3 { margin: 0; color: var(--navy-900); font-size: 13px; }
+    .place-card p { margin: 4px 0; color: var(--muted); font-size: 9px; line-height: 1.4; }
+    .demo-label { color: #8b6a22; background: var(--gold-soft); border-radius: 999px; padding: 4px 7px; font-size: 8px; font-weight: 900; white-space: nowrap; }
+    .mini-map { position: relative; height: 118px; margin-top: 10px; background: #e9ecec; border-radius: 10px; overflow: hidden; }
+    .mini-map::before, .mini-map::after { content: ""; position: absolute; inset: -30px; border: 2px solid rgba(32, 55, 93, .20); transform: rotate(-21deg); }
+    .mini-map::after { transform: rotate(29deg); }
+    .map-pin { position: absolute; left: 56%; top: 46%; width: 22px; height: 22px; background: var(--coral); border: 4px solid #fff; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 4px 10px rgba(0,0,0,.2); }
+    .map-caption { position: absolute; left: 10px; bottom: 8px; z-index: 1; color: var(--navy-900); background: rgba(255,255,255,.88); padding: 5px 8px; border-radius: 7px; font-size: 8px; font-weight: 800; }
+
+    .arrival-hero { display: grid; place-items: center; padding: 18px; background: var(--gold-soft); border: 1px solid #dfc472; border-radius: 16px; text-align: center; }
+    .arrival-medal { display: grid; place-items: center; width: 54px; height: 54px; color: var(--navy-950); background: var(--gold); border: 5px solid #fff4cf; border-radius: 50%; font-size: 23px; font-weight: 900; }
+    .arrival-hero h3 { margin: 9px 0 3px; color: var(--navy-950); font-family: Georgia, serif; font-size: 18px; }
+    .arrival-hero p { margin: 0; color: #715819; font-size: 9px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 11px 0; }
+    .metric { padding: 11px 6px; background: #fff; border: 1px solid var(--line); border-radius: 11px; text-align: center; }
+    .metric strong { display: block; color: var(--coral); font-size: 18px; }
+    .metric span { color: var(--muted); font-size: 8px; }
+    .rating-label { display: block; margin: 12px 0 7px; color: var(--navy-900); font-size: 10px; font-weight: 800; }
+    .rating-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+    .rating-button { aspect-ratio: 1; color: var(--navy-900); background: #fff; border: 1px solid var(--line); border-radius: 50%; font-size: 11px; font-weight: 800; }
+    .rating-button.is-selected { color: #fff; background: var(--coral); border-color: var(--coral); }
+
+    .decision-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: decisions; }
+    .decision-list li { position: relative; padding: 12px 12px 12px 40px; background: #f8f7f4; border: 1px solid #e3e2de; border-radius: 11px; color: #555d69; font-size: 11px; line-height: 1.45; }
+    .decision-list li::before { counter-increment: decisions; content: counter(decisions); position: absolute; left: 12px; top: 11px; display: grid; place-items: center; width: 18px; height: 18px; color: #fff; background: var(--coral); border-radius: 50%; font-size: 9px; font-weight: 900; }
+    .requirement-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 17px; }
+    .requirement-tags span { padding: 6px 8px; color: var(--navy-900); background: #edf0f4; border-radius: 999px; font-size: 9px; font-weight: 800; }
+
+    .demo-control { margin-top: 16px; padding: 14px; background: var(--navy-950); border-radius: 13px; color: #fff; }
+    .demo-control strong { display: block; margin-bottom: 5px; color: var(--gold); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .demo-control p { margin: 0 0 10px; color: #bdc6d4; font-size: 10px; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 25px;
+      flex: 0 0 auto;
+      padding: 0;
+      background: #6e7888;
+      border: 0;
+      border-radius: 999px;
+    }
+    .toggle::after { content: ""; position: absolute; left: 3px; top: 3px; width: 19px; height: 19px; background: #fff; border-radius: 50%; transition: transform .2s ease; }
+    .toggle[aria-pressed="true"] { background: var(--green); }
+    .toggle[aria-pressed="true"]::after { transform: translateX(19px); }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 20;
+      max-width: calc(100% - 32px);
+      padding: 11px 16px;
+      color: #fff;
+      background: var(--navy-950);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 999px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.26);
+      font-size: 11px;
+      font-weight: 800;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+    .prototype-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 4px 0;
+      color: #7b8088;
+      font-size: 10px;
+    }
+
+    @media (max-width: 1100px) {
+      .frame-grid { grid-template-columns: minmax(390px, 1.2fr) minmax(260px, .8fr); }
+      .context-card { grid-column: 1 / -1; }
+      .context-card .context-list { grid-template-columns: repeat(3, 1fr); }
+      .context-card .evidence-box { margin-top: 12px; }
+    }
+
+    @media (max-width: 760px) {
+      .prototype { width: 100%; margin: 0; }
+      .prototype-header { border-radius: 0; padding: 16px; }
+      .prototype-badge { display: none; }
+      .brand-title { font-size: 20px; }
+      .frame-nav { grid-template-columns: repeat(6, 150px); }
+      .browser-frame { border-radius: 0; }
+      .browser-chrome { grid-template-columns: 58px 1fr; }
+      .chrome-status { display: none; }
+      .frame { padding: 20px 14px 28px; }
+      .frame-heading { align-items: flex-start; flex-direction: column; }
+      .frame-purpose { text-align: left; }
+      .frame-grid { grid-template-columns: 1fr; }
+      .context-card { order: 2; }
+      .app-stage { order: 1; padding: 12px; border-radius: 18px; }
+      .decision-card { order: 3; }
+      .context-card .context-list { grid-template-columns: 1fr; }
+      .phone { min-height: 640px; }
+      .prototype-footer { padding: 14px 14px 24px; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="prototype">
+    <header class="prototype-header">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">ST</div>
+        <div>
+          <h1 class="brand-title">ShosholozaTrail</h1>
+          <p class="brand-subtitle">Pretoria → Cape Town passenger journey prototype</p>
+        </div>
+      </div>
+      <div class="prototype-badge">Interactive wireflow · v1</div>
+    </header>
+
+    <nav class="frame-nav" aria-label="Prototype frames">
+      <button type="button" data-go="0" aria-current="step"><span class="nav-number">FRAME 01</span><span class="nav-label">Board &amp; download</span></button>
+      <button type="button" data-go="1"><span class="nav-number">FRAME 02</span><span class="nav-label">Live journey</span></button>
+      <button type="button" data-go="2"><span class="nav-number">FRAME 03</span><span class="nav-label">Story &amp; provenance</span></button>
+      <button type="button" data-go="3"><span class="nav-number">FRAME 04</span><span class="nav-label">Delay mode</span></button>
+      <button type="button" data-go="4"><span class="nav-number">FRAME 05</span><span class="nav-label">Safe local action</span></button>
+      <button type="button" data-go="5"><span class="nav-number">FRAME 06</span><span class="nav-label">Arrival outcome</span></button>
+    </nav>
+
+    <div class="browser-frame">
+      <div class="browser-chrome" aria-hidden="true">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="address-bar">prototype.shosholozatrail/passenger</div>
+        <div class="chrome-status">LOCAL PROTOTYPE</div>
+      </div>
+
+      <main>
+        <section class="frame" data-frame="0">
+          <div class="frame-heading">
+            <div><p class="frame-kicker">Frame 01 · Before departure</p><h2 class="frame-title">Board with the route already in your pocket</h2></div>
+            <p class="frame-purpose">The passenger chooses a language and journey mode, sees the download size, and caches the experience while station Wi-Fi is available.</p>
+          </div>
+          <div class="frame-grid">
+            <aside class="context-card">
+              <h3>Passenger context</h3>
+              <p>A first-time domestic rail traveller is preparing for a roughly 27-hour journey. Connectivity will weaken after the metro corridor.</p>
+              <ul class="context-list">
+                <li><strong>Primary need</strong><span>Know what to download and whether it will work without data.</span></li>
+                <li><strong>Risk removed</strong><span>No account creation before the passenger receives value.</span></li>
+                <li><strong>Accessibility</strong><span>Language, audio, captions and text size are visible at the start.</span></li>
+              </ul>
+              <div class="evidence-box"><strong>Real corridor anchor</strong><span>Pretoria → Johannesburg → Kimberley → Matjiesfontein → Cape Town. Route content is presented as prototype material pending operator confirmation.</span></div>
+            </aside>
+
+            <div class="app-stage">
+              <div class="phone" aria-label="Board and download mobile screen">
+                <div class="phone-topbar"><span>12:18</span><span class="phone-notch"></span><span>Wi-Fi 91%</span></div>
+                <div class="app-header"><div><div class="app-brand">ShosholozaTrail</div><div class="app-meta">Journey pack setup</div></div><button class="icon-button" type="button" aria-label="Accessibility settings">Aa</button></div>
+                <div class="screen-body">
+                  <h2>Ready for Cape Town?</h2>
+                  <p class="lead">Set up once at the station. After the route pack downloads, the core journey works without mobile data.</p>
+                  <div class="route-summary"><div><strong>Pretoria</strong><span>Depart 12:30</span></div><div class="route-arrow">→</div><div><strong>Cape Town</strong><span>~27 hours</span></div></div>
+                  <label class="field-label" for="language">Journey language</label>
+                  <select id="language" class="select-field"><option>English</option><option>Afrikaans</option><option>isiXhosa</option><option>Sesotho</option></select>
+                  <span class="field-label">Choose a mode</span>
+                  <div class="choice-row" role="group" aria-label="Journey mode">
+                    <button type="button" class="choice-button is-selected" data-choice="Adventure">Adventure</button>
+                    <button type="button" class="choice-button" data-choice="Heritage">Heritage</button>
+                    <button type="button" class="choice-button" data-choice="Learning">Learning</button>
+                  </div>
+                  <div class="pack-card"><div class="pack-card-top"><div><strong>Offline route pack</strong><small id="pack-status">18 stories · audio · transcripts</small></div><div class="pack-size">42 MB</div></div><div class="progress-track"><div id="download-progress" class="progress-fill"></div></div><p class="pack-note">Best downloaded on station Wi-Fi. No account is required for the demo journey.</p></div>
+                  <div class="button-stack"><button id="download-button" type="button" class="primary-button">Download route pack</button><button id="start-button" type="button" class="secondary-button" disabled>Start journey</button></div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="decision-card">
+              <h3>What this frame tests</h3>
+              <ol class="decision-list"><li>Can a passenger understand the data cost before downloading?</li><li>Can they enter without an account or lengthy onboarding?</li><li>Are language and accessibility choices visible early enough?</li></ol>
+              <div class="requirement-tags"><span>Offline-first</span><span>No sign-in</span><span>Language choice</span><span>Transparent size</span></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="frame" data-frame="1" hidden>
+          <div class="frame-heading">
+            <div><p class="frame-kicker">Frame 02 · In motion</p><h2 class="frame-title">The map keeps orientation when signal disappears</h2></div>
+            <p class="frame-purpose">A persistent cached-state indicator, route progress and next-story trigger answer the passenger's three questions: where am I, what is next, and will it still work?</p>
+          </div>
+          <div class="frame-grid">
+            <aside class="context-card">
+              <h3>Journey state</h3><p>The train has left Gauteng and the experience is running from the downloaded route pack.</p>
+              <ul class="context-list"><li><strong>Current segment</strong><span>Approaching Kimberley.</span></li><li><strong>Next trigger</strong><span>Matjiesfontein heritage story.</span></li><li><strong>Fallback</strong><span>GPS estimate with cached route content.</span></li></ul>
+              <div class="evidence-box"><strong>Route content</strong><span>Kimberley: Big Hole and Sol Plaatje context. Matjiesfontein: Lord Milner Hotel, Transport Museum and railway heritage.</span></div>
+            </aside>
+
+            <div class="app-stage">
+              <div class="phone" aria-label="Live journey route mobile screen">
+                <div class="phone-topbar"><span>16:42</span><span class="phone-notch"></span><span>62%</span></div>
+                <div class="app-header"><div><div class="app-brand">Live journey</div><div class="app-meta">Pretoria → Cape Town</div></div><button class="icon-button" type="button" aria-label="Journey information">i</button></div>
+                <div class="status-strip"><span><span class="status-dot"></span>OFFLINE · CONTENT CACHED</span><span>GPS estimate</span></div>
+                <div class="screen-body">
+                  <h2>Along the corridor</h2><p class="lead">Tap a stop to preview the kind of story that unlocks there.</p>
+                  <div class="route-map"><div class="route-line"></div><div class="route-progress"></div>
+                    <button type="button" class="stop is-passed" data-stop="Pretoria"><strong>Pretoria</strong><small>Journey started · 0 km</small></button>
+                    <button type="button" class="stop is-current" data-stop="Kimberley"><strong>Kimberley</strong><small>You are here · route estimate</small></button>
+                    <button type="button" class="stop" data-stop="Matjiesfontein"><strong>Matjiesfontein</strong><small>Heritage story · ahead</small></button>
+                    <button type="button" class="stop" data-stop="Cape Town"><strong>Cape Town</strong><small>Arrival trail · final stop</small></button>
+                  </div>
+                  <div class="next-card"><small>NEXT STORY</small><strong id="route-card-title">Kimberley: the diamond-city story</strong><span id="route-card-meta">Audio · approximately 6 minutes</span></div>
+                  <div class="button-stack"><button type="button" class="primary-button" data-go="2">Open Matjiesfontein story</button><button type="button" class="secondary-button" data-go="3">Simulate a 40-minute delay</button></div>
+                </div>
+                <nav class="bottom-nav" aria-label="App navigation"><button class="is-active">Map</button><button data-go="2">Stories</button><button>Saved</button><button>Me</button></nav>
+              </div>
+            </div>
+
+            <aside class="decision-card"><h3>What this frame tests</h3><ol class="decision-list"><li>Is offline availability visible rather than assumed?</li><li>Can the passenger orient themselves without relying on live network data?</li><li>Do story triggers relate to recognisable places on the actual corridor?</li></ol><div class="requirement-tags"><span>Cached route</span><span>GPS fallback</span><span>Real stops</span></div></aside>
+          </div>
+        </section>
+
+        <section class="frame" data-frame="2" hidden>
+          <div class="frame-heading">
+            <div><p class="frame-kicker">Frame 03 · Story unlock</p><h2 class="frame-title">Local stories remain attached to their custodians</h2></div>
+            <p class="frame-purpose">The story is entertaining, but its author, source, usage rights and review status remain visible—especially when the passenger saves or shares it.</p>
+          </div>
+          <div class="frame-grid">
+            <aside class="context-card"><h3>Story context</h3><p>The passenger is approaching Matjiesfontein, a railway settlement in the Western Cape with heritage attractions linked to the corridor.</p><ul class="context-list"><li><strong>Format</strong><span>Short audio with transcript.</span></li><li><strong>Custodianship</strong><span>Community contributor and heritage-source fields are required.</span></li><li><strong>Prototype caveat</strong><span>Named content must be approved before release.</span></li></ul><div class="evidence-box"><strong>Place anchor</strong><span>Matjiesfontein · Lord Milner Hotel · Transport Museum. This prototype demonstrates the attribution model; it does not claim a signed content partnership.</span></div></aside>
+
+            <div class="app-stage">
+              <div class="phone" aria-label="Story and provenance mobile screen">
+                <div class="phone-topbar"><span>20:08</span><span class="phone-notch"></span><span>48%</span></div>
+                <div class="app-header"><div><div class="app-brand">Matjiesfontein</div><div class="app-meta">Heritage story · cached</div></div><button class="icon-button" type="button" data-go="1" aria-label="Close story">×</button></div>
+                <div class="screen-body">
+                  <div class="hero-media"><div class="hero-media-content"><small>Railway heritage</small><h3>The siding that became a town</h3></div></div>
+                  <div class="audio-player"><div class="audio-row"><button id="play-button" type="button" class="play-button" aria-label="Play story">▶</button><div><div class="audio-title">Community-recorded story</div><div class="audio-time"><span id="audio-current">0:00</span> / 4:12</div></div><div class="audio-time">Transcript</div></div><div class="audio-progress"><span id="audio-progress"></span></div></div>
+                  <p class="story-copy">A train stop, a hotel and a community grew around this Karoo railway siding. Listen for the voices and objects that connect the station to the town today.</p>
+                  <div class="credit-card"><strong>Content provenance</strong><span>Storyteller / community custodian: contributor pending approval<br>Heritage references: source list required<br>Usage rights: release required · Review date: pending</span><details><summary>Why this information is shown</summary><p>Attribution travels with the story when it is saved or shared, so local knowledge is not separated from its source.</p></details></div>
+                  <div class="button-stack"><button id="save-story" type="button" class="primary-button">Save attributed story</button><button type="button" class="secondary-button" data-go="1">Return to route</button></div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="decision-card"><h3>What this frame tests</h3><ol class="decision-list"><li>Can the passenger enjoy the story without losing provenance?</li><li>Does the interface distinguish prototype content from approved community content?</li><li>Will attribution remain visible after saving or sharing?</li></ol><div class="requirement-tags"><span>Contributor credit</span><span>Usage rights</span><span>Review date</span><span>Transcript</span></div></aside>
+          </div>
+        </section>
+
+        <section class="frame" data-frame="3" hidden>
+          <div class="frame-heading">
+            <div><p class="frame-kicker">Frame 04 · Train stopped</p><h2 class="frame-title">A delay becomes useful time without inventing certainty</h2></div>
+            <p class="frame-purpose">The interface responds to a stopped-train state, recommends content that fits the available time, and keeps the passenger safely onboard.</p>
+          </div>
+          <div class="frame-grid">
+            <aside class="context-card"><h3>Simulated scenario</h3><p>The operator feed is not connected in this prototype, so the delay is explicitly labelled as simulated rather than presented as live truth.</p><ul class="context-list"><li><strong>Trigger</strong><span>Train stopped · 40-minute example.</span></li><li><strong>Response</strong><span>Cached content ranked by available time.</span></li><li><strong>Safety</strong><span>No instruction to leave the train.</span></li></ul><div class="evidence-box"><strong>Design distinction</strong><span>The duration bracket is a system state. It must not be mistaken for a precise geographic point or confirmed operator information.</span></div></aside>
+
+            <div class="app-stage">
+              <div class="phone" aria-label="Delay mode mobile screen">
+                <div class="phone-topbar"><span>22:31</span><span class="phone-notch"></span><span>No signal · 39%</span></div>
+                <div class="app-header"><div><div class="app-brand">Delay mode</div><div class="app-meta">Offline content available</div></div><button class="icon-button" type="button" data-go="1" aria-label="Close delay mode">×</button></div>
+                <div class="screen-body">
+                  <div class="delay-banner"><strong>Simulated delay · 40 minutes</strong><span>Train stopped. Stay onboard and choose something that fits the time available.</span></div>
+                  <span class="field-label">I have time for</span>
+                  <div class="duration-row" role="group" aria-label="Content duration"><button class="duration-button" data-duration="2">2 min</button><button class="duration-button is-selected" data-duration="5">5 min</button><button class="duration-button" data-duration="10">10+ min</button></div>
+                  <div id="delay-content" class="content-list">
+                    <button type="button" class="content-card" data-minutes="8"><strong>Karoo sky tonight</strong><span>8 min · audio story</span></button>
+                    <button type="button" class="content-card" data-minutes="4"><strong>Railway-worker memories</strong><span>4 min · transcript</span></button>
+                    <button type="button" class="content-card" data-minutes="2"><strong>Window-side challenge</strong><span>2 min · quiz</span></button>
+                  </div>
+                  <div class="offline-note">NO SIGNAL REQUIRED · CACHED BEFORE DEPARTURE</div>
+                  <div class="button-stack"><button type="button" class="primary-button" data-go="4">Explore a nearby place safely</button><button type="button" class="secondary-button" data-go="1">Return to route</button></div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="decision-card"><h3>What this frame tests</h3><ol class="decision-list"><li>Does the experience become more relevant when the train stops?</li><li>Are live and simulated states clearly distinguished?</li><li>Can useful content continue with no signal?</li></ol><div class="requirement-tags"><span>Delay adaptation</span><span>Duration filter</span><span>Offline content</span><span>Safety copy</span></div></aside>
+          </div>
+        </section>
+
+        <section class="frame" data-frame="4" hidden>
+          <div class="frame-heading">
+            <div><p class="frame-kicker">Frame 05 · Community connection</p><h2 class="frame-title">Local discovery unlocks only when leaving is safe</h2></div>
+            <p class="frame-purpose">The nearby place remains useful even when dwell time is unknown. A visit action appears only after an operator or verified partner supplies enough time and platform guidance.</p>
+          </div>
+          <div class="frame-grid">
+            <aside class="context-card"><h3>Market-facing moment</h3><p>This frame shows how corridor visibility could convert into a saved place, platform pickup or later visit—without presenting an unverified business as a signed partner.</p><ul class="context-list"><li><strong>Default</strong><span>Dwell time unverified; do not disembark.</span></li><li><strong>Safe action</strong><span>Save for later works immediately.</span></li><li><strong>Verified action</strong><span>Visit requires operator time and partner confirmation.</span></li></ul><div class="evidence-box"><strong>Demo vendor</strong><span>“Ma Riet's Padkos Stall” is shown as prototype content only. Listing, hours, price and partnership would require verification before launch.</span></div></aside>
+
+            <div class="app-stage">
+              <div class="phone" aria-label="Safe local action mobile screen">
+                <div class="phone-topbar"><span>23:02</span><span class="phone-notch"></span><span>Cached · 34%</span></div>
+                <div class="app-header"><div><div class="app-brand">Nearby place</div><div class="app-meta">Community listing · demo</div></div><button class="icon-button" type="button" data-go="3" aria-label="Close nearby place">×</button></div>
+                <div class="screen-body">
+                  <div id="safety-banner" class="safety-banner"><strong id="safety-title">Do not disembark</strong><span id="safety-copy">Dwell time is not verified. Save this place for later or wait for operator confirmation.</span></div>
+                  <div class="place-card"><div class="place-card-head"><div><h3>Ma Riet's Padkos Stall</h3><p>Karoo snacks · platform-area demo listing</p></div><span class="demo-label">DEMO</span></div><div class="mini-map"><div class="map-pin"></div><div class="map-caption">200 m from platform · unverified</div></div></div>
+                  <div class="button-stack"><button id="visit-button" type="button" class="primary-button" disabled>Visit during this stop</button><button id="save-place" type="button" class="secondary-button">Save for later</button><button type="button" class="secondary-button" data-go="5">Continue to arrival</button></div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="decision-card">
+              <h3>What this frame tests</h3><ol class="decision-list"><li>Is passenger safety stronger than the commercial call to action?</li><li>Can an unverified listing be clearly identified as prototype content?</li><li>Does a safe save action still create value for a local place?</li></ol>
+              <div class="demo-control"><strong>Demo control</strong><div class="toggle-row"><p id="operator-label">Operator dwell time: unavailable</p><button id="operator-toggle" type="button" class="toggle" aria-label="Toggle operator dwell-time verification" aria-pressed="false"></button></div></div>
+              <div class="requirement-tags"><span>Operator feed</span><span>Verified partner</span><span>Safety gate</span><span>Save for later</span></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="frame" data-frame="5" hidden>
+          <div class="frame-heading">
+            <div><p class="frame-kicker">Frame 06 · Cape Town arrival</p><h2 class="frame-title">The journey ends with evidence of engagement</h2></div>
+            <p class="frame-purpose">The passenger sees their saved trail and gives a quick relevance rating. These are prototype values that indicate what a pilot should measure—not claimed results.</p>
+          </div>
+          <div class="frame-grid">
+            <aside class="context-card"><h3>Pilot outcome</h3><p>The arrival screen turns the user journey into measurable events that can support the success-metrics slide.</p><ul class="context-list"><li><strong>Engagement</strong><span>Stories opened and completed.</span></li><li><strong>Tourism intent</strong><span>Places saved and attributed trails shared.</span></li><li><strong>Satisfaction</strong><span>One-tap journey relevance rating.</span></li></ul><div class="evidence-box"><strong>Measurement note</strong><span>Values shown here are demonstration values only. A pilot should report observed counts, completion rates and passenger feedback separately.</span></div></aside>
+
+            <div class="app-stage">
+              <div class="phone" aria-label="Arrival and outcome mobile screen">
+                <div class="phone-topbar"><span>15:34</span><span class="phone-notch"></span><span>5G · 22%</span></div>
+                <div class="app-header"><div><div class="app-brand">Cape Town</div><div class="app-meta">Journey complete</div></div><button class="icon-button" type="button" aria-label="Passenger profile">TM</button></div>
+                <div class="screen-body">
+                  <div class="arrival-hero"><div class="arrival-medal">6</div><h3>Karoo Explorer</h3><p>Your attributed story trail is ready.</p></div>
+                  <div class="metric-grid"><div class="metric"><strong>6</strong><span>stories heard</span></div><div class="metric"><strong>3</strong><span>places saved</span></div><div class="metric"><strong>2</strong><span>local handoffs</span></div></div>
+                  <span class="rating-label">How relevant was this journey?</span>
+                  <div class="rating-row" role="group" aria-label="Journey relevance rating"><button class="rating-button" data-rating="1">1</button><button class="rating-button" data-rating="2">2</button><button class="rating-button" data-rating="3">3</button><button class="rating-button" data-rating="4">4</button><button class="rating-button" data-rating="5">5</button></div>
+                  <div class="button-stack"><button id="share-trail" type="button" class="primary-button">Share attributed trail</button><button id="download-trail" type="button" class="secondary-button">Keep stories on this device</button><button id="restart-prototype" type="button" class="secondary-button">Restart prototype</button></div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="decision-card"><h3>What this frame tests</h3><ol class="decision-list"><li>Can the team measure engagement without inventing pilot results?</li><li>Is attribution preserved when a passenger shares a trail?</li><li>Is satisfaction captured inside the journey rather than through a separate survey?</li></ol><div class="requirement-tags"><span>Engagement events</span><span>Saved places</span><span>Attribution</span><span>Rating</span></div></aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="prototype-footer"><span>ShosholozaTrail · Train Journey Mapper · Interactive prototype</span><span>All people, partner listings, live states and metrics shown are prototype content unless explicitly verified.</span></footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const frames = [...document.querySelectorAll('[data-frame]')];
+      const navButtons = [...document.querySelectorAll('.frame-nav [data-go]')];
+      const allGoButtons = [...document.querySelectorAll('[data-go]')];
+      const toast = document.getElementById('toast');
+      let activeFrame = 0;
+      let toastTimer;
+      let audioTimer;
+      let audioSeconds = 0;
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('is-visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
+      }
+
+      function showFrame(index) {
+        const next = Math.max(0, Math.min(frames.length - 1, Number(index)));
+        activeFrame = next;
+        frames.forEach((frame, i) => { frame.hidden = i !== next; });
+        navButtons.forEach((button, i) => {
+          if (i === next) button.setAttribute('aria-current', 'step');
+          else button.removeAttribute('aria-current');
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      allGoButtons.forEach(button => button.addEventListener('click', () => showFrame(button.dataset.go)));
+
+      document.querySelectorAll('.choice-button').forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.choice-button').forEach(item => item.classList.remove('is-selected'));
+          button.classList.add('is-selected');
+          showToast(button.dataset.choice + ' mode selected');
+        });
+      });
+
+      const downloadButton = document.getElementById('download-button');
+      const startButton = document.getElementById('start-button');
+      const downloadProgress = document.getElementById('download-progress');
+      const packStatus = document.getElementById('pack-status');
+      let downloading = false;
+      downloadButton.addEventListener('click', () => {
+        if (downloading) return;
+        downloading = true;
+        downloadButton.disabled = true;
+        let value = 0;
+        const timer = setInterval(() => {
+          value += 10;
+          downloadProgress.style.width = value + '%';
+          packStatus.textContent = 'Downloading route pack · ' + value + '%';
+          if (value >= 100) {
+            clearInterval(timer);
+            packStatus.textContent = 'Route pack ready · offline access enabled';
+            downloadButton.textContent = 'Downloaded';
+            startButton.disabled = false;
+            showToast('Route pack cached successfully');
+          }
+        }, 90);
+      });
+      startButton.addEventListener('click', () => showFrame(1));
+
+      const routeStories = {
+        Pretoria: ['Pretoria: a capital shaped by rail', 'Text + archive audio · approximately 5 minutes'],
+        Kimberley: ['Kimberley: the diamond-city story', 'Audio · approximately 6 minutes'],
+        Matjiesfontein: ['Matjiesfontein: the siding that became a town', 'Community audio + transcript · approximately 4 minutes'],
+        'Cape Town': ['Cape Town: your saved corridor trail', 'Arrival summary · available at destination']
+      };
+      document.querySelectorAll('.stop').forEach(stop => {
+        stop.addEventListener('click', () => {
+          const item = routeStories[stop.dataset.stop];
+          document.getElementById('route-card-title').textContent = item[0];
+          document.getElementById('route-card-meta').textContent = item[1];
+          document.querySelectorAll('.stop').forEach(s => s.classList.remove('is-current'));
+          stop.classList.add('is-current');
+        });
+      });
+
+      const playButton = document.getElementById('play-button');
+      const audioProgress = document.getElementById('audio-progress');
+      const audioCurrent = document.getElementById('audio-current');
+      playButton.addEventListener('click', () => {
+        const playing = playButton.textContent === '❚❚';
+        if (playing) {
+          clearInterval(audioTimer);
+          playButton.textContent = '▶';
+          return;
+        }
+        playButton.textContent = '❚❚';
+        audioTimer = setInterval(() => {
+          audioSeconds = Math.min(252, audioSeconds + 2);
+          audioProgress.style.width = (audioSeconds / 252 * 100) + '%';
+          audioCurrent.textContent = Math.floor(audioSeconds / 60) + ':' + String(audioSeconds % 60).padStart(2, '0');
+          if (audioSeconds >= 252) {
+            clearInterval(audioTimer);
+            playButton.textContent = '▶';
+          }
+        }, 400);
+      });
+
+      document.getElementById('save-story').addEventListener('click', event => {
+        event.currentTarget.textContent = 'Story saved with attribution';
+        showToast('Story and source details saved together');
+      });
+
+      document.querySelectorAll('.duration-button').forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.duration-button').forEach(item => item.classList.remove('is-selected'));
+          button.classList.add('is-selected');
+          const selected = Number(button.dataset.duration);
+          document.querySelectorAll('#delay-content .content-card').forEach(card => {
+            const minutes = Number(card.dataset.minutes);
+            card.hidden = selected === 10 ? minutes < 8 : minutes > selected;
+          });
+        });
+      });
+      document.querySelectorAll('.content-card').forEach(card => card.addEventListener('click', () => showToast(card.querySelector('strong').textContent + ' opened from cache')));
+
+      const operatorToggle = document.getElementById('operator-toggle');
+      const operatorLabel = document.getElementById('operator-label');
+      const safetyBanner = document.getElementById('safety-banner');
+      const safetyTitle = document.getElementById('safety-title');
+      const safetyCopy = document.getElementById('safety-copy');
+      const visitButton = document.getElementById('visit-button');
+      operatorToggle.addEventListener('click', () => {
+        const verified = operatorToggle.getAttribute('aria-pressed') !== 'true';
+        operatorToggle.setAttribute('aria-pressed', String(verified));
+        operatorLabel.textContent = verified ? 'Operator dwell time: 18 min verified' : 'Operator dwell time: unavailable';
+        safetyBanner.classList.toggle('is-safe', verified);
+        safetyTitle.textContent = verified ? 'Platform visit available' : 'Do not disembark';
+        safetyCopy.textContent = verified ? 'Operator feed confirms an 18-minute stop. Return-to-train countdown and platform guidance are active.' : 'Dwell time is not verified. Save this place for later or wait for operator confirmation.';
+        visitButton.disabled = !verified;
+        visitButton.textContent = verified ? 'Visit · return in 14 minutes' : 'Visit during this stop';
+      });
+      visitButton.addEventListener('click', () => showToast('Demo visit started · return countdown active'));
+      document.getElementById('save-place').addEventListener('click', event => {
+        event.currentTarget.textContent = 'Saved for later';
+        showToast('Demo place saved without leaving the train');
+      });
+
+      document.querySelectorAll('.rating-button').forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.rating-button').forEach(item => item.classList.toggle('is-selected', item === button));
+          showToast('Journey relevance rated ' + button.dataset.rating + ' out of 5');
+        });
+      });
+      document.getElementById('share-trail').addEventListener('click', () => showToast('Attributed trail prepared for sharing'));
+      document.getElementById('download-trail').addEventListener('click', () => showToast('Saved stories remain available on this device'));
+      document.getElementById('restart-prototype').addEventListener('click', () => showFrame(0));
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'ArrowRight') showFrame(activeFrame + 1);
+        if (event.key === 'ArrowLeft') showFrame(activeFrame - 1);
+      });
+    })();
+  </script>
+</body>
+</html>
