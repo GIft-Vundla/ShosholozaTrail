@@ -1,6 +1,6 @@
 # Pre-release verification record
 
-Record date: 2026-09-08 (Africa/Johannesburg). Baseline commit: `c1c6befe348dca6d0355640daad4d3d86fbe9ad5` plus an uncommitted build worktree. Assessment status: **working towards TRL 5; release acceptance incomplete**.
+Record date: 2026-09-08 (Africa/Johannesburg). Deployed application source commit: `1bdf24e9e1937519b9609ca21fda1132add747d3`; this evidence correction is committed separately. Assessment status: **working towards TRL 5; release acceptance incomplete**.
 
 This record captures local component checks plus automated smoke runs against final deployment version `7e8d7d9b-7595-4afa-bf94-87b48cff8cfa` at `https://shosholozatrail.giftvundla22.workers.dev`. It is not evidence for a physical phone, a live AI or MapTiler provider, corridor field performance, a human trial, an endurance run or independent assessment. R1–R16 remain governed by `evidence/acceptance.md`; a component or narrower-scope smoke PASS below does not advance an ordered T1–T15 release gate.
 
