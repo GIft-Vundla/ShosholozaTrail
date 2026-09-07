@@ -36,7 +36,7 @@ The 2026-09-08 cinematic-journey working tree passed 5/5 local headless-Chromium
 
 ## External dependencies and open inputs
 
-1. Cloudflare deployment access and D1 scope were supplied. Remote migration and deployment version `7e8d7d9b-7595-4afa-bf94-87b48cff8cfa` succeeded at `https://shosholozatrail.giftvundla22.workers.dev`. Provider, MapTiler and moderator secrets remain unconfigured; any replacement credentials belong only in Worker secret storage. Do not paste keys into evidence, screenshots, commits or chat.
+1. Cloudflare deployment access and D1 scope were supplied. Remote migration and deployment version `b8a8af7e-f547-44a7-9e6c-8df7703805f1` succeeded at `https://shosholozatrail.giftvundla22.workers.dev`. Provider, MapTiler and moderator secrets remain unconfigured; any replacement credentials belong only in Worker secret storage. Do not paste keys into evidence, screenshots, commits or chat.
 2. A human must open the deployed HTTPS URL on a real phone to complete T1. Record make/model, OS/browser, URL, build and observed result. Freeze the supported device inventory before acceptance testing: at least three physical phones if available, including weakest supported Android; iOS only if claimed.
 3. Assign named requirement owners and an independent reviewer. Obtain a written review of why controlled route inputs, local GPS checks, realistic interruptions and the declared real services represent the proposed scope; explicitly list missing carriage/corridor effects.
 4. Source and rights reviewers must approve actual route evidence and all published factual chapters. A competent speaker must review any claimed second language; English-only work does not establish second-language readiness.

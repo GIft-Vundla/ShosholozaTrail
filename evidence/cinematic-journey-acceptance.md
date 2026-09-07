@@ -1,6 +1,6 @@
-# Cinematic 2D journey — local browser acceptance
+# Cinematic 2D journey - local browser acceptance
 
-Run date: 2026-09-08 (Africa/Johannesburg). Baseline repository HEAD at run time: `a6cce8c`; the cinematic UI, attraction data, acceptance harness and this record were uncommitted working-tree changes. This is a local regression run, not evidence for the deployed Worker version, a physical phone, corridor GPS, route accuracy, user acceptance or TRL 5.
+Run date: 2026-09-08 (Africa/Johannesburg). The tested files were committed as `65c0cc88c3741e8099a28cfdc0ed8190c5eae256` and deployed as Worker version `b8a8af7e-f547-44a7-9e6c-8df7703805f1`. The Playwright run is still local regression evidence, not evidence for a physical phone, corridor GPS, route accuracy, user acceptance or TRL 5. A separate deployed-DOM smoke confirmed that the same release rendered seven story markers, seven attraction markers, the schematic notice, labelled replay train, and attraction caveat card.
 
 ## Test environment
 
