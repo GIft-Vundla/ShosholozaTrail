@@ -1,0 +1,113 @@
+{
+  "version": "1.0.0-editorial-draft",
+  "records": [
+    {
+      "id": "osm-stations",
+      "title": "OpenStreetMap station anchor records",
+      "url": "https://www.openstreetmap.org/copyright",
+      "institution": "OpenStreetMap contributors",
+      "passage": "Seven mapped station or stop-position anchors were retrieved from the OpenStreetMap API. Their selected node IDs, versions and coordinates are recorded in data/provenance/osm-stations-selected.json. Connecting these points with straight lines produces an unresolved schematic, not sourced railway geometry.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Station extract and derivative schematic distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible."
+    },
+    {
+      "id": "freedom-park",
+      "title": "Freedom Park",
+      "url": "https://www.freedompark.co.za/",
+      "institution": "Freedom Park",
+      "passage": "Freedom Park is in Salvokop, Pretoria. Its heritage spaces commemorate people who gave their lives for South Africa's freedom. The institution describes its purpose as remembering and celebrating South Africa's heritage and cultures.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "sol-plaatje",
+      "title": "Sol Plaatje House: Who is Sol Plaatje?",
+      "url": "https://www.education.gov.za/ContactUs/SolPlaatjeHouse.aspx",
+      "institution": "Department of Basic Education; page credits Sol Plaatje Educational Trust",
+      "passage": "Sol Plaatje worked as a teacher, interpreter, journalist and writer. His English books include Native Life in South Africa (1916) and Mhudi (1930). He also wrote in Setswana and translated Shakespeare. The Sol Plaatje Educational Trust and Museum occupies his Kimberley home.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "schreiner-de-aar",
+      "title": "Olive Schreiner to Edward Carpenter, 26 October 1913",
+      "url": "https://www.oliveschreiner.org/vre?colid=39&letterid=17&view=collections",
+      "institution": "Olive Schreiner Letters Online; archival record credits National English Literary Museum",
+      "passage": "The archive catalogues a letter from Olive Schreiner to Edward Carpenter, dated 26 October 1913 and sent from De Aar. In it she discusses plans to travel from Africa to England and the help offered by friends.",
+      "passageType": "original-paraphrase",
+      "publicationDate": "1913-10-26",
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "sanparks-karoo",
+      "title": "Karoo National Park: Hikes, Walks and Trails",
+      "url": "https://www.sanparks.org/parks/karoo/what-to-do/activities/hikes-walks-trails",
+      "institution": "South African National Parks",
+      "passage": "The Fossil Trail in Karoo National Park presents the geology and palaeontology of the Great Karoo. SANParks describes genuine fossils and petrified wood displayed along a paved walkway. This is a park attraction, not a view promised from a train.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "matjiesfontein-history",
+      "title": "Matjiesfontein History",
+      "url": "https://www.matjiesfontein.com/pages/history/",
+      "institution": "Matjiesfontein / Lord Milner Hotel",
+      "passage": "Matjiesfontein's own history page identifies railway worker James Douglas Logan as its founder. It records Olive Schreiner's residency and says the Milner Hotel served as a military hospital during the South African War. David Rawdon later restored the village and reopened the hotel in 1970.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "worcester-heritage",
+      "title": "Zwelethemba Heritage Route",
+      "url": "https://worcestertourism.com/places/zwelethemba-route/",
+      "institution": "Worcester Tourism",
+      "passage": "Worcester Tourism presents a Zwelethemba Heritage Route. It explains the settlement's history through the displacement of residents from Sakkiesdorp. Its linked route publication includes public memorials and artists' histories, and distinguishes private residences from places open to visitors.",
+      "passageType": "original-paraphrase",
+      "publicationDate": "2023-10-09",
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "district-six",
+      "title": "About District Six Museum",
+      "url": "https://www.districtsix.co.za/",
+      "institution": "District Six Museum",
+      "passage": "The District Six Museum Foundation formed in 1989 after the Hands Off District Six conference. The museum opened on 10 December 1994 with the exhibition Streets: Retracing District Six. Its work connects place, memory and the history of displacement.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "big-hole",
+      "title": "The Big Hole: history",
+      "url": "https://thebighole.com/the-big-hole/",
+      "institution": "The Big Hole museum and visitor attraction",
+      "passage": "The Big Hole's official history dates the start of digging at the Kimberley diamond mine site to 1871. The visitor attraction interprets diamonds, mining and the stages between rough stones and polished gems.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    }
+  ]
+}

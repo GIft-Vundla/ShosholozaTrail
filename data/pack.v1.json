@@ -1,0 +1,160 @@
+{
+  "version": "1.0.0-editorial-draft",
+  "language": "en",
+  "status": "editorial-draft-human-review-pending",
+  "reviewDate": "2026-09-08",
+  "chapters": [
+    {
+      "id": "pretoria",
+      "hubId": "pretoria",
+      "title": "Pretoria: beginning with remembrance",
+      "depth": "short",
+      "body": "Freedom Park in Salvokop gives this departure chapter a theme of remembrance. The institution honours people who gave their lives for South Africa's freedom and creates space to remember the country's heritage and cultures. This short introduction invites a careful journey: the places ahead have histories beyond what any window can show. Read the linked institution's account for its own description of the site.",
+      "transcript": "Freedom Park in Salvokop gives this departure chapter a theme of remembrance. The institution honours people who gave their lives for South Africa's freedom and creates space to remember the country's heritage and cultures. This short introduction invites a careful journey: the places ahead have histories beyond what any window can show. Read the linked institution's account for its own description of the site.",
+      "sourceIds": [
+        "freedom-park"
+      ],
+      "language": "en",
+      "reviewStatus": "human-review-pending",
+      "narrationStatus": "text-transcript-only; recorded-audio-not-yet-produced",
+      "locationNotice": "A story associated with this hub. The attraction is not necessarily visible or accessible from the train."
+    },
+    {
+      "id": "kimberley",
+      "hubId": "kimberley",
+      "title": "Kimberley: a city in words",
+      "depth": "deep",
+      "body": "Kimberley's stories extend beyond its mine. Sol Plaatje worked with language as a teacher, interpreter, journalist and author. His former Kimberley home houses the Sol Plaatje Educational Trust and Museum.\n\nThe Department of Basic Education lists Native Life in South Africa, published in 1916, and the novel Mhudi, published in 1930. It also describes his Setswana writing and Shakespeare translations. Language was part of his public work as well as his literary craft.\n\nThe Big Hole museum dates mining at its site to 1871. Read these two institutional accounts together: one foregrounds a writer's legacy, the other mining. Each offers a different starting point for understanding the city; neither is a complete history.",
+      "transcript": "Kimberley's stories extend beyond its mine. Sol Plaatje worked with language as a teacher, interpreter, journalist and author. His former Kimberley home houses the Sol Plaatje Educational Trust and Museum.\n\nThe Department of Basic Education lists Native Life in South Africa, published in 1916, and the novel Mhudi, published in 1930. It also describes his Setswana writing and Shakespeare translations. Language was part of his public work as well as his literary craft.\n\nThe Big Hole museum dates mining at its site to 1871. Read these two institutional accounts together: one foregrounds a writer's legacy, the other mining. Each offers a different starting point for understanding the city; neither is a complete history.",
+      "sourceIds": [
+        "sol-plaatje",
+        "big-hole"
+      ],
+      "language": "en",
+      "reviewStatus": "human-review-pending",
+      "narrationStatus": "text-transcript-only; recorded-audio-not-yet-produced",
+      "locationNotice": "A story associated with this hub. The attraction is not necessarily visible or accessible from the train.",
+      "activity": {
+        "question": "Which novel by Sol Plaatje does this chapter name?",
+        "answer": "Mhudi",
+        "hints": [
+          "Look in the paragraph about his published books.",
+          "Native Life in South Africa is the other title; the question asks for the novel.",
+          "The novel is Mhudi."
+        ],
+        "sourceIds": [
+          "sol-plaatje",
+          "big-hole"
+        ]
+      },
+      "creativePrompt": "Create a fictional postcard about what a city might preserve in words. Use your own voice; do not invent a quotation from Sol Plaatje."
+    },
+    {
+      "id": "de-aar",
+      "hubId": "de-aar",
+      "title": "De Aar: a letter before departure",
+      "depth": "short",
+      "body": "An archival letter connects De Aar with a much wider world. Olive Schreiner Letters Online records her letter to Edward Carpenter from De Aar on 26 October 1913. She discusses travelling to England and friends helping with the journey. This brief chapter stays with what that single document can support: one writer, a named recipient, a place and a date. It is not an account of every resident's experience.",
+      "transcript": "An archival letter connects De Aar with a much wider world. Olive Schreiner Letters Online records her letter to Edward Carpenter from De Aar on 26 October 1913. She discusses travelling to England and friends helping with the journey. This brief chapter stays with what that single document can support: one writer, a named recipient, a place and a date. It is not an account of every resident's experience.",
+      "sourceIds": [
+        "schreiner-de-aar"
+      ],
+      "language": "en",
+      "reviewStatus": "human-review-pending",
+      "narrationStatus": "text-transcript-only; recorded-audio-not-yet-produced",
+      "locationNotice": "A story associated with this hub. The attraction is not necessarily visible or accessible from the train."
+    },
+    {
+      "id": "beaufort-west",
+      "hubId": "beaufort-west",
+      "title": "Beaufort West: reading the Karoo",
+      "depth": "deep",
+      "body": "This hub opens a window onto Karoo natural history through a source from SANParks. Its Fossil Trail in Karoo National Park presents the region's geology and palaeontology with fossils and petrified wood along a paved walkway.\n\nA fossil display and a living landscape invite different kinds of attention. The display brings selected evidence together for interpretation. Looking out of a train window is an observation in the present; it does not identify the age or species of something you cannot examine.\n\nThe activity below asks only about the material named by the source. This is an onboard reading activity associated with the Beaufort West hub. It does not promise entry to the park, a wildlife sighting or visibility of the trail from the railway.",
+      "transcript": "This hub opens a window onto Karoo natural history through a source from SANParks. Its Fossil Trail in Karoo National Park presents the region's geology and palaeontology with fossils and petrified wood along a paved walkway.\n\nA fossil display and a living landscape invite different kinds of attention. The display brings selected evidence together for interpretation. Looking out of a train window is an observation in the present; it does not identify the age or species of something you cannot examine.\n\nThe activity below asks only about the material named by the source. This is an onboard reading activity associated with the Beaufort West hub. It does not promise entry to the park, a wildlife sighting or visibility of the trail from the railway.",
+      "sourceIds": [
+        "sanparks-karoo"
+      ],
+      "language": "en",
+      "reviewStatus": "human-review-pending",
+      "narrationStatus": "text-transcript-only; recorded-audio-not-yet-produced",
+      "locationNotice": "A story associated with this hub. The attraction is not necessarily visible or accessible from the train.",
+      "activity": {
+        "question": "Besides fossils, what material does SANParks say is displayed on the Fossil Trail?",
+        "answer": "petrified wood",
+        "hints": [
+          "The first paragraph names two kinds of display material.",
+          "It is wood preserved in mineral form.",
+          "The source names petrified wood."
+        ],
+        "sourceIds": [
+          "sanparks-karoo"
+        ]
+      },
+      "creativePrompt": "Draw or describe an imagined museum label for a memory from your own journey. Label invented objects as imaginary; do not identify real fossils from a moving train."
+    },
+    {
+      "id": "matjiesfontein",
+      "hubId": "matjiesfontein",
+      "title": "Matjiesfontein: railway, writing and memory",
+      "depth": "deep",
+      "body": "Matjiesfontein's history page names James Douglas Logan, a railway worker, as the village's founder. It also records writer Olive Schreiner's residency. These links place rail travel and writing beside one another in the village's published account.\n\nThe same source says the Milner Hotel served as a military hospital during the South African War. It later describes David Rawdon's restoration work and the hotel's reopening in 1970. A building can have several uses across a lifetime; its present appearance alone cannot tell them all.\n\nThis chapter is based on the property's published history, not a new interview with local residents. The linked source lets you inspect that perspective. Our challenge asks about a documented use of the hotel, while your postcard can imagine your own experience without pretending to be historical testimony.",
+      "transcript": "Matjiesfontein's history page names James Douglas Logan, a railway worker, as the village's founder. It also records writer Olive Schreiner's residency. These links place rail travel and writing beside one another in the village's published account.\n\nThe same source says the Milner Hotel served as a military hospital during the South African War. It later describes David Rawdon's restoration work and the hotel's reopening in 1970. A building can have several uses across a lifetime; its present appearance alone cannot tell them all.\n\nThis chapter is based on the property's published history, not a new interview with local residents. The linked source lets you inspect that perspective. Our challenge asks about a documented use of the hotel, while your postcard can imagine your own experience without pretending to be historical testimony.",
+      "sourceIds": [
+        "matjiesfontein-history"
+      ],
+      "language": "en",
+      "reviewStatus": "human-review-pending",
+      "narrationStatus": "text-transcript-only; recorded-audio-not-yet-produced",
+      "locationNotice": "A story associated with this hub. The attraction is not necessarily visible or accessible from the train.",
+      "activity": {
+        "question": "What wartime role did the Milner Hotel serve, according to the source?",
+        "answer": "military hospital",
+        "hints": [
+          "Find the second paragraph.",
+          "Its role involved caring for people during the war.",
+          "It served as a military hospital."
+        ],
+        "sourceIds": [
+          "matjiesfontein-history"
+        ]
+      },
+      "creativePrompt": "Make an imagined postcard from a railway pause. Describe light, sound or anticipation in your own words; keep your invention separate from the sourced history."
+    },
+    {
+      "id": "worcester",
+      "hubId": "worcester",
+      "title": "Worcester / Zwelethemba: public memory",
+      "depth": "short",
+      "body": "Worcester Tourism's Zwelethemba Heritage Route connects local history with public memorials and artists' lives. Its introduction places the settlement in the history of residents displaced from Sakkiesdorp. The route distinguishes public places from private homes. This onboard chapter is an introduction to the published heritage account, not an invitation to enter a residence or a claim that these places are visible from the station.",
+      "transcript": "Worcester Tourism's Zwelethemba Heritage Route connects local history with public memorials and artists' lives. Its introduction places the settlement in the history of residents displaced from Sakkiesdorp. The route distinguishes public places from private homes. This onboard chapter is an introduction to the published heritage account, not an invitation to enter a residence or a claim that these places are visible from the station.",
+      "sourceIds": [
+        "worcester-heritage"
+      ],
+      "language": "en",
+      "reviewStatus": "human-review-pending",
+      "narrationStatus": "text-transcript-only; recorded-audio-not-yet-produced",
+      "locationNotice": "A story associated with this hub. The attraction is not necessarily visible or accessible from the train."
+    },
+    {
+      "id": "cape-town",
+      "hubId": "cape-town",
+      "title": "Cape Town: streets remembered",
+      "depth": "short",
+      "body": "At the end of this story corridor, the District Six Museum offers another way to think about place. Its foundation formed in 1989, and the museum opened on 10 December 1994 with Streets: Retracing District Six. That exhibition title connects streets with memory. This arrival chapter points to the museum's own account; it does not invent a former resident's voice or claim that a replay has taken you there.",
+      "transcript": "At the end of this story corridor, the District Six Museum offers another way to think about place. Its foundation formed in 1989, and the museum opened on 10 December 1994 with Streets: Retracing District Six. That exhibition title connects streets with memory. This arrival chapter points to the museum's own account; it does not invent a former resident's voice or claim that a replay has taken you there.",
+      "sourceIds": [
+        "district-six"
+      ],
+      "language": "en",
+      "reviewStatus": "human-review-pending",
+      "narrationStatus": "text-transcript-only; recorded-audio-not-yet-produced",
+      "locationNotice": "A story associated with this hub. The attraction is not necessarily visible or accessible from the train."
+    }
+  ],
+  "scope": {
+    "deepChapters": 3,
+    "shortChapters": 4,
+    "reviewedSecondLanguage": false,
+    "recordedAudio": false
+  }
+}

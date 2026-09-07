@@ -1,0 +1,11 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE IF NOT EXISTS rooms (id TEXT PRIMARY KEY, code_hash TEXT NOT NULL UNIQUE, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS sessions (token_hash TEXT PRIMARY KEY, room_id TEXT NOT NULL REFERENCES rooms(id) ON DELETE CASCADE, expires_at INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS sessions_room ON sessions(room_id);
+CREATE TABLE IF NOT EXISTS messages (id TEXT PRIMARY KEY, room_id TEXT NOT NULL REFERENCES rooms(id) ON DELETE CASCADE, author_hash TEXT NOT NULL, request_id TEXT NOT NULL, text TEXT NOT NULL, created_at INTEGER NOT NULL, UNIQUE(author_hash, request_id));
+CREATE INDEX IF NOT EXISTS messages_room_time ON messages(room_id, created_at);
+CREATE TABLE IF NOT EXISTS contributions (id TEXT PRIMARY KEY, title TEXT NOT NULL, text TEXT NOT NULL, source_url TEXT NOT NULL, credit TEXT NOT NULL, submitted_at INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','rejected')), reviewed_at INTEGER, review_note TEXT, source_id TEXT NOT NULL UNIQUE);
+CREATE TABLE IF NOT EXISTS published_packs (version INTEGER PRIMARY KEY, manifest TEXT NOT NULL, published_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS rate_limits (scope TEXT NOT NULL, bucket INTEGER NOT NULL, used INTEGER NOT NULL, PRIMARY KEY(scope, bucket));
+CREATE TABLE IF NOT EXISTS provider_circuit (id TEXT PRIMARY KEY, failures INTEGER NOT NULL DEFAULT 0, open_until INTEGER NOT NULL DEFAULT 0);
+INSERT OR IGNORE INTO provider_circuit (id, failures, open_until) VALUES ('gemini', 0, 0);

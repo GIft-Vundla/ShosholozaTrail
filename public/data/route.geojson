@@ -1,0 +1,97 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "pretoria-cape-town-story-corridor",
+    "version": "0.1.0-unresolved-schematic",
+    "routeVersion": "0.1.0-unresolved-schematic",
+    "name": "Pretoria–Cape Town story corridor — UNVERIFIED SCHEMATIC",
+    "sourceId": "osm-stations",
+    "source": "OpenStreetMap station anchors only; straight connectors authored by ShosholozaTrail",
+    "sourceUrl": "https://www.openstreetmap.org/copyright",
+    "attribution": "© OpenStreetMap contributors",
+    "license": "ODbL-1.0",
+    "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+    "confidence": "unresolved",
+    "geometryType": "schematic-station-connectors",
+    "railAlignmentVerified": false,
+    "intendedUse": "Synthetic laboratory replay and geographic overview only; not live rail tracking or routing",
+    "direction": "pretoria-to-cape-town",
+    "style": {
+      "dashArray": "8 8",
+      "color": "#f59e0b"
+    },
+    "lengthMetres": 1355881.5025033648,
+    "generatedAt": "2026-09-07T22:21:34.344442+00:00",
+    "unresolvedConnectors": [
+      {
+        "fromHubId": "pretoria",
+        "toHubId": "kimberley",
+        "confidence": "unresolved",
+        "reason": "Rail alignment not acquired; direct schematic connector"
+      },
+      {
+        "fromHubId": "kimberley",
+        "toHubId": "de-aar",
+        "confidence": "unresolved",
+        "reason": "Rail alignment not acquired; direct schematic connector"
+      },
+      {
+        "fromHubId": "de-aar",
+        "toHubId": "beaufort-west",
+        "confidence": "unresolved",
+        "reason": "Rail alignment not acquired; direct schematic connector"
+      },
+      {
+        "fromHubId": "beaufort-west",
+        "toHubId": "matjiesfontein",
+        "confidence": "unresolved",
+        "reason": "Rail alignment not acquired; direct schematic connector"
+      },
+      {
+        "fromHubId": "matjiesfontein",
+        "toHubId": "worcester",
+        "confidence": "unresolved",
+        "reason": "Rail alignment not acquired; direct schematic connector"
+      },
+      {
+        "fromHubId": "worcester",
+        "toHubId": "cape-town",
+        "confidence": "unresolved",
+        "reason": "Rail alignment not acquired; direct schematic connector"
+      }
+    ]
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        28.1892212,
+        -25.7594894
+      ],
+      [
+        24.7698702,
+        -28.7353474
+      ],
+      [
+        24.0138567,
+        -30.6503939
+      ],
+      [
+        22.5769196,
+        -32.3518393
+      ],
+      [
+        20.5808832,
+        -33.2314538
+      ],
+      [
+        19.4411747,
+        -33.6394993
+      ],
+      [
+        18.4263523,
+        -33.9224221
+      ]
+    ]
+  }
+}

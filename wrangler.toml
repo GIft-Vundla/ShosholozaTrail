@@ -1,0 +1,22 @@
+# Reuse the Worker already owned by this Cloudflare account.
+name = "shosholozatrail"
+main = "src/worker.ts"
+compatibility_date = "2026-09-07"
+workers_dev = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+not_found_handling = "single-page-application"
+
+[vars]
+AI_ENABLED = "false"
+# Set an account-verified model ID before the separately gated AI evaluation.
+GEMINI_MODEL = "unconfigured"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "shosholoza-trail-pilot"
+database_id = "95940d95-bd11-4635-8007-cdb8d4082deb"
+migrations_dir = "migrations"

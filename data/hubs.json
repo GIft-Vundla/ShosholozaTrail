@@ -1,0 +1,263 @@
+{
+  "version": "0.1.0-unresolved-schematic",
+  "stations": [
+    {
+      "id": "pretoria-station",
+      "hubId": "pretoria",
+      "name": "Pretoria",
+      "lat": -25.7594894,
+      "lon": 28.1892212,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 799906122,
+      "sourceUrl": "https://www.openstreetmap.org/node/799906122",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-station-point"
+    },
+    {
+      "id": "kimberley-station",
+      "hubId": "kimberley",
+      "name": "Kimberley",
+      "lat": -28.7353474,
+      "lon": 24.7698702,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 247327890,
+      "sourceUrl": "https://www.openstreetmap.org/node/247327890",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-station-point"
+    },
+    {
+      "id": "de-aar-station",
+      "hubId": "de-aar",
+      "name": "De Aar",
+      "lat": -30.6503939,
+      "lon": 24.0138567,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 247327813,
+      "sourceUrl": "https://www.openstreetmap.org/node/247327813",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-station-point"
+    },
+    {
+      "id": "beaufort-west-station",
+      "hubId": "beaufort-west",
+      "name": "Beaufort West",
+      "lat": -32.3518393,
+      "lon": 22.5769196,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 8148099536,
+      "sourceUrl": "https://www.openstreetmap.org/node/8148099536",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-station-point"
+    },
+    {
+      "id": "matjiesfontein-station",
+      "hubId": "matjiesfontein",
+      "name": "Matjiesfontein",
+      "lat": -33.2314538,
+      "lon": 20.5808832,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 249333087,
+      "sourceUrl": "https://www.openstreetmap.org/node/249333087",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-stop-position"
+    },
+    {
+      "id": "worcester-station",
+      "hubId": "worcester",
+      "name": "Worcester",
+      "lat": -33.6394993,
+      "lon": 19.4411747,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 9155692732,
+      "sourceUrl": "https://www.openstreetmap.org/node/9155692732",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-station-point"
+    },
+    {
+      "id": "cape-town-station",
+      "hubId": "cape-town",
+      "name": "Cape Town",
+      "lat": -33.9224221,
+      "lon": 18.4263523,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 288676470,
+      "sourceUrl": "https://www.openstreetmap.org/node/288676470",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-station-point"
+    }
+  ],
+  "triggerZones": [
+    {
+      "id": "pretoria-trigger",
+      "recordType": "trigger-zone",
+      "hubId": "pretoria",
+      "sEnter": 0,
+      "sExit": 800.0,
+      "stationAlongMetres": 0.0,
+      "routeVersion": "0.1.0-unresolved-schematic",
+      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+    },
+    {
+      "id": "kimberley-trigger",
+      "recordType": "trigger-zone",
+      "hubId": "kimberley",
+      "sEnter": 472172.8525516245,
+      "sExit": 473772.8525516245,
+      "stationAlongMetres": 472972.8525516245,
+      "routeVersion": "0.1.0-unresolved-schematic",
+      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+    },
+    {
+      "id": "de-aar-trigger",
+      "recordType": "trigger-zone",
+      "hubId": "de-aar",
+      "sEnter": 697288.2356578384,
+      "sExit": 698888.2356578384,
+      "stationAlongMetres": 698088.2356578384,
+      "routeVersion": "0.1.0-unresolved-schematic",
+      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+    },
+    {
+      "id": "beaufort-west-trigger",
+      "recordType": "trigger-zone",
+      "hubId": "beaufort-west",
+      "sEnter": 930419.421550668,
+      "sExit": 932019.421550668,
+      "stationAlongMetres": 931219.421550668,
+      "routeVersion": "0.1.0-unresolved-schematic",
+      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+    },
+    {
+      "id": "matjiesfontein-trigger",
+      "recordType": "trigger-zone",
+      "hubId": "matjiesfontein",
+      "sEnter": 1141076.4667871192,
+      "sExit": 1142676.4667871192,
+      "stationAlongMetres": 1141876.4667871192,
+      "routeVersion": "0.1.0-unresolved-schematic",
+      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+    },
+    {
+      "id": "worcester-trigger",
+      "recordType": "trigger-zone",
+      "hubId": "worcester",
+      "sEnter": 1256154.7316623055,
+      "sExit": 1257754.7316623055,
+      "stationAlongMetres": 1256954.7316623055,
+      "routeVersion": "0.1.0-unresolved-schematic",
+      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+    },
+    {
+      "id": "cape-town-trigger",
+      "recordType": "trigger-zone",
+      "hubId": "cape-town",
+      "sEnter": 1355081.5025033648,
+      "sExit": 1355881.5025033648,
+      "stationAlongMetres": 1355881.5025033648,
+      "routeVersion": "0.1.0-unresolved-schematic",
+      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+    }
+  ],
+  "attractions": [
+    {
+      "id": "freedom-park",
+      "hubId": "pretoria",
+      "name": "Freedom Park",
+      "recordType": "attraction",
+      "lat": null,
+      "lon": null,
+      "coordinateStatus": "not-geocoded",
+      "sourceIds": [
+        "freedom-park"
+      ],
+      "visibilityFromTrain": "not-established"
+    },
+    {
+      "id": "sol-plaatje-museum",
+      "hubId": "kimberley",
+      "name": "Sol Plaatje Educational Trust and Museum",
+      "recordType": "attraction",
+      "lat": null,
+      "lon": null,
+      "coordinateStatus": "not-geocoded",
+      "sourceIds": [
+        "sol-plaatje"
+      ],
+      "visibilityFromTrain": "not-established"
+    },
+    {
+      "id": "karoo-fossil-trail",
+      "hubId": "beaufort-west",
+      "name": "Karoo National Park Fossil Trail",
+      "recordType": "attraction",
+      "lat": null,
+      "lon": null,
+      "coordinateStatus": "not-geocoded",
+      "sourceIds": [
+        "sanparks-karoo"
+      ],
+      "visibilityFromTrain": "not-established"
+    },
+    {
+      "id": "lord-milner-hotel",
+      "hubId": "matjiesfontein",
+      "name": "Lord Milner Hotel",
+      "recordType": "attraction",
+      "lat": null,
+      "lon": null,
+      "coordinateStatus": "not-geocoded",
+      "sourceIds": [
+        "matjiesfontein-history"
+      ],
+      "visibilityFromTrain": "not-established"
+    },
+    {
+      "id": "zwelethemba-heritage-route",
+      "hubId": "worcester",
+      "name": "Zwelethemba Heritage Route",
+      "recordType": "attraction",
+      "lat": null,
+      "lon": null,
+      "coordinateStatus": "not-geocoded",
+      "sourceIds": [
+        "worcester-heritage"
+      ],
+      "visibilityFromTrain": "not-established"
+    },
+    {
+      "id": "district-six-museum",
+      "hubId": "cape-town",
+      "name": "District Six Museum",
+      "recordType": "attraction",
+      "lat": null,
+      "lon": null,
+      "coordinateStatus": "not-geocoded",
+      "sourceIds": [
+        "district-six"
+      ],
+      "visibilityFromTrain": "not-established"
+    }
+  ],
+  "measurementMethod": "Cumulative haversine distance on LineString, Earth mean radius 6371008.8 m; metres from Pretoria"
+}

@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "hash": "382a3d57ef83f67bcc8b7779bfac42fbc353f4a04152fe539c30148201848d89",
+  "bytes": 366104,
+  "assets": [
+    {
+      "url": "/app.js",
+      "bytes": 34330,
+      "sha256": "6c7cbceb16109f914f4ce0053723a0b1993d9ec1dbb187750f5e7aa4fa07cbb5"
+    },
+    {
+      "url": "/data/hubs.json",
+      "bytes": 8751,
+      "sha256": "3d252357c3483806b305b06a08518c08364f5bf77e3ca1c53da33027612d66a9"
+    },
+    {
+      "url": "/data/pack.v1.json",
+      "bytes": 13971,
+      "sha256": "ee00400acd55f3bb49213f24444333014fb73aaa10d06e098f09e29a6644b3d2"
+    },
+    {
+      "url": "/data/route.geojson",
+      "bytes": 2834,
+      "sha256": "8db06dd85ca98db35fb69f7ec7c857c43aea9bab777652bd4786069c28a69a51"
+    },
+    {
+      "url": "/data/sources.json",
+      "bytes": 7757,
+      "sha256": "4ac3833897f1740c8789f8acaadf14ab27dd8fe31cb49cfc11a96a3bb32d588b"
+    },
+    {
+      "url": "/data/traces/demo-corridor.json",
+      "bytes": 3531,
+      "sha256": "eee26569a3ddda8cc2cdd23ac45b4133411bf65b891727629295b61c8143f897"
+    },
+    {
+      "url": "/engine/gps.js",
+      "bytes": 1318,
+      "sha256": "8b479368299d6e20f2df309450ca3afd160162ddcc8b087db97c58ee95f1a228"
+    },
+    {
+      "url": "/engine/journey.js",
+      "bytes": 5388,
+      "sha256": "e55788e1dcc19cfbd0976e0220bde65fbef84aa83cc6d827919b9de63afe47ef"
+    },
+    {
+      "url": "/engine/replay.js",
+      "bytes": 1545,
+      "sha256": "c2219229e24715167e73b3d1521b3c2f9882ae088f49a1d39a89bdbfac8b678c"
+    },
+    {
+      "url": "/engine/state.js",
+      "bytes": 2467,
+      "sha256": "d19402244a50aa5e9ca2b498ac127485a45f32ec4d99ebb236eff6ca4ad194a0"
+    },
+    {
+      "url": "/engine/triggers.js",
+      "bytes": 767,
+      "sha256": "71f98c01603400bc2035c9868c926591c247e839f77835174e1c7140317422e5"
+    },
+    {
+      "url": "/icon.svg",
+      "bytes": 232,
+      "sha256": "720be68ca4dda88e282c1b5bf2574e0c5fa3f69c50d3968141118f30517fb2d8"
+    },
+    {
+      "url": "/index.html",
+      "bytes": 1565,
+      "sha256": "fbec0a906480e8c886938704f9617937447d8f2d7d9c0a02ae9f7029798e905f"
+    },
+    {
+      "url": "/manifest.webmanifest",
+      "bytes": 253,
+      "sha256": "bb8baa93f4ff6e098786a270b828ab49869328846d542ea371d344298fb718f6"
+    },
+    {
+      "url": "/results/r10.json",
+      "bytes": 16190,
+      "sha256": "3aa4a788098aaa7bf4e25aa8f7eeb95aced847f967e60f0daf3b9fb58dd58d79"
+    },
+    {
+      "url": "/results/r3.json",
+      "bytes": 76123,
+      "sha256": "3128efd3e89302039831129c5d7116c796598fa42c817cbec4df5bf55c421634"
+    },
+    {
+      "url": "/storage/drafts.js",
+      "bytes": 2071,
+      "sha256": "818674c3f6b2a50b149de72404c8ad9b94fd062c65e9193f378574111823d097"
+    },
+    {
+      "url": "/storage/pack.js",
+      "bytes": 2560,
+      "sha256": "7b0fc0706001d8d610cc23cfaea30ee65e28edd766b35d4ad4170af34e577480"
+    },
+    {
+      "url": "/style.css",
+      "bytes": 4868,
+      "sha256": "45a17549d9107fa45ea155e6bd0db39efd58519e304b36bfb6c7566a2abceb85"
+    },
+    {
+      "url": "/vendor/TURF-LICENSE",
+      "bytes": 1073,
+      "sha256": "f9b32b82fd5a1d3a990526d86da97f42fb805d9f4d9f978125c4679b674fce44"
+    },
+    {
+      "url": "/vendor/leaflet/LICENSE",
+      "bytes": 1395,
+      "sha256": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb"
+    },
+    {
+      "url": "/vendor/leaflet/images/layers-2x.png",
+      "bytes": 1259,
+      "sha256": "066daca850d8ffbef007af00b06eac0015728dee279c51f3cb6c716df7c42edf"
+    },
+    {
+      "url": "/vendor/leaflet/images/layers.png",
+      "bytes": 696,
+      "sha256": "1dbbe9d028e292f36fcba8f8b3a28d5e8932754fc2215b9ac69e4cdecf5107c6"
+    },
+    {
+      "url": "/vendor/leaflet/images/marker-icon-2x.png",
+      "bytes": 2464,
+      "sha256": "00179c4c1ee830d3a108412ae0d294f55776cfeb085c60129a39aa6fc4ae2528"
+    },
+    {
+      "url": "/vendor/leaflet/images/marker-icon.png",
+      "bytes": 1466,
+      "sha256": "574c3a5cca85f4114085b6841596d62f00d7c892c7b03f28cbfa301deb1dc437"
+    },
+    {
+      "url": "/vendor/leaflet/images/marker-shadow.png",
+      "bytes": 618,
+      "sha256": "264f5c640339f042dd729062cfc04c17f8ea0f29882b538e3848ed8f10edb4da"
+    },
+    {
+      "url": "/vendor/leaflet/leaflet.css",
+      "bytes": 14806,
+      "sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6"
+    },
+    {
+      "url": "/vendor/leaflet/leaflet.js",
+      "bytes": 147552,
+      "sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a"
+    },
+    {
+      "url": "/vendor/turf.js",
+      "bytes": 8254,
+      "sha256": "aa4718c3c6bc65cff5bf5c2f85202129295b01b3a028b7d2ecff251f6f00433e"
+    }
+  ]
+}

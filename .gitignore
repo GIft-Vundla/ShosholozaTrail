@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Pilot application local dependencies, outputs and credentials
+node_modules/
+.wrangler/
+.dev.vars
+.dev.vars.*
+.env.*
+!.env.example
+API keys.txt
+playwright-report/
+test-results/

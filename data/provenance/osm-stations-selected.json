@@ -1,0 +1,135 @@
+{
+  "source": "OpenStreetMap",
+  "attribution": "© OpenStreetMap contributors",
+  "license": "ODbL-1.0",
+  "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "retrievedAt": "2026-09-07T22:21:34.347891+00:00",
+  "records": [
+    {
+      "hubId": "pretoria",
+      "osmType": "node",
+      "osmId": 799906122,
+      "lat": -25.7594894,
+      "lon": 28.1892212,
+      "version": 7,
+      "timestamp": "2025-12-19T17:29:58Z",
+      "tags": {
+        "name": "Pretoria",
+        "public_transport": "station",
+        "railway": "station",
+        "ref": "PRR"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=28.184,-25.765,28.196,-25.755",
+      "rawSha256": "bd603dc1a128a05cfc8add6195effbfdcffe0cbf4482353a3ee76b3b69a9a082",
+      "sourceUrl": "https://www.openstreetmap.org/node/799906122"
+    },
+    {
+      "hubId": "kimberley",
+      "osmType": "node",
+      "osmId": 247327890,
+      "lat": -28.7353474,
+      "lon": 24.7698702,
+      "version": 16,
+      "timestamp": "2025-09-17T07:23:31Z",
+      "tags": {
+        "name": "Kimberley",
+        "public_transport": "station",
+        "railway": "station",
+        "ref": "KBY"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=24.757,-28.751,24.78,-28.729",
+      "rawSha256": "1c73c733c790aa03b8ebbe2d0dbb13500323033882d85207f012fd4e44adf5b0",
+      "sourceUrl": "https://www.openstreetmap.org/node/247327890"
+    },
+    {
+      "hubId": "de-aar",
+      "osmType": "node",
+      "osmId": 247327813,
+      "lat": -30.6503939,
+      "lon": 24.0138567,
+      "version": 15,
+      "timestamp": "2026-01-22T23:59:35Z",
+      "tags": {
+        "name": "De Aar",
+        "public_transport": "station",
+        "railway": "station",
+        "ref": "DER"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=24.001,-30.66,24.031,-30.638",
+      "rawSha256": "954de1c2750458bfe9f42a2ee1336cbbf77f92834bd4240c4630c38ad8f88410",
+      "sourceUrl": "https://www.openstreetmap.org/node/247327813"
+    },
+    {
+      "hubId": "beaufort-west",
+      "osmType": "node",
+      "osmId": 8148099536,
+      "lat": -32.3518393,
+      "lon": 22.5769196,
+      "version": 4,
+      "timestamp": "2025-09-17T07:23:31Z",
+      "tags": {
+        "name": "Beaufort West",
+        "public_transport": "station",
+        "railway": "station",
+        "ref": "BFU"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=22.571,-32.367,22.603,-32.339",
+      "rawSha256": "46ed3cd3650998cfb9d01a6f6a04fb13e69432dbbb5b6f2673478a0f9102d23e",
+      "sourceUrl": "https://www.openstreetmap.org/node/8148099536"
+    },
+    {
+      "hubId": "matjiesfontein",
+      "osmType": "node",
+      "osmId": 249333087,
+      "lat": -33.2314538,
+      "lon": 20.5808832,
+      "version": 10,
+      "timestamp": "2018-01-13T17:55:40Z",
+      "tags": {
+        "name": "Matjiesfontein",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "ref": "MJN"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=20.571,-33.237,20.592,-33.224",
+      "rawSha256": "ad251d9fc1cefa0ac210473a0aafe39813e8909bcc65edcb324fddbcaabe36bb",
+      "sourceUrl": "https://www.openstreetmap.org/node/249333087"
+    },
+    {
+      "hubId": "worcester",
+      "osmType": "node",
+      "osmId": 9155692732,
+      "lat": -33.6394993,
+      "lon": 19.4411747,
+      "version": 3,
+      "timestamp": "2026-01-09T20:01:11Z",
+      "tags": {
+        "name": "Worcester",
+        "public_transport": "station",
+        "railway": "station",
+        "ref": "WOR"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=19.429,-33.659,19.451,-33.632",
+      "rawSha256": "720afbf36f9d7c5467ef1a21a5ae683eb770e0160f842511b4dff0605c9dcc62",
+      "sourceUrl": "https://www.openstreetmap.org/node/9155692732"
+    },
+    {
+      "hubId": "cape-town",
+      "osmType": "node",
+      "osmId": 288676470,
+      "lat": -33.9224221,
+      "lon": 18.4263523,
+      "version": 20,
+      "timestamp": "2025-12-19T17:34:39Z",
+      "tags": {
+        "name": "Cape Town Station",
+        "public_transport": "station",
+        "railway": "station",
+        "ref": "CPT"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=18.419,-33.929,18.435,-33.913",
+      "rawSha256": "49edde33b8e250fd69e501eaea5cfe9e1cf2fb6338276e5224c07e01634bfd52",
+      "sourceUrl": "https://www.openstreetmap.org/node/288676470"
+    }
+  ]
+}

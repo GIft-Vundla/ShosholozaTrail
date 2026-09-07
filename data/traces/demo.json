@@ -1,0 +1,217 @@
+{
+  "header": {
+    "traceId": "synthetic-equatorial-delay-demo",
+    "provenance": "synthetic",
+    "notes": "Equatorial laboratory fixture, not corridor travel. Movement, nine minutes stationary, then movement. Use rate 60 for demonstration."
+  },
+  "route": {
+    "type": "Feature",
+    "properties": {
+      "version": "synthetic-equator-v1",
+      "provenance": "synthetic",
+      "notes": "Equatorial laboratory line; not South African rail geometry or field data."
+    },
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          0,
+          0
+        ],
+        [
+          0.4,
+          0
+        ]
+      ]
+    }
+  },
+  "zones": [
+    {
+      "hubId": "synthetic-hub-1",
+      "sEnter": 5000,
+      "sExit": 5020
+    },
+    {
+      "hubId": "synthetic-hub-2",
+      "sEnter": 10000,
+      "sExit": 10020
+    },
+    {
+      "hubId": "synthetic-hub-3",
+      "sEnter": 15000,
+      "sExit": 15020
+    },
+    {
+      "hubId": "synthetic-hub-4",
+      "sEnter": 20000,
+      "sExit": 20020
+    },
+    {
+      "hubId": "synthetic-hub-5",
+      "sEnter": 25000,
+      "sExit": 25020
+    },
+    {
+      "hubId": "synthetic-hub-6",
+      "sEnter": 30000,
+      "sExit": 30020
+    },
+    {
+      "hubId": "synthetic-hub-7",
+      "sEnter": 35000,
+      "sExit": 35020
+    }
+  ],
+  "fixes": [
+    {
+      "lat": 0,
+      "lon": 0.04316737745877782,
+      "accuracy": 5,
+      "t": 1700000000000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04370696967701254,
+      "accuracy": 5,
+      "t": 1700000010000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04424656189524726,
+      "accuracy": 5,
+      "t": 1700000020000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000030000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000060000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000090000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000120000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000150000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000180000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000210000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000240000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000270000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000300000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000330000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000360000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000390000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000420000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000450000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000480000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000510000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000540000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000570000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04501098420441312,
+      "accuracy": 5,
+      "t": 1700000600000
+    },
+    {
+      "lat": 0,
+      "lon": 0.04721431909553824,
+      "accuracy": 5,
+      "t": 1700000630000
+    },
+    {
+      "lat": 0,
+      "lon": 0.049462620004849585,
+      "accuracy": 5,
+      "t": 1700000660000
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+# Large API search extracts include irrelevant objects and contributor metadata.
+# Selected source records and raw SHA-256 fingerprints are versioned separately.
+*.osm

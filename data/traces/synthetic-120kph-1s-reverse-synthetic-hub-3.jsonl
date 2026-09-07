@@ -1,0 +1,6 @@
+{"traceId":"synthetic-120kph-1s-reverse-synthetic-hub-3","provenance":"synthetic","speedKmh":120,"sampleGapS":1,"direction":-1,"routeVersion":"synthetic-equator-v1","expectedHubIds":["synthetic-hub-3"],"notes":"One independently prescribed passage across a 20 m interval. Five analytic equatorial fixes; no field claims."}
+{"lat":0,"lon":0.13552757881328786,"accuracy":5,"t":1700000000000}
+{"lat":0,"lon":0.135227805358713,"accuracy":5,"t":1700000001000}
+{"lat":0,"lon":0.13492803190413818,"accuracy":5,"t":1700000002000}
+{"lat":0,"lon":0.13462825844956333,"accuracy":5,"t":1700000003000}
+{"lat":0,"lon":0.13432848499498848,"accuracy":5,"t":1700000004000}
