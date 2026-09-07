@@ -32,6 +32,8 @@ This document freezes the supplied implementation plan sections 7, 8 and 11 belo
 
 Each run must identify requirement, status, timestamp, commit/build, deployment URL, route/content/model/prompt versions as applicable, device/OS/browser, network and position profile, expected result, actual numerator/denominator or measurements, artifacts, failures, fix and retest links. Preserve both trial rounds. Use NOT RUN, FAIL or PASS explicitly; unavailable evidence is not a zero measurement.
 
+The 2026-09-08 cinematic-journey working tree passed 5/5 local headless-Chromium checks for marker/card interaction, replay labelling and route progress, reduced motion, waiting/low-power presentation, and complete-pack offline navigation. See `evidence/cinematic-journey-acceptance.md` for the exact environment, failures fixed, and limits. This local run adds component evidence only; it does not change any NOT RUN release-gate status above or replace physical-device and relevant-environment testing.
+
 ## External dependencies and open inputs
 
 1. Cloudflare deployment access and D1 scope were supplied. Remote migration and deployment version `7e8d7d9b-7595-4afa-bf94-87b48cff8cfa` succeeded at `https://shosholozatrail.giftvundla22.workers.dev`. Provider, MapTiler and moderator secrets remain unconfigured; any replacement credentials belong only in Worker secret storage. Do not paste keys into evidence, screenshots, commits or chat.

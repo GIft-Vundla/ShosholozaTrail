@@ -1,0 +1,101 @@
+import { expect, test } from '@playwright/test';
+
+test.beforeEach(async ({ context, page }) => {
+  await context.clearCookies();
+  await page.goto('/');
+  await expect(page.locator('#map')).toBeVisible();
+});
+
+test('map keeps route provenance visible and opens a sourced story card from a keyboard-accessible hub', async ({ page }) => {
+  await expect(page.locator('.map-key')).toContainText(/unverified|not verified/i);
+  await expect(page.locator('.leaflet-control-attribution')).toContainText(/OpenStreetMap/i);
+
+  const hubs = page.locator('.hub-marker');
+  await expect(hubs).toHaveCount(7);
+  const firstHub = hubs.first();
+  const firstInteractiveMarker = firstHub.locator('..');
+  await expect(firstInteractiveMarker).toHaveAttribute('tabindex', '0');
+  await firstInteractiveMarker.focus();
+  await page.keyboard.press('Enter');
+
+  const card = page.locator('#map-story-card');
+  await expect(card).toBeVisible();
+  await expect(card).toContainText(/offline|route|nearby/i);
+  await expect(card.getByRole('link', { name: /open|read/i })).toBeVisible();
+
+  await card.getByRole('button', { name: /close story preview/i }).click();
+  const expectedAttractions = await page.evaluate(async () => {
+    const data = await fetch('/data/hubs.json').then(response => response.json());
+    return data.attractions.filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon)).length;
+  });
+  const attractions = page.locator('.attraction-marker');
+  await expect(attractions).toHaveCount(expectedAttractions);
+  const firstAttraction = attractions.first().locator('..');
+  await expect(firstAttraction).toHaveAttribute('tabindex', '0');
+  await firstAttraction.focus();
+  await page.keyboard.press('Enter');
+  await expect(card).toBeVisible();
+  await expect(card).toContainText(/visibility from the train and rail access are not established/i);
+  await expect(card.getByRole('link', { name: /coordinate source/i })).toBeVisible();
+  await card.getByRole('link', { name: /open the hub chapter/i }).click();
+  await expect(page.locator('.story-sources .source a').first()).toBeVisible();
+});
+
+test('labelled replay moves a train and progressively reveals the traversed route', async ({ page }) => {
+  await page.getByRole('button', { name: /run labelled replay/i }).click();
+
+  await expect(page.locator('#position-label')).toContainText('SIMULATED REPLAY');
+  const train = page.locator('.train-marker.replay');
+  await expect(train).toBeVisible();
+  await expect(train.locator('..')).toHaveAttribute('aria-label', /simulated|replay/i);
+
+  await expect.poll(() => page.locator('#journey-progress-bar').evaluate(element => element.value)).toBeGreaterThan(0);
+  await expect(page.locator('#journey-progress')).toContainText(/%|km/i);
+  await expect(page.locator('.route-traversed')).toHaveCount(1);
+  await expect(page.locator('.route-traversed')).toHaveAttribute('d', /\S+/);
+});
+
+test('reduced-motion preference removes cinematic animation while retaining journey status', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  await expect(page.locator('#map')).toBeVisible();
+  await page.getByRole('button', { name: /run labelled replay/i }).click();
+
+  const train = page.locator('.train-marker.replay');
+  await expect(train).toBeVisible();
+  const motion = await train.evaluate(element => {
+    const style = getComputedStyle(element);
+    return { animationName: style.animationName, animationDuration: style.animationDuration };
+  });
+  expect(motion.animationName).toBe('none');
+  expect(motion.animationDuration).toBe('0s');
+  await expect(page.locator('#journey-progress')).toBeVisible();
+});
+
+test('waiting enters low-power mode with truthful copy and no visual animation', async ({ page }) => {
+  await page.getByRole('button', { name: /run labelled replay/i }).click();
+  await page.waitForFunction(() => document.body.classList.contains('low-power'), null, { timeout: 12_000, polling: 50 });
+
+  await expect(page.locator('#waiting')).toContainText('The train has not moved for more than 8 minutes.');
+  await expect(page.locator('#waiting')).toContainText("We don't have an official reason or a restart time.");
+  await expect(page.locator('#waiting')).toContainText(/30 seconds/i);
+  await expect(page.locator('#map')).toBeHidden();
+  const animationName = await page.locator('body').evaluate(element => getComputedStyle(element).animationName);
+  expect(animationName).toBe('none');
+});
+
+test('installed pack reopens the journey and a chapter with the browser offline', async ({ context, page }) => {
+  await page.getByRole('button', { name: /download offline pack|check and install pack update/i }).click();
+  await expect(page.locator('#pack-state')).toContainText(/Ready .* verified files/i, { timeout: 20_000 });
+  await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null)).toBe(true);
+
+  await context.setOffline(true);
+  await page.goto('/stories/kimberley', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#network')).toContainText('Offline');
+  await expect(page.locator('main h1')).toContainText(/Kimberley/i);
+  await expect(page.locator('#startup-error')).toHaveCount(0);
+
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#map')).toBeVisible();
+  await expect(page.locator('.map-key')).toContainText(/unverified|not verified/i);
+});

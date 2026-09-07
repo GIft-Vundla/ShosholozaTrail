@@ -1,5 +1,19 @@
 {
   "version": "0.1.0-unresolved-schematic",
+  "hubOrder": [
+    "pretoria",
+    "kimberley",
+    "de-aar",
+    "beaufort-west",
+    "matjiesfontein",
+    "worcester",
+    "cape-town"
+  ],
+  "recordTypeDefinitions": {
+    "station": "Mapped rail anchor used to define the current schematic corridor.",
+    "trigger-zone": "Independent along-route interval used to unlock a hub story.",
+    "attraction": "Place associated with a hub story. It is not a rail stop, route waypoint, promised view, or permission to disembark."
+  },
   "stations": [
     {
       "id": "pretoria-station",
@@ -13,7 +27,8 @@
       "osmId": 799906122,
       "sourceUrl": "https://www.openstreetmap.org/node/799906122",
       "confidence": "osm-mapped-not-field-verified",
-      "positionType": "mapped-station-point"
+      "positionType": "mapped-station-point",
+      "markerRole": "rail-station-anchor"
     },
     {
       "id": "kimberley-station",
@@ -27,7 +42,8 @@
       "osmId": 247327890,
       "sourceUrl": "https://www.openstreetmap.org/node/247327890",
       "confidence": "osm-mapped-not-field-verified",
-      "positionType": "mapped-station-point"
+      "positionType": "mapped-station-point",
+      "markerRole": "rail-station-anchor"
     },
     {
       "id": "de-aar-station",
@@ -41,7 +57,8 @@
       "osmId": 247327813,
       "sourceUrl": "https://www.openstreetmap.org/node/247327813",
       "confidence": "osm-mapped-not-field-verified",
-      "positionType": "mapped-station-point"
+      "positionType": "mapped-station-point",
+      "markerRole": "rail-station-anchor"
     },
     {
       "id": "beaufort-west-station",
@@ -55,7 +72,8 @@
       "osmId": 8148099536,
       "sourceUrl": "https://www.openstreetmap.org/node/8148099536",
       "confidence": "osm-mapped-not-field-verified",
-      "positionType": "mapped-station-point"
+      "positionType": "mapped-station-point",
+      "markerRole": "rail-station-anchor"
     },
     {
       "id": "matjiesfontein-station",
@@ -69,7 +87,8 @@
       "osmId": 249333087,
       "sourceUrl": "https://www.openstreetmap.org/node/249333087",
       "confidence": "osm-mapped-not-field-verified",
-      "positionType": "mapped-stop-position"
+      "positionType": "mapped-stop-position",
+      "markerRole": "rail-station-anchor"
     },
     {
       "id": "worcester-station",
@@ -83,7 +102,8 @@
       "osmId": 9155692732,
       "sourceUrl": "https://www.openstreetmap.org/node/9155692732",
       "confidence": "osm-mapped-not-field-verified",
-      "positionType": "mapped-station-point"
+      "positionType": "mapped-station-point",
+      "markerRole": "rail-station-anchor"
     },
     {
       "id": "cape-town-station",
@@ -97,7 +117,8 @@
       "osmId": 288676470,
       "sourceUrl": "https://www.openstreetmap.org/node/288676470",
       "confidence": "osm-mapped-not-field-verified",
-      "positionType": "mapped-station-point"
+      "positionType": "mapped-station-point",
+      "markerRole": "rail-station-anchor"
     }
   ],
   "triggerZones": [
@@ -110,6 +131,7 @@
       "stationAlongMetres": 0.0,
       "routeVersion": "0.1.0-unresolved-schematic",
       "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "markerRole": "story-unlock-zone",
       "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
     },
     {
@@ -121,6 +143,7 @@
       "stationAlongMetres": 472972.8525516245,
       "routeVersion": "0.1.0-unresolved-schematic",
       "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "markerRole": "story-unlock-zone",
       "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
     },
     {
@@ -132,6 +155,7 @@
       "stationAlongMetres": 698088.2356578384,
       "routeVersion": "0.1.0-unresolved-schematic",
       "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "markerRole": "story-unlock-zone",
       "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
     },
     {
@@ -143,6 +167,7 @@
       "stationAlongMetres": 931219.421550668,
       "routeVersion": "0.1.0-unresolved-schematic",
       "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "markerRole": "story-unlock-zone",
       "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
     },
     {
@@ -154,6 +179,7 @@
       "stationAlongMetres": 1141876.4667871192,
       "routeVersion": "0.1.0-unresolved-schematic",
       "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "markerRole": "story-unlock-zone",
       "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
     },
     {
@@ -165,6 +191,7 @@
       "stationAlongMetres": 1256954.7316623055,
       "routeVersion": "0.1.0-unresolved-schematic",
       "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "markerRole": "story-unlock-zone",
       "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
     },
     {
@@ -176,6 +203,7 @@
       "stationAlongMetres": 1355881.5025033648,
       "routeVersion": "0.1.0-unresolved-schematic",
       "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "markerRole": "story-unlock-zone",
       "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
     }
   ],
@@ -185,12 +213,18 @@
       "hubId": "pretoria",
       "name": "Freedom Park",
       "recordType": "attraction",
-      "lat": null,
-      "lon": null,
-      "coordinateStatus": "not-geocoded",
+      "lat": -25.7641,
+      "lon": 28.1873,
+      "coordinateStatus": "official-published-coordinate-not-field-verified",
+      "coordinateMethod": "official-published-gps converted from degrees and decimal minutes/seconds to decimal degrees",
+      "coordinateSourceId": "freedom-park-location",
+      "coordinateSourceUrl": "https://www.freedompark.co.za/wp-content/uploads/2024/04/stakeholder_magazine_2ND_term_2021-22Final_1.pdf",
       "sourceIds": [
-        "freedom-park"
+        "freedom-park",
+        "freedom-park-location"
       ],
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
       "visibilityFromTrain": "not-established"
     },
     {
@@ -198,13 +232,42 @@
       "hubId": "kimberley",
       "name": "Sol Plaatje Educational Trust and Museum",
       "recordType": "attraction",
-      "lat": null,
-      "lon": null,
-      "coordinateStatus": "not-geocoded",
+      "lat": -28.7460964,
+      "lon": 24.7633823,
+      "coordinateStatus": "osm-mapped-not-field-verified",
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "coordinateSourceId": "osm-attraction-coordinates",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/632676755",
       "sourceIds": [
-        "sol-plaatje"
+        "sol-plaatje",
+        "osm-attraction-coordinates"
       ],
-      "visibilityFromTrain": "not-established"
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
+      "visibilityFromTrain": "not-established",
+      "osmType": "way",
+      "osmId": 632676755
+    },
+    {
+      "id": "big-hole",
+      "hubId": "kimberley",
+      "name": "The Big Hole",
+      "recordType": "attraction",
+      "lat": -28.7391467,
+      "lon": 24.7585415,
+      "coordinateStatus": "osm-mapped-not-field-verified",
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "coordinateSourceId": "osm-attraction-coordinates",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/467535571",
+      "sourceIds": [
+        "big-hole",
+        "osm-attraction-coordinates"
+      ],
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
+      "visibilityFromTrain": "not-established",
+      "osmType": "way",
+      "osmId": 467535571
     },
     {
       "id": "karoo-fossil-trail",
@@ -214,9 +277,34 @@
       "lat": null,
       "lon": null,
       "coordinateStatus": "not-geocoded",
+      "coordinateMethod": null,
+      "coordinateSourceId": null,
+      "coordinateSourceUrl": null,
       "sourceIds": [
         "sanparks-karoo"
       ],
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
+      "visibilityFromTrain": "not-established",
+      "coordinateNote": "SANParks identifies the trail inside Karoo National Park but the reviewed official page does not publish a trail coordinate. The park entrance coordinate is a separate record and is not substituted for the trail."
+    },
+    {
+      "id": "karoo-national-park-entrance",
+      "hubId": "beaufort-west",
+      "name": "Karoo National Park entrance",
+      "recordType": "attraction",
+      "lat": -32.3633889,
+      "lon": 22.5412222,
+      "coordinateStatus": "official-published-coordinate-not-field-verified",
+      "coordinateMethod": "official-published-gps converted from degrees and decimal minutes/seconds to decimal degrees",
+      "coordinateSourceId": "sanparks-karoo-waypoint",
+      "coordinateSourceUrl": "https://www.sanparks.org/parks/karoo/travel/gps-waypoints",
+      "sourceIds": [
+        "sanparks-karoo",
+        "sanparks-karoo-waypoint"
+      ],
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
       "visibilityFromTrain": "not-established"
     },
     {
@@ -224,13 +312,21 @@
       "hubId": "matjiesfontein",
       "name": "Lord Milner Hotel",
       "recordType": "attraction",
-      "lat": null,
-      "lon": null,
-      "coordinateStatus": "not-geocoded",
+      "lat": -33.2308374,
+      "lon": 20.5822131,
+      "coordinateStatus": "osm-mapped-not-field-verified",
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "coordinateSourceId": "osm-attraction-coordinates",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/relation/7878336",
       "sourceIds": [
-        "matjiesfontein-history"
+        "matjiesfontein-history",
+        "osm-attraction-coordinates"
       ],
-      "visibilityFromTrain": "not-established"
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
+      "visibilityFromTrain": "not-established",
+      "osmType": "relation",
+      "osmId": 7878336
     },
     {
       "id": "zwelethemba-heritage-route",
@@ -240,24 +336,61 @@
       "lat": null,
       "lon": null,
       "coordinateStatus": "not-geocoded",
+      "coordinateMethod": null,
+      "coordinateSourceId": null,
+      "coordinateSourceUrl": null,
       "sourceIds": [
-        "worcester-heritage"
+        "worcester-heritage",
+        "worcester-heritage-map"
       ],
-      "visibilityFromTrain": "not-established"
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
+      "visibilityFromTrain": "not-established",
+      "coordinateNote": "This is a multi-stop heritage route, not a single attraction point. Public stops should be mapped individually only after their coordinates are reviewed; private homes must not become passenger prompts."
+    },
+    {
+      "id": "worcester-museum",
+      "hubId": "worcester",
+      "name": "Worcester Museum (Kleinplasie)",
+      "recordType": "attraction",
+      "lat": -33.6412485,
+      "lon": 19.4674183,
+      "coordinateStatus": "osm-mapped-not-field-verified",
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "coordinateSourceId": "osm-attraction-coordinates",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/node/3760601751",
+      "sourceIds": [
+        "worcester-heritage-map",
+        "osm-attraction-coordinates"
+      ],
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
+      "visibilityFromTrain": "not-established",
+      "osmType": "node",
+      "osmId": 3760601751
     },
     {
       "id": "district-six-museum",
       "hubId": "cape-town",
       "name": "District Six Museum",
       "recordType": "attraction",
-      "lat": null,
-      "lon": null,
-      "coordinateStatus": "not-geocoded",
+      "lat": -33.9278161,
+      "lon": 18.4237518,
+      "coordinateStatus": "osm-mapped-not-field-verified",
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "coordinateSourceId": "osm-attraction-coordinates",
+      "coordinateSourceUrl": "https://www.openstreetmap.org/way/250299433",
       "sourceIds": [
-        "district-six"
+        "district-six",
+        "osm-attraction-coordinates"
       ],
-      "visibilityFromTrain": "not-established"
+      "markerRole": "nearby-attraction",
+      "relationshipToRail": "Associated with the story hub; not asserted to lie on the rail line or be accessible from the train.",
+      "visibilityFromTrain": "not-established",
+      "osmType": "way",
+      "osmId": 250299433
     }
   ],
+  "mapNotice": "Stations, trigger zones and attractions are independent records. Attraction coordinates never alter route geometry or trigger intervals.",
   "measurementMethod": "Cumulative haversine distance on LineString, Earth mean radius 6371008.8 m; metres from Pretoria"
 }

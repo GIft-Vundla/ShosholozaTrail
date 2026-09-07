@@ -14,11 +14,35 @@
       "rights": "OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Station extract and derivative schematic distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible."
     },
     {
+      "id": "osm-attraction-coordinates",
+      "title": "OpenStreetMap attraction coordinate records",
+      "url": "https://www.openstreetmap.org/copyright",
+      "institution": "OpenStreetMap contributors",
+      "passage": "Five attraction map positions were selected by exact OpenStreetMap feature ID. Nominatim supplied a representative point for each feature. IDs, coordinates and direct object URLs are recorded in data/provenance/attractions-selected.json. These mapped positions are not field verified and make no claim about rail access or visibility.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Selected feature positions are distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible."
+    },
+    {
       "id": "freedom-park",
       "title": "Freedom Park",
       "url": "https://www.freedompark.co.za/",
       "institution": "Freedom Park",
       "passage": "Freedom Park is in Salvokop, Pretoria. Its heritage spaces commemorate people who gave their lives for South Africa's freedom. The institution describes its purpose as remembering and celebrating South Africa's heritage and cultures.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "freedom-park-location",
+      "title": "Freedom Park stakeholder magazine: visitor information",
+      "url": "https://www.freedompark.co.za/wp-content/uploads/2024/04/stakeholder_magazine_2ND_term_2021-22Final_1.pdf",
+      "institution": "Freedom Park",
+      "passage": "The official publication lists Freedom Park at Corner Koch and 7th Avenue, Salvokop, and publishes GPS coordinates S 25 45.846 and E 28 11.238. The map coordinate is the decimal conversion of that published pair.",
       "passageType": "original-paraphrase",
       "publicationDate": null,
       "reviewDate": "2026-09-08",
@@ -62,6 +86,18 @@
       "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
     },
     {
+      "id": "sanparks-karoo-waypoint",
+      "title": "Karoo National Park GPS Waypoints",
+      "url": "https://www.sanparks.org/parks/karoo/travel/gps-waypoints",
+      "institution": "South African National Parks",
+      "passage": "SANParks publishes the entrance gate waypoint as 32°21'48.2”S, 22°32'28.4”E. This locates the park entrance only. It is not substituted for the Fossil Trail and does not establish access from the train.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
       "id": "matjiesfontein-history",
       "title": "Matjiesfontein History",
       "url": "https://www.matjiesfontein.com/pages/history/",
@@ -81,6 +117,18 @@
       "passage": "Worcester Tourism presents a Zwelethemba Heritage Route. It explains the settlement's history through the displacement of residents from Sakkiesdorp. Its linked route publication includes public memorials and artists' histories, and distinguishes private residences from places open to visitors.",
       "passageType": "original-paraphrase",
       "publicationDate": "2023-10-09",
+      "reviewDate": "2026-09-08",
+      "reviewStatus": "automated-source-review; human-review-pending",
+      "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."
+    },
+    {
+      "id": "worcester-heritage-map",
+      "title": "Zwelethemba Heritage Route map",
+      "url": "https://worcestertourism.com/wp-content/uploads/2023/10/BVM-Zwelenthema-Map-Final-260623.pdf",
+      "institution": "Worcester Tourism",
+      "passage": "The published route map identifies public heritage stops, including Freedom Square and Worcester Museum, and explicitly labels several former homes as private residences not open to the public. This prototype maps Worcester Museum but leaves the multi-stop route ungeocoded.",
+      "passageType": "original-paraphrase",
+      "publicationDate": null,
       "reviewDate": "2026-09-08",
       "reviewStatus": "automated-source-review; human-review-pending",
       "rights": "Original factual paraphrase with attribution. No source images, recordings or full texts licensed for redistribution; none included."

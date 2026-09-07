@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "hash": "382a3d57ef83f67bcc8b7779bfac42fbc353f4a04152fe539c30148201848d89",
-  "bytes": 366104,
+  "hash": "7baf7340ab669beb38b80a117ddebc55d73d0f8a584e492e63193f74c88d3563",
+  "bytes": 398733,
   "assets": [
     {
       "url": "/app.js",
-      "bytes": 34330,
-      "sha256": "6c7cbceb16109f914f4ce0053723a0b1993d9ec1dbb187750f5e7aa4fa07cbb5"
+      "bytes": 45320,
+      "sha256": "fbdef3d6154880f7e21439e596ed92494653dee57f46c64c260bb9610125246e"
     },
     {
       "url": "/data/hubs.json",
-      "bytes": 8751,
-      "sha256": "3d252357c3483806b305b06a08518c08364f5bf77e3ca1c53da33027612d66a9"
+      "bytes": 15934,
+      "sha256": "8419223fbaeff71a91b796f07230fe3199e512b4744dff83c96b5e1fd6abc23e"
     },
     {
       "url": "/data/pack.v1.json",
@@ -25,8 +25,8 @@
     },
     {
       "url": "/data/sources.json",
-      "bytes": 7757,
-      "sha256": "4ac3833897f1740c8789f8acaadf14ab27dd8fe31cb49cfc11a96a3bb32d588b"
+      "bytes": 11313,
+      "sha256": "1e931a5b35668e1b4215fdbfabed5ea7ed95644bc524d1be1d2713ac790548a2"
     },
     {
       "url": "/data/traces/demo-corridor.json",
@@ -65,8 +65,13 @@
     },
     {
       "url": "/index.html",
-      "bytes": 1565,
-      "sha256": "fbec0a906480e8c886938704f9617937447d8f2d7d9c0a02ae9f7029798e905f"
+      "bytes": 1608,
+      "sha256": "b20a7a5581ab7c147afadc385903c580a7fa7d38b14c716e423dcf009a36f3a1"
+    },
+    {
+      "url": "/journey.css",
+      "bytes": 10857,
+      "sha256": "b33b591584c9df98bd62bd2d595ac7328e2f3c5593e9c772786a0ca6bf0e523f"
     },
     {
       "url": "/manifest.webmanifest",
@@ -81,7 +86,7 @@
     {
       "url": "/results/r3.json",
       "bytes": 76123,
-      "sha256": "3128efd3e89302039831129c5d7116c796598fa42c817cbec4df5bf55c421634"
+      "sha256": "2d1948a5fc5ac78542a71ab4e2e59af28d683ee0792bb1a8d4f3287ec7fb8560"
     },
     {
       "url": "/storage/drafts.js",

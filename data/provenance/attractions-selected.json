@@ -1,0 +1,95 @@
+{
+  "source": "OpenStreetMap exact-ID lookup plus named institutional GPS pages",
+  "retrievedAt": "2026-09-07T23:14:32.151046+00:00",
+  "osmLookupUrl": "https://nominatim.openstreetmap.org/lookup?format=jsonv2&osm_ids=W632676755%2CW467535571%2CR7878336%2CN3760601751%2CW250299433&addressdetails=1&extratags=1",
+  "osmAttribution": "© OpenStreetMap contributors",
+  "osmLicense": "ODbL-1.0",
+  "osmLicenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
+  "records": [
+    {
+      "attractionId": "big-hole",
+      "lat": -28.7391467,
+      "lon": 24.7585415,
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "sourceId": "osm-attraction-coordinates",
+      "sourceUrl": "https://www.openstreetmap.org/way/467535571",
+      "osmType": "way",
+      "osmId": 467535571,
+      "mappedName": "Big Hole",
+      "displayName": "Big Hole, Sol Plaatje Ward 20, Sol Plaatje Local Municipality, Frances Baard District Municipality, Northern Cape, 8301, South Africa",
+      "confidence": "osm-mapped-not-field-verified"
+    },
+    {
+      "attractionId": "district-six-museum",
+      "lat": -33.9278161,
+      "lon": 18.4237518,
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "sourceId": "osm-attraction-coordinates",
+      "sourceUrl": "https://www.openstreetmap.org/way/250299433",
+      "osmType": "way",
+      "osmId": 250299433,
+      "mappedName": "District Six Museum",
+      "displayName": "District Six Museum, 25A, Buitenkant Street, Cape Town Ward 115, Cape Town, City of Cape Town, Western Cape, 7925, South Africa",
+      "confidence": "osm-mapped-not-field-verified"
+    },
+    {
+      "attractionId": "freedom-park",
+      "lat": -25.7641,
+      "lon": 28.1873,
+      "publishedCoordinate": "Latitude S 25 45.846; Longitude E 28 11.238",
+      "sourceId": "freedom-park-location",
+      "sourceUrl": "https://www.freedompark.co.za/wp-content/uploads/2024/04/stakeholder_magazine_2ND_term_2021-22Final_1.pdf",
+      "coordinateMethod": "official-published-gps converted from degrees and decimal minutes/seconds to decimal degrees",
+      "confidence": "official-published-coordinate-not-field-verified"
+    },
+    {
+      "attractionId": "karoo-national-park-entrance",
+      "lat": -32.3633889,
+      "lon": 22.5412222,
+      "publishedCoordinate": "Latitude 32°21'48.2”S; Longitude 22°32'28.4”E",
+      "sourceId": "sanparks-karoo-waypoint",
+      "sourceUrl": "https://www.sanparks.org/parks/karoo/travel/gps-waypoints",
+      "coordinateMethod": "official-published-gps converted from degrees and decimal minutes/seconds to decimal degrees",
+      "confidence": "official-published-coordinate-not-field-verified"
+    },
+    {
+      "attractionId": "lord-milner-hotel",
+      "lat": -33.2308374,
+      "lon": 20.5822131,
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "sourceId": "osm-attraction-coordinates",
+      "sourceUrl": "https://www.openstreetmap.org/relation/7878336",
+      "osmType": "relation",
+      "osmId": 7878336,
+      "mappedName": "Lord Milner Hotel",
+      "displayName": "Lord Milner Hotel, 1, Logan Street, Laingsburg Ward 2, Matjiesfontein, Laingsburg Local Municipality, Central Karoo District Municipality, Western Cape, 6901, South Africa",
+      "confidence": "osm-mapped-not-field-verified"
+    },
+    {
+      "attractionId": "sol-plaatje-museum",
+      "lat": -28.7460964,
+      "lon": 24.7633823,
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "sourceId": "osm-attraction-coordinates",
+      "sourceUrl": "https://www.openstreetmap.org/way/632676755",
+      "osmType": "way",
+      "osmId": 632676755,
+      "mappedName": "Sol Plaatje Museum and Library",
+      "displayName": "Sol Plaatje Museum and Library, 32, Angel Street, New Park, Sol Plaatje Ward 23, Kimberley, Frances Baard District Municipality, Northern Cape, 8301, South Africa",
+      "confidence": "osm-mapped-not-field-verified"
+    },
+    {
+      "attractionId": "worcester-museum",
+      "lat": -33.6412485,
+      "lon": 19.4674183,
+      "coordinateMethod": "OpenStreetMap feature representative point returned by Nominatim exact-ID lookup",
+      "sourceId": "osm-attraction-coordinates",
+      "sourceUrl": "https://www.openstreetmap.org/node/3760601751",
+      "osmType": "node",
+      "osmId": 3760601751,
+      "mappedName": "Worcester Museum (Kleinplasie)",
+      "displayName": "Worcester Museum (Kleinplasie), Traub, Industria, Breede Valley Ward 8, Worcester, Breede Valley Local Municipality, Cape Winelands District Municipality, Western Cape, South Africa",
+      "confidence": "osm-mapped-not-field-verified"
+    }
+  ]
+}

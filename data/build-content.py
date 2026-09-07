@@ -15,18 +15,26 @@ def source(id, title, url, institution, passage, publication=None):
 sources = [
     source('osm-stations', 'OpenStreetMap station anchor records', 'https://www.openstreetmap.org/copyright', 'OpenStreetMap contributors',
            'Seven mapped station or stop-position anchors were retrieved from the OpenStreetMap API. Their selected node IDs, versions and coordinates are recorded in data/provenance/osm-stations-selected.json. Connecting these points with straight lines produces an unresolved schematic, not sourced railway geometry.'),
+    source('osm-attraction-coordinates', 'OpenStreetMap attraction coordinate records', 'https://www.openstreetmap.org/copyright', 'OpenStreetMap contributors',
+           'Five attraction map positions were selected by exact OpenStreetMap feature ID. Nominatim supplied a representative point for each feature. IDs, coordinates and direct object URLs are recorded in data/provenance/attractions-selected.json. These mapped positions are not field verified and make no claim about rail access or visibility.'),
     source('freedom-park', 'Freedom Park', 'https://www.freedompark.co.za/', 'Freedom Park',
            'Freedom Park is in Salvokop, Pretoria. Its heritage spaces commemorate people who gave their lives for South Africa\'s freedom. The institution describes its purpose as remembering and celebrating South Africa\'s heritage and cultures.'),
+    source('freedom-park-location', 'Freedom Park stakeholder magazine: visitor information', 'https://www.freedompark.co.za/wp-content/uploads/2024/04/stakeholder_magazine_2ND_term_2021-22Final_1.pdf', 'Freedom Park',
+           'The official publication lists Freedom Park at Corner Koch and 7th Avenue, Salvokop, and publishes GPS coordinates S 25 45.846 and E 28 11.238. The map coordinate is the decimal conversion of that published pair.'),
     source('sol-plaatje', 'Sol Plaatje House: Who is Sol Plaatje?', 'https://www.education.gov.za/ContactUs/SolPlaatjeHouse.aspx', 'Department of Basic Education; page credits Sol Plaatje Educational Trust',
            'Sol Plaatje worked as a teacher, interpreter, journalist and writer. His English books include Native Life in South Africa (1916) and Mhudi (1930). He also wrote in Setswana and translated Shakespeare. The Sol Plaatje Educational Trust and Museum occupies his Kimberley home.'),
     source('schreiner-de-aar', 'Olive Schreiner to Edward Carpenter, 26 October 1913', 'https://www.oliveschreiner.org/vre?colid=39&letterid=17&view=collections', 'Olive Schreiner Letters Online; archival record credits National English Literary Museum',
            'The archive catalogues a letter from Olive Schreiner to Edward Carpenter, dated 26 October 1913 and sent from De Aar. In it she discusses plans to travel from Africa to England and the help offered by friends.', '1913-10-26'),
     source('sanparks-karoo', 'Karoo National Park: Hikes, Walks and Trails', 'https://www.sanparks.org/parks/karoo/what-to-do/activities/hikes-walks-trails', 'South African National Parks',
            'The Fossil Trail in Karoo National Park presents the geology and palaeontology of the Great Karoo. SANParks describes genuine fossils and petrified wood displayed along a paved walkway. This is a park attraction, not a view promised from a train.'),
+    source('sanparks-karoo-waypoint', 'Karoo National Park GPS Waypoints', 'https://www.sanparks.org/parks/karoo/travel/gps-waypoints', 'South African National Parks',
+           'SANParks publishes the entrance gate waypoint as 32°21\'48.2”S, 22°32\'28.4”E. This locates the park entrance only. It is not substituted for the Fossil Trail and does not establish access from the train.'),
     source('matjiesfontein-history', 'Matjiesfontein History', 'https://www.matjiesfontein.com/pages/history/', 'Matjiesfontein / Lord Milner Hotel',
            'Matjiesfontein\'s own history page identifies railway worker James Douglas Logan as its founder. It records Olive Schreiner\'s residency and says the Milner Hotel served as a military hospital during the South African War. David Rawdon later restored the village and reopened the hotel in 1970.'),
     source('worcester-heritage', 'Zwelethemba Heritage Route', 'https://worcestertourism.com/places/zwelethemba-route/', 'Worcester Tourism',
            'Worcester Tourism presents a Zwelethemba Heritage Route. It explains the settlement\'s history through the displacement of residents from Sakkiesdorp. Its linked route publication includes public memorials and artists\' histories, and distinguishes private residences from places open to visitors.', '2023-10-09'),
+    source('worcester-heritage-map', 'Zwelethemba Heritage Route map', 'https://worcestertourism.com/wp-content/uploads/2023/10/BVM-Zwelenthema-Map-Final-260623.pdf', 'Worcester Tourism',
+           'The published route map identifies public heritage stops, including Freedom Square and Worcester Museum, and explicitly labels several former homes as private residences not open to the public. This prototype maps Worcester Museum but leaves the multi-stop route ungeocoded.'),
     source('district-six', 'About District Six Museum', 'https://www.districtsix.co.za/', 'District Six Museum',
            'The District Six Museum Foundation formed in 1989 after the Hands Off District Six conference. The museum opened on 10 December 1994 with the exhibition Streets: Retracing District Six. Its work connects place, memory and the history of displacement.'),
     source('big-hole', 'The Big Hole: history', 'https://thebighole.com/the-big-hole/', 'The Big Hole museum and visitor attraction',
@@ -71,6 +79,7 @@ def write(name, obj):
     (ROOT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
 sources[0]['rights'] = 'OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Station extract and derivative schematic distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible.'
+next(record for record in sources if record['id'] == 'osm-attraction-coordinates')['rights'] = 'OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Selected feature positions are distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible.'
 write('sources.json', dict(version=VERSION, records=sources))
 write('pack.v1.json', dict(version=VERSION, language='en', status='editorial-draft-human-review-pending',
                          reviewDate=REVIEW, chapters=chapters,
