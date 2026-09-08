@@ -9,11 +9,20 @@ directory = "./public"
 binding = "ASSETS"
 run_worker_first = true
 not_found_handling = "single-page-application"
+html_handling = "none"
 
 [vars]
-AI_ENABLED = "false"
-# Set an account-verified model ID before the separately gated AI evaluation.
-GEMINI_MODEL = "unconfigured"
+AI_ENABLED = "true"
+AI_VALIDATED = "false"
+AI_EXPERIMENTAL = "true"
+AI_PROVIDER = "workers-ai"
+AI_MODEL = "@cf/zai-org/glm-4.7-flash"
+
+# This binding uses the account's Workers AI allocation and does not expose a
+# provider API key to the Worker or browser.
+[ai]
+binding = "AI"
+remote = true
 
 [[d1_databases]]
 binding = "DB"

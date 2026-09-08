@@ -9,7 +9,10 @@ self.addEventListener('fetch', event => {
     if (pointer) {
       const { cacheName } = await pointer.json();
       const cache = await caches.open(cacheName);
-      const path = request.mode === 'navigate' ? '/index.html' : url.pathname;
+      // Navigations resolve to whichever shell owns the path: the React
+      // front door, or the journey engine mounted under /app.
+      const engineShell = url.pathname === '/app' || url.pathname.startsWith('/app/');
+      const path = request.mode === 'navigate' ? (engineShell ? '/app.html' : '/index.html') : url.pathname;
       const cached = await cache.match(path);
       if (cached) return cached;
     }

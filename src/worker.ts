@@ -7,10 +7,18 @@ export interface Env extends BackendEnv {
 
 function secure(response: Response): Response {
   const headers = new Headers(response.headers);
+  const mapHosts = [
+    'https://tile.openstreetmap.org',
+    'https://*.tile.openstreetmap.org',
+    'https://*.tile.opentopomap.org',
+    'https://*.tiles.maps.eox.at',
+    'https://s3.amazonaws.com',
+    'https://api.maptiler.com'
+  ].join(' ');
   headers.set('X-Content-Type-Options', 'nosniff');
   headers.set('Referrer-Policy', 'no-referrer');
   headers.set('Permissions-Policy', 'geolocation=(self), camera=(), microphone=()');
-  headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
+  headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self'; img-src 'self' data: blob: ${mapHosts}; connect-src 'self' ${mapHosts}; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'`);
   headers.set('Strict-Transport-Security', 'max-age=31536000');
   headers.set('X-Frame-Options', 'DENY');
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
@@ -31,7 +39,14 @@ export default {
     if (path === '/api' || path.startsWith('/api/')) {
       return secure(Response.json({ error: 'Endpoint not found' }, { status: 404, headers: { 'Cache-Control': 'no-store' } }));
     }
+    // The React front door owns "/". Navigations under /app are served the
+    // vanilla journey-engine shell rather than the React single-page shell.
     try {
+      if (path === '/app' || path.startsWith('/app/')) {
+        const shell = new URL(request.url);
+        shell.pathname = '/app.html';
+        return secure(await env.ASSETS.fetch(new Request(shell, request)));
+      }
       return secure(await env.ASSETS.fetch(request));
     } catch {
       return secure(new Response('The application could not be loaded. Please try again.', { status: 503 }));

@@ -4,8 +4,8 @@ const DEFAULT_CENTER = [23.31, -30.03];
 const ATTRIBUTION = Object.freeze({
   osm: '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>',
   topo: 'Map style: <a href="https://opentopomap.org" target="_blank" rel="noopener">© OpenTopoMap</a>',
-  carto: '<a href="https://carto.com/attributions" target="_blank" rel="noopener">© CARTO</a>',
-  nasa: 'Imagery: <a href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">NASA EOSDIS GIBS</a>',
+  eox: 'Imagery: <a href="https://cloudless.eox.at" target="_blank" rel="noopener">EOxCloudless</a> by <a href="https://eox.at" target="_blank" rel="noopener">EOX IT Services GmbH</a> (modified Copernicus Sentinel data 2025)',
+  eoxOverlay: 'Labels: <a href="https://maps.eox.at" target="_blank" rel="noopener">© EOX and MapServer</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>',
 });
 
 const BACKGROUNDS = Object.freeze({
@@ -77,6 +77,14 @@ function rasterStyle(id, sources, layers, metadata = {}) {
   };
 }
 
+function configuredAttribution(tiles, fallback) {
+  const urls = Array.isArray(tiles) ? tiles : [tiles];
+  if (urls.some(url => String(url).includes('api.maptiler.com'))) {
+    return '<a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">© MapTiler</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>';
+  }
+  return fallback;
+}
+
 /**
  * Returns self-contained MapLibre style objects. Tile URLs may be replaced at
  * runtime, including with a restricted MapTiler URL supplied by the caller.
@@ -89,55 +97,66 @@ export function createBasemapStyles(config = {}) {
     'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
     'https://c.tile.opentopomap.org/{z}/{x}/{y}.png',
   ];
-  const darkTiles = config.darkTiles ?? [
-    'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-    'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-    'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-  ];
+  // CARTO's anonymous raster service now adds an API-key watermark. Reuse the
+  // standard OSM raster with a restrained night treatment for a keyless view.
+  const darkTiles = config.darkTiles ?? streetsTiles;
   const satelliteTiles = config.satelliteTiles ?? [
-    'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg',
+    'https://a.tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg',
+    'https://b.tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg',
+    'https://c.tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg',
   ];
-  const hybridLabelTiles = config.hybridLabelTiles ?? streetsTiles;
+  const hybridLabelTiles = config.hybridLabelTiles ?? [
+    'https://a.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
+    'https://b.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
+    'https://c.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
+  ];
   const terrainTiles = config.terrainTiles ?? ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'];
+  const satelliteMaxZoom = config.satelliteMaxZoom ?? 14;
+  const satelliteAttribution = config.satelliteAttribution ?? (config.satelliteTiles ? configuredAttribution(satelliteTiles, ATTRIBUTION.eox) : ATTRIBUTION.eox);
 
   return {
     streets: {
       id: 'streets', label: 'Streets', online: true, maxUsefulZoom: 19,
       style: rasterStyle('streets', { base: rasterSource(streetsTiles, ATTRIBUTION.osm) }, [
         { id: 'streets-raster', type: 'raster', source: 'base' },
-      ]),
+      ], { 'shosholoza:provider': config.streetsTiles ? 'configured' : 'openstreetmap' }),
     },
     outdoor: {
       id: 'outdoor', label: 'Terrain', online: true, maxUsefulZoom: 17,
       style: rasterStyle('outdoor', {
-        base: rasterSource(outdoorTiles, `${ATTRIBUTION.topo} · ${ATTRIBUTION.osm}`, 17),
+        base: rasterSource(outdoorTiles, config.outdoorTiles ? configuredAttribution(outdoorTiles, ATTRIBUTION.osm) : `${ATTRIBUTION.topo} · ${ATTRIBUTION.osm}`, 17),
         elevation: { type: 'raster-dem', tiles: terrainTiles, tileSize: 256, maxzoom: 15, encoding: 'terrarium', attribution: 'Elevation: Mapzen terrain tiles' },
       }, [
         { id: 'outdoor-raster', type: 'raster', source: 'base' },
         { id: 'terrain-hillshade', type: 'hillshade', source: 'elevation', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#46351e', 'hillshade-highlight-color': '#f6e6be' } },
-      ], { 'shosholoza:terrain': true }),
+      ], { 'shosholoza:terrain': true, 'shosholoza:provider': config.outdoorTiles ? 'configured' : 'opentopomap' }),
     },
     dark: {
       id: 'dark', label: 'Night', online: true, maxUsefulZoom: 19,
-      style: rasterStyle('dark', { base: rasterSource(darkTiles, `${ATTRIBUTION.carto} · ${ATTRIBUTION.osm}`, 19, 256) }, [
-        { id: 'dark-raster', type: 'raster', source: 'base' },
-      ]),
+      style: rasterStyle('dark', { base: rasterSource(darkTiles, configuredAttribution(darkTiles, ATTRIBUTION.osm), 19, 256) }, [
+        { id: 'dark-raster', type: 'raster', source: 'base', paint: {
+          'raster-brightness-min': 0.025,
+          'raster-brightness-max': 0.34,
+          'raster-saturation': -0.72,
+          'raster-contrast': 0.16,
+        } },
+      ], { 'shosholoza:provider': config.darkTiles ? 'configured' : 'openstreetmap-night-treatment' }),
     },
     satellite: {
-      id: 'satellite', label: 'Satellite', online: true, maxUsefulZoom: config.satelliteMaxZoom ?? 9,
-      style: rasterStyle('satellite', { base: rasterSource(satelliteTiles, config.satelliteAttribution ?? ATTRIBUTION.nasa, config.satelliteMaxZoom ?? 9) }, [
-        { id: 'satellite-raster', type: 'raster', source: 'base', paint: { 'raster-saturation': 0.08, 'raster-contrast': 0.08 } },
-      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'nasa-gibs' }),
+      id: 'satellite', label: 'Satellite', online: true, maxUsefulZoom: satelliteMaxZoom,
+      style: rasterStyle('satellite', { base: rasterSource(satelliteTiles, satelliteAttribution, satelliteMaxZoom) }, [
+        { id: 'satellite-raster', type: 'raster', source: 'base', paint: { 'raster-saturation': 0.12, 'raster-contrast': 0.09, 'raster-brightness-max': 1 } },
+      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'eox-cloudless-2025' }),
     },
     hybrid: {
-      id: 'hybrid', label: 'Hybrid', online: true, maxUsefulZoom: config.satelliteMaxZoom ?? 9,
+      id: 'hybrid', label: 'Hybrid', online: true, maxUsefulZoom: satelliteMaxZoom,
       style: rasterStyle('hybrid', {
-        imagery: rasterSource(satelliteTiles, config.satelliteAttribution ?? ATTRIBUTION.nasa, config.satelliteMaxZoom ?? 9),
-        labels: rasterSource(hybridLabelTiles, ATTRIBUTION.osm, 19),
+        imagery: rasterSource(satelliteTiles, satelliteAttribution, satelliteMaxZoom),
+        labels: rasterSource(hybridLabelTiles, config.hybridLabelTiles ? configuredAttribution(hybridLabelTiles, ATTRIBUTION.osm) : ATTRIBUTION.eoxOverlay, 19),
       }, [
         { id: 'hybrid-imagery', type: 'raster', source: 'imagery', paint: { 'raster-saturation': 0.05, 'raster-contrast': 0.08 } },
-        { id: 'hybrid-reference', type: 'raster', source: 'labels', paint: { 'raster-opacity': config.hybridLabelOpacity ?? 0.48, 'raster-contrast': 0.35 } },
-      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'nasa-gibs' }),
+        { id: 'hybrid-reference', type: 'raster', source: 'labels', paint: { 'raster-opacity': config.hybridLabelOpacity ?? (config.hybridLabelTiles ? 0.38 : 0.92), 'raster-contrast': config.hybridLabelTiles ? 0.28 : 0.08 } },
+      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'eox-cloudless-2025' }),
     },
     offline: {
       id: 'offline', label: 'Offline', online: false, maxUsefulZoom: 12,
@@ -174,9 +193,11 @@ export function createImmersiveMap(options) {
 
   const runtimeConfig = { ...(globalThis.SHOSHOLOZA_MAP_CONFIG ?? {}), ...(options.mapConfig ?? {}) };
   const styles = createBasemapStyles(runtimeConfig);
+  const keylessStyles = createBasemapStyles();
   const containerElement = typeof options.container === 'string' ? document.getElementById(options.container) : options.container;
   if (!containerElement) throw new Error('The immersive map container was not found.');
   let activeStyle = styles[options.initialStyle] ? options.initialStyle : (globalThis.navigator?.onLine === false ? 'offline' : 'dark');
+  let activeDefinition = styles[activeStyle];
   let preferredOnlineStyle = activeStyle === 'offline' ? 'dark' : activeStyle;
   let follow = options.follow !== false;
   let cinematic = options.cinematic !== false;
@@ -187,10 +208,12 @@ export function createImmersiveMap(options) {
   let previewFrame = null;
   let styleSequence = 0;
   let styleControl = null;
+  const providerFallbacks = new Set();
   const markers = new Map();
   containerElement.dataset.mapEngine = 'maplibre';
   containerElement.dataset.activeStyle = activeStyle;
   containerElement.dataset.offlineFallback = String(activeStyle === 'offline');
+  containerElement.dataset.mapProvider = activeDefinition.style.metadata?.['shosholoza:provider'] ?? 'local';
 
   const notify = (status, detail = {}) => options.onStatus?.({ status, basemap: activeStyle, ...detail });
   const map = new maplibre.Map({
@@ -272,7 +295,7 @@ export function createImmersiveMap(options) {
         center: next,
         bearing: cinematic ? trainBearing : map.getBearing(),
         pitch: cinematic ? (movement.pitch ?? 58) : map.getPitch(),
-        zoom: Math.min(styles[activeStyle].maxUsefulZoom, movement.zoom ?? Math.max(map.getZoom(), 7.2)),
+        zoom: Math.min(activeDefinition.maxUsefulZoom, movement.zoom ?? Math.max(map.getZoom(), 7.2)),
         duration: options.reducedMotion ? 0 : (movement.duration ?? 900),
         essential: true,
         padding: movement.padding ?? { top: 80, right: 30, bottom: 180, left: 30 },
@@ -281,16 +304,19 @@ export function createImmersiveMap(options) {
     options.onPosition?.({ coordinates: next, bearing: trainBearing, follow, cinematic });
   }
 
-  async function setBasemap(id, { remember = true } = {}) {
-    const requested = styles[id] ?? styles.offline;
+  async function setBasemap(id, { remember = true, definition } = {}) {
+    const requested = definition ?? styles[id] ?? styles.offline;
     if (requested.online && globalThis.navigator?.onLine === false) {
       notify('offline-fallback', { requested: id });
       return setBasemap('offline', { remember: false });
     }
+    if (!definition) providerFallbacks.delete(requested.id);
     if (remember && requested.online) preferredOnlineStyle = requested.id;
     activeStyle = requested.id;
+    activeDefinition = requested;
     containerElement.dataset.activeStyle = activeStyle;
     containerElement.dataset.offlineFallback = String(activeStyle === 'offline');
+    containerElement.dataset.mapProvider = requested.style.metadata?.['shosholoza:provider'] ?? 'local';
     const sequence = ++styleSequence;
     map.setStyle(requested.style, { diff: false });
     await new Promise(resolve => map.once('style.load', resolve));
@@ -302,7 +328,12 @@ export function createImmersiveMap(options) {
     if (styleControl) {
       for (const candidate of styleControl.querySelectorAll('[data-map-style]')) candidate.setAttribute('aria-pressed', String(candidate.dataset.mapStyle === activeStyle));
       const status = styleControl.querySelector('.immersive-map-status');
-      if (status) status.textContent = activeStyle === 'offline' ? 'Offline map active. Route and stops remain available.' : `${styles[activeStyle].label} map active.`;
+      if (status) {
+        const provider = requested.style.metadata?.['shosholoza:provider'];
+        status.textContent = activeStyle === 'offline'
+          ? 'Offline map active. Route and stops remain available.'
+          : `${requested.label} map active${provider === 'eox-cloudless-2025' ? ' · cloudless Sentinel-2 mosaic' : ''}.`;
+      }
     }
     options.onStyleChange?.({ id: activeStyle, definition: requested });
     notify('style-ready');
@@ -379,7 +410,18 @@ export function createImmersiveMap(options) {
   globalThis.addEventListener?.('online', onlineHandler);
   globalThis.addEventListener?.('offline', offlineHandler);
   map.on('load', () => { addJourneyLayers(); addMarkers(); fitRoute({ duration: 0 }); notify('ready'); });
-  map.on('error', event => notify('map-resource-error', { message: event.error?.message ?? 'A map resource could not load.' }));
+  map.on('error', () => {
+    const provider = activeDefinition.style.metadata?.['shosholoza:provider'];
+    if (provider === 'configured' && !providerFallbacks.has(activeStyle)) {
+      providerFallbacks.add(activeStyle);
+      // Provider errors can include credential-bearing URLs. Never expose the
+      // raw MapLibre error to callbacks, logs, or the DOM.
+      notify('provider-fallback', { requested: activeStyle, fallbackProvider: keylessStyles[activeStyle].style.metadata?.['shosholoza:provider'] });
+      queueMicrotask(() => setBasemap(activeStyle, { remember: false, definition: keylessStyles[activeStyle] }));
+      return;
+    }
+    notify('map-resource-error', { resource: activeStyle });
+  });
 
   return {
     map,

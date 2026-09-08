@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ context, page }) => {
   await context.clearCookies();
-  await page.goto('/');
+  await page.goto('/app');
   await expect(page.locator('#map')).toBeVisible();
 });
 
@@ -88,12 +88,12 @@ test('installed pack reopens the journey and a chapter with the browser offline'
   await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null)).toBe(true);
 
   await context.setOffline(true);
-  await page.goto('/stories/kimberley', { waitUntil: 'domcontentloaded' });
+  await page.goto('/app/stories/kimberley', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('#network')).toContainText('Offline');
   await expect(page.locator('main h1')).toContainText(/Kimberley/i);
   await expect(page.locator('#startup-error')).toHaveCount(0);
 
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.goto('/app', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('#map')).toBeVisible();
   await expect(page.locator('.map-key')).toContainText(/unverified|not verified/i);
 });

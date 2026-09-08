@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "hash": "3a1b5af160793abbfd76996d55ea045bacda4009da29ba62a01356c0fcf1f98e",
-  "bytes": 1299475,
+  "hash": "883e141c3057f7b075001fa880e4df4d0957e4410353debaff20529026ef5275",
+  "bytes": 3589459,
   "assets": [
     {
       "url": "/animations/README.md",
@@ -29,9 +29,154 @@
       "sha256": "5b5f39ff4fef7e21ae29f8b75684043541b5e4fd141ce11ceadcce7d42fcb116"
     },
     {
+      "url": "/app-assets/fraunces-latin-400-normal-6IfK1voy.woff2",
+      "bytes": 17968,
+      "sha256": "e558f39453a9c611908be04294b50dea5f21ae6c49b41c6e47f4115e91f90209"
+    },
+    {
+      "url": "/app-assets/fraunces-latin-400-normal-NUPT2cO8.woff",
+      "bytes": 22480,
+      "sha256": "695442434f77c44190b48a022f943e052bb60d49ed3c7940ea60a16ac3faf8b3"
+    },
+    {
+      "url": "/app-assets/fraunces-latin-600-normal-BFCDtZfi.woff2",
+      "bytes": 18096,
+      "sha256": "3a1de7711d147bad4422825045f87597fd77cca72e7c96d3b0a81735d00dda82"
+    },
+    {
+      "url": "/app-assets/fraunces-latin-600-normal-DL5QCzvS.woff",
+      "bytes": 22512,
+      "sha256": "d78e988f844f474ce9b1cc10c72501add6c5056763bfe83ff2a8e2fcb6708ad0"
+    },
+    {
+      "url": "/app-assets/fraunces-latin-700-normal-CEOla-zY.woff2",
+      "bytes": 18212,
+      "sha256": "c38570d224b830056e69484bb9e768e1d3fa7ba4755c8891a3c6d366194d2ff3"
+    },
+    {
+      "url": "/app-assets/fraunces-latin-700-normal-DTjk5d1Q.woff",
+      "bytes": 22516,
+      "sha256": "1f9b0930f7a5e2b6aaba0df15f21bcdebebfcaff4b704daf3619589da69fd2a4"
+    },
+    {
+      "url": "/app-assets/index-BNLjyx6F.css",
+      "bytes": 19463,
+      "sha256": "316f8af9904d7e7bbc1eaa997bd19b995d387f26c3fe916c7519317587dab44e"
+    },
+    {
+      "url": "/app-assets/index-DIRQmpYH.js",
+      "bytes": 262094,
+      "sha256": "b3f6777e368b6ac5de9bcf89f9adc1fba5bdf9c00299e1cfedbd358d26947d23"
+    },
+    {
+      "url": "/app-assets/outfit-latin-300-normal-AWLfuCom.woff",
+      "bytes": 18196,
+      "sha256": "bcc41559359a3cb79105f71979b7e70f9bba8ee39460db790057d3f3c0cc77eb"
+    },
+    {
+      "url": "/app-assets/outfit-latin-300-normal-CRYTwY6m.woff2",
+      "bytes": 13956,
+      "sha256": "ef88e74f63ce75b54cce4d5a4087c6f180750b9ebae6ab6e5bf2a9939bf6958f"
+    },
+    {
+      "url": "/app-assets/outfit-latin-400-normal-BGsTXAXT.woff2",
+      "bytes": 14032,
+      "sha256": "71f028fd2349990b3f8aa643abe767e82e0f596be407ae66f0004ff164121bdb"
+    },
+    {
+      "url": "/app-assets/outfit-latin-400-normal-DMwTpYkH.woff",
+      "bytes": 18232,
+      "sha256": "f329dc36d2d9285431fb8322f5e951def9cac4a42c1cada679747f7c64b04916"
+    },
+    {
+      "url": "/app-assets/outfit-latin-500-normal-ClnHRwRh.woff",
+      "bytes": 17688,
+      "sha256": "40083be5d9c1935c562bfe9be662d5a2798910deee9e8049509142549a995626"
+    },
+    {
+      "url": "/app-assets/outfit-latin-500-normal-DKnIMDSk.woff2",
+      "bytes": 13528,
+      "sha256": "fc9bff941def6d924a71632bd8a93190528872eae6414844f3c367ff948d92fd"
+    },
+    {
+      "url": "/app-assets/outfit-latin-600-normal-B7SfZ07L.woff2",
+      "bytes": 14140,
+      "sha256": "8cfe15c2c6de6ef8efff3eedbd52a383ac9ef23d6c23f6cd9f9b838f5f37dc36"
+    },
+    {
+      "url": "/app-assets/outfit-latin-600-normal-BEfTtDA7.woff",
+      "bytes": 18412,
+      "sha256": "3d1cd1b42cb525acde934764b2adec41dddf7932e1a965392d285efd56f2c148"
+    },
+    {
+      "url": "/app-assets/outfit-latin-700-normal-Cu9v6i1X.woff2",
+      "bytes": 14060,
+      "sha256": "5d5e3734089a74707292ce8a3e186def34cd63e33879f9ac3689a8d8da9d0706"
+    },
+    {
+      "url": "/app-assets/outfit-latin-700-normal-D4itBLBr.woff",
+      "bytes": 18344,
+      "sha256": "fb730df77799be655b0028de3ff2952a6ebcd3ca85d32cbf188c6f3ea66f82b7"
+    },
+    {
+      "url": "/app.html",
+      "bytes": 1762,
+      "sha256": "c41da78c613aa186038fa610014f86d4b5ae5023e827b02f541734259f913066"
+    },
+    {
       "url": "/app.js",
-      "bytes": 47332,
-      "sha256": "d4f6d6f055682c777a8f68c3f1e0794c7985d35a4280a2cf8cae0820a4bb5ea4"
+      "bytes": 48468,
+      "sha256": "b910f82d0edfa656e7382cdb32911d5de5cd1897ae02205c63f7bc3d5c4b1efe"
+    },
+    {
+      "url": "/assets/photo-credits.json",
+      "bytes": 3869,
+      "sha256": "250788be39521e6d0975683e022eff47a0051b7330f9930ca7d92decb3def5e8"
+    },
+    {
+      "url": "/assets/photos/beaufort-west.webp",
+      "bytes": 234604,
+      "sha256": "aba82e70a48aa0dd0b4d4eaed0befbb1440232b0456f51c6d645e280a5aacb74"
+    },
+    {
+      "url": "/assets/photos/cape-town.webp",
+      "bytes": 249800,
+      "sha256": "f6ec516c0b6f30bfee38549f070dee250235c31c02abbbdaa801746cf4c30ee2"
+    },
+    {
+      "url": "/assets/photos/de-aar.webp",
+      "bytes": 36704,
+      "sha256": "3c9fdff60a7a4f1dc09ac6cc398824938879d9098b5acd184e36395d99e49c90"
+    },
+    {
+      "url": "/assets/photos/hero-train.webp",
+      "bytes": 46606,
+      "sha256": "3ddc5cff99a2341957ba18c0b6a1d653d9088ec30317e8a5f01d42d914e9ea90"
+    },
+    {
+      "url": "/assets/photos/johannesburg.webp",
+      "bytes": 143920,
+      "sha256": "18b822aec67991afb3b265a999e79ec1feb47d0640313a2417f8919e44ace30e"
+    },
+    {
+      "url": "/assets/photos/kimberley.webp",
+      "bytes": 268716,
+      "sha256": "a8890b807c43bf6783ffad7d45e62122f03c616642813595e8886a8725ed13dc"
+    },
+    {
+      "url": "/assets/photos/matjiesfontein.webp",
+      "bytes": 220558,
+      "sha256": "9e2de3e06950c9d9a1a9d8acc37387efd9667445974679d217c9b649e0730320"
+    },
+    {
+      "url": "/assets/photos/pretoria.webp",
+      "bytes": 249520,
+      "sha256": "f55b2c0b9761ac4aa63554c1432520c6b67a42e86a6ef401f5ed15ffb35cfe84"
+    },
+    {
+      "url": "/assets/photos/worcester.webp",
+      "bytes": 264972,
+      "sha256": "2b773c1707ee202fe10564dd3509523041a4b22fd6f5033de56db330cbe2db0c"
     },
     {
       "url": "/data/hubs.json",
@@ -90,8 +235,8 @@
     },
     {
       "url": "/index.html",
-      "bytes": 1739,
-      "sha256": "27ea3097e36fb551cab652b393bfceae85b07206a08b9e2518ab694ad62061a9"
+      "bytes": 650,
+      "sha256": "9a9f3ce3526c085da9cb7aad7998b21bf6de4d34d6015a0f2f6bbe2f45955bc9"
     },
     {
       "url": "/journey.css",
@@ -105,18 +250,18 @@
     },
     {
       "url": "/map/README.md",
-      "bytes": 2021,
-      "sha256": "91866c3ff3b8842c3b97c8c0ef2bfc9d9d7e609d58a62fff3c8ea20a54b99b7d"
+      "bytes": 3916,
+      "sha256": "f88b7b2ae786904ac174f5697b26e09bacc1b162f68b630cba538411c95c0b6e"
     },
     {
       "url": "/map/immersive-map.css",
-      "bytes": 4734,
-      "sha256": "682b0b5dee909ce34d35f41b99ba3a005c1586e17cc7d4b4b7e26fc4185b8c04"
+      "bytes": 4752,
+      "sha256": "accd1f4b2bd44803fd47e9c53230540db83145ec9c2bd50172357cc413abebe0"
     },
     {
       "url": "/map/immersive-map.js",
-      "bytes": 22092,
-      "sha256": "5fb9b3710474020241b23ead78f31515318a6dadecef26f0e1e8eced7b26ce82"
+      "bytes": 25156,
+      "sha256": "827245730c8c0ab21bf272422249095e7a0b726442033f2a4343e349842ef667"
     },
     {
       "url": "/results/r10.json",

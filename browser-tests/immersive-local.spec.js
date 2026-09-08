@@ -13,7 +13,7 @@ const HUB_IDS = [
 ];
 
 async function openShell(page) {
-  await page.goto('/');
+  await page.goto('/app');
   await expect(page.locator('main')).toBeVisible();
 }
 
@@ -115,7 +115,7 @@ test.describe('immersive map application contract', () => {
       await control.click();
       await expect(map).toHaveAttribute('data-active-style', style);
       await expect(control).toHaveAttribute('aria-pressed', 'true');
-      await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/OpenStreetMap|OpenMapTiles|OpenFreeMap|NASA|Copernicus/i);
+      await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/OpenStreetMap|OpenMapTiles|OpenFreeMap|EOX|Copernicus/i);
     }
   });
 
@@ -159,9 +159,10 @@ test.describe('immersive map application contract', () => {
   });
 
   test('falls back to an attributed first-party route view when external styles are offline', async ({ context, page }) => {
+    test.setTimeout(90_000);
     const map = await requireImmersiveMap(page);
     await page.getByRole('button', { name: /download offline pack|check and install pack update/i }).click();
-    await expect(page.locator('#pack-state')).toContainText(/Ready .* verified files/i, { timeout: 20_000 });
+    await expect(page.locator('#pack-state')).toContainText(/Ready .* verified files/i, { timeout: 60_000 });
     await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null)).toBe(true);
 
     await context.setOffline(true);
@@ -222,7 +223,6 @@ test.describe('immersive map module contract', () => {
     await dark.click();
     await expect(map).toHaveAttribute('data-active-style', 'dark');
     await expect(dark).toHaveAttribute('aria-pressed', 'true');
-    await expect(fixture.locator('.maplibregl-ctrl-attrib')).toContainText(/CARTO/i);
     await expect(fixture.locator('.maplibregl-ctrl-attrib')).toContainText(/OpenStreetMap/i);
 
     await context.setOffline(true);

@@ -20,6 +20,15 @@ function publicPath(pathname) {
   return candidate.startsWith(root) ? candidate : null;
 }
 
+async function isFile(candidate) {
+  if (!candidate) return false;
+  try {
+    return (await stat(candidate)).isFile();
+  } catch {
+    return false;
+  }
+}
+
 const server = createServer(async (request, response) => {
   const url = new URL(request.url, 'http://127.0.0.1');
   if (url.pathname === '/api/health') {
@@ -27,9 +36,12 @@ const server = createServer(async (request, response) => {
     response.end(JSON.stringify({ readiness: 'working-towards-trl5', localHarness: true }));
     return;
   }
+  const engineShell = url.pathname === '/app' || url.pathname.startsWith('/app/');
   let file = publicPath(url.pathname === '/' ? '/index.html' : url.pathname);
   try {
-    if (!file || !(await stat(file)).isFile()) file = join(root, 'index.html');
+    // stat() rejects for paths that do not exist, so probe before falling back
+    // to whichever shell owns the route: React at "/", the engine under /app.
+    if (!(await isFile(file))) file = join(root, engineShell ? 'app.html' : 'index.html');
     response.writeHead(200, {
       'content-type': types.get(extname(file)) || 'application/octet-stream',
       'cache-control': 'no-store',
@@ -40,5 +52,6 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(4173, '127.0.0.1');
+// PORT lets a second agent or a parallel suite bind its own port.
+server.listen(Number(process.env.PORT) || 4173, '127.0.0.1');
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => server.close(() => process.exit(0)));

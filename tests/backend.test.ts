@@ -90,7 +90,7 @@ test('per-session and global AI budgets are enforced by SQL and persist across r
 
 async function aiSetup() {
   const setupResult = setup(); const { env, room, request } = setupResult; const member = await room();
-  env.AI_ENABLED = 'true'; env.AI_VALIDATED = 'true'; env.GEMINI_API_KEY = 'test-placeholder'; env.GEMINI_MODEL = 'test-model';
+  env.AI_ENABLED = 'true'; env.AI_VALIDATED = 'true'; env.AI_PROVIDER = 'gemini'; env.GEMINI_API_KEY = 'test-placeholder'; env.GEMINI_MODEL = 'test-model';
   const passage = 'This is a synthetic source passage for a software test only.';
   env.ASSETS = { fetch: async () => Response.json({ records: [{ id: 'test-source', passage, reviewStatus: 'human-reviewed' }] }) };
   return { ...setupResult, passage, aiRequest: () => request('/api/ai', { action: 'explain', question: 'What does the source say?' }, member.token) };
@@ -126,7 +126,44 @@ test('AI config alone cannot bypass grounding gate; unreviewed sources never rea
   const { aiRequest, env } = await aiSetup(); let calls = 0; const upstream: typeof fetch = async () => { calls++; throw new Error('should not call'); };
   env.AI_VALIDATED = 'false'; assert.equal((await (await ai(aiRequest(), env, upstream)).json() as any).enabled, false);
   env.AI_VALIDATED = 'true'; env.ASSETS = { fetch: async () => Response.json({ records: [{ id: 'pending', passage: 'Not reviewed', reviewStatus: 'human-review-pending' }] }) };
-  assert.equal((await (await ai(aiRequest(), env, upstream)).json() as any).reason, 'no-human-reviewed-source-passages'); assert.equal(calls, 0);
+  assert.equal((await (await ai(aiRequest(), env, upstream)).json() as any).reason, 'no-eligible-source-passages'); assert.equal(calls, 0);
+});
+
+test('experimental Workers AI serves source-locked editorial drafts to a quota-limited guest', async () => {
+  const { env, request } = setup();
+  const passage = 'Freedom Park is in Salvokop, Pretoria.';
+  let calls = 0; let providerInput: Record<string, unknown> | undefined;
+  env.AI_ENABLED = 'true'; env.AI_VALIDATED = 'false'; env.AI_EXPERIMENTAL = 'true';
+  env.AI_PROVIDER = 'workers-ai'; env.AI_MODEL = '@cf/zai-org/glm-4.7-flash';
+  env.AI = { run: async (model, input) => {
+    calls++; providerInput = input;
+    assert.equal(model, env.AI_MODEL);
+    return { choices: [{ message: { content: JSON.stringify({ answer: passage, sourceIds: ['freedom-park'] }) } }] };
+  } };
+  env.ASSETS = { fetch: async () => Response.json({ records: [{ id: 'freedom-park', passage, reviewStatus: 'automated-source-review; human-review-pending' }] }) };
+  const aiRequest = () => request('/api/ai', { action: 'explain', question: 'Where is Freedom Park?' }, undefined, { 'CF-Connecting-IP': '192.0.2.25' });
+  const first = await ai(aiRequest(), env); const result = await first.json() as any;
+  assert.equal(result.status, 'source-excerpt');
+  assert.equal(result.answer, passage);
+  assert.equal(result.sourceReview, 'editorial-draft-human-review-pending');
+  assert.equal(result.mode, 'experimental-source-locked');
+  assert.equal(result.quotaIdentity, 'guest');
+  assert.equal((providerInput?.response_format as any).type, 'json_schema');
+  assert.equal((providerInput?.response_format as any).json_schema.name, 'source_excerpt');
+  assert.equal((providerInput?.response_format as any).json_schema.strict, true);
+  for (let i = 1; i < 5; i++) assert.equal((await (await ai(aiRequest(), env)).json() as any).status, 'source-excerpt');
+  assert.equal((await (await ai(aiRequest(), env)).json() as any).reason, 'daily-assistance-budget-reached');
+  assert.equal(calls, 5);
+});
+
+test('Workers AI output still rejects invented prose and citations', async () => {
+  const { env, request } = setup();
+  const passage = 'A source passage that must be returned exactly.';
+  env.AI_ENABLED = 'true'; env.AI_EXPERIMENTAL = 'true'; env.AI_PROVIDER = 'workers-ai';
+  env.AI = { run: async () => ({ response: { answer: 'Invented answer.', sourceIds: ['made-up'] } }) };
+  env.ASSETS = { fetch: async () => Response.json({ records: [{ id: 'source-1', passage, reviewStatus: 'automated-source-review; human-review-pending' }] }) };
+  const response = await ai(request('/api/ai', { action: 'explain', question: 'Invent something' }, undefined, { 'CF-Connecting-IP': '192.0.2.26' }), env);
+  assert.equal((await response.json() as any).reason, 'provider-failed-or-output-not-grounded');
 });
 
 test('Worker dispatches implemented APIs and adds security headers', async () => {
@@ -143,11 +180,12 @@ test('Worker dispatches implemented APIs and adds security headers', async () =>
   assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
   assert.equal(response.headers.get('X-Frame-Options'), 'DENY');
   assert.match(response.headers.get('Content-Security-Policy') || '', /frame-ancestors 'none'/);
+  assert.match(response.headers.get('Content-Security-Policy') || '', /worker-src 'self' blob:/);
 });
 
 test('Worker health and route matching report configuration without false provider claims', async () => {
   const { env } = setup();
-  const workerEnv = { ...env, AI_ENABLED: 'true', AI_VALIDATED: 'true', GEMINI_API_KEY: 'configured-secret', GEMINI_MODEL: 'test-model', ASSETS: { fetch: async () => new Response('asset') } };
+  const workerEnv = { ...env, AI_ENABLED: 'true', AI_VALIDATED: 'true', AI_PROVIDER: 'gemini', GEMINI_API_KEY: 'configured-secret', GEMINI_MODEL: 'test-model', ASSETS: { fetch: async () => new Response('asset') } };
   const response = await worker.fetch(new Request('https://trail.example/api/health'), workerEnv);
   const result = await response.json() as any;
   assert.equal(result.readiness, 'working-towards-trl5');
@@ -157,4 +195,22 @@ test('Worker health and route matching report configuration without false provid
   assert.equal(JSON.stringify(result).includes('configured-secret'), false);
   assert.equal((await worker.fetch(new Request('https://trail.example/api/aix'), workerEnv)).status, 404);
   assert.equal((await worker.fetch(new Request('https://trail.example/api/contributions-extra'), workerEnv)).status, 404);
+});
+
+test('health identifies configured Workers AI experimental mode without probing it', async () => {
+  const { env } = setup(); let calls = 0;
+  const workerEnv = {
+    ...env,
+    AI_ENABLED: 'true', AI_VALIDATED: 'false', AI_EXPERIMENTAL: 'true', AI_PROVIDER: 'workers-ai',
+    AI_MODEL: '@cf/zai-org/glm-4.7-flash',
+    AI: { run: async () => { calls++; return {}; } },
+    ASSETS: { fetch: async () => new Response('asset') }
+  };
+  const response = await worker.fetch(new Request('https://trail.example/api/health'), workerEnv);
+  const result = await response.json() as any;
+  assert.equal(result.ai.enabled, true);
+  assert.equal(result.ai.provider, 'workers-ai');
+  assert.equal(result.ai.mode, 'experimental-source-locked');
+  assert.equal(result.ai.providerStatus, 'configured-not-probed');
+  assert.equal(calls, 0);
 });

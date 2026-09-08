@@ -30,8 +30,21 @@ test('all requested basemaps exist and offline has no remote sources', () => {
   const styles = createBasemapStyles();
   assert.deepEqual(Object.keys(styles), ['streets', 'outdoor', 'dark', 'satellite', 'hybrid', 'offline']);
   assert.deepEqual(styles.offline.style.sources, {});
-  assert.match(styles.satellite.style.sources.base.tiles[0], /earthdata\.nasa\.gov/);
+  assert.match(styles.satellite.style.sources.base.tiles[0], /tiles\.maps\.eox\.at\/wmts\/1\.0\.0\/s2cloudless-2025_3857\/default\/g\/\{z\}\/\{y\}\/\{x\}\.jpg/);
+  assert.equal(styles.satellite.maxUsefulZoom, 14);
+  assert.equal(styles.satellite.style.metadata['shosholoza:provider'], 'eox-cloudless-2025');
+  assert.match(styles.hybrid.style.sources.labels.tiles[0], /overlay_3857/);
   assert.match(styles.streets.style.sources.base.attribution, /OpenStreetMap/);
+});
+
+test('keyless Night has no CARTO watermark dependency and applies a dark treatment', () => {
+  const styles = createBasemapStyles();
+  assert.deepEqual(styles.dark.style.sources.base.tiles, styles.streets.style.sources.base.tiles);
+  assert.equal(JSON.stringify(styles.dark).includes('cartocdn'), false);
+  assert.equal(styles.dark.style.metadata['shosholoza:provider'], 'openstreetmap-night-treatment');
+  const paint = styles.dark.style.layers.find(layer => layer.id === 'dark-raster').paint;
+  assert.ok(paint['raster-brightness-max'] < 0.5);
+  assert.ok(paint['raster-saturation'] < 0);
 });
 
 test('runtime satellite config replaces the keyless fallback without embedding a key', () => {
@@ -39,4 +52,16 @@ test('runtime satellite config replaces the keyless fallback without embedding a
   assert.deepEqual(styles.satellite.style.sources.base.tiles, ['https://tiles.example/{z}/{x}/{y}.jpg']);
   assert.equal(styles.satellite.maxUsefulZoom, 16);
   assert.equal(JSON.stringify(styles).includes('GEMINI'), false);
+});
+
+test('configured MapTiler tiles receive required provider attribution without persisting a credential', () => {
+  const browserKey = ['public', 'browser', 'value'].join('-');
+  const styles = createBasemapStyles({
+    darkTiles: [`https://api.maptiler.com/maps/dataviz-dark/{z}/{x}/{y}.png?key=${browserKey}`],
+    satelliteTiles: [`https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${browserKey}`],
+  });
+  assert.match(styles.dark.style.sources.base.attribution, /MapTiler/);
+  assert.match(styles.satellite.style.sources.base.attribution, /MapTiler/);
+  assert.equal(styles.dark.style.metadata['shosholoza:provider'], 'configured');
+  assert.equal(styles.satellite.style.metadata['shosholoza:provider'], 'configured');
 });

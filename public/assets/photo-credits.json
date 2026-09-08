@@ -1,0 +1,95 @@
+{
+  "source": "Wikimedia Commons",
+  "photos": [
+    {
+      "id": "hero-train",
+      "file": "/assets/photos/hero-train.webp",
+      "title": "Shosholoza Meyl Trans Natal headed by 18-xxx and 18-422 near Balfour. (16993112398).jpg",
+      "author": "Bob Adams from Amanzimtoti, South Africa",
+      "licence": "CC BY-SA 2.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shosholoza_Meyl_Trans_Natal_headed_by_18-xxx_and_18-422_near_Balfour._(16993112398).jpg",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "pretoria",
+      "file": "/assets/photos/pretoria.webp",
+      "title": "Jacaranda Trees, Becket Street Pretoria.jpg",
+      "author": "Paul Saad",
+      "licence": "CC BY-SA 4.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Jacaranda_Trees,_Becket_Street_Pretoria.jpg",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "johannesburg",
+      "file": "/assets/photos/johannesburg.webp",
+      "title": "Johannesburg's inner city.jpg",
+      "author": "Andrew Moore",
+      "licence": "CC BY-SA 2.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Johannesburg%27s_inner_city.jpg",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "kimberley",
+      "file": "/assets/photos/kimberley.webp",
+      "title": "Big Hole Kimberley.jpg",
+      "author": "Rudolph Botha",
+      "licence": "CC BY-SA 3.0",
+      "licenceUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:Big_Hole_Kimberley.jpg",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "de-aar",
+      "file": "/assets/photos/de-aar.webp",
+      "title": "De Aar, South Africa - panoramio.jpg",
+      "author": "Graham Maclachlan",
+      "licence": "CC BY-SA 3.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:De_Aar,_South_Africa_-_panoramio.jpg",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "beaufort-west",
+      "file": "/assets/photos/beaufort-west.webp",
+      "title": "Karoo National Park 2014 05.jpg",
+      "author": "Photograph by Mike Peel (www.mikepeel.net).",
+      "licence": "CC BY-SA 4.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Karoo_National_Park_2014_05.jpg",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "matjiesfontein",
+      "file": "/assets/photos/matjiesfontein.webp",
+      "title": "Matjiesfontein 1.JPG",
+      "author": "Tottelme",
+      "licence": "CC BY-SA 3.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Matjiesfontein_1.JPG",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "worcester",
+      "file": "/assets/photos/worcester.webp",
+      "title": "Hex River Valley - Western Cape, South Africa (3880658723).jpg",
+      "author": "South African Tourism from South Africa",
+      "licence": "CC BY 2.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Hex_River_Valley_-_Western_Cape,_South_Africa_(3880658723).jpg",
+      "retrieved": "2026-09-08"
+    },
+    {
+      "id": "cape-town",
+      "file": "/assets/photos/cape-town.webp",
+      "title": "Cape Town - view from Table Mountain 2.jpg",
+      "author": "Azral",
+      "licence": "CC BY-SA 3.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Cape_Town_-_view_from_Table_Mountain_2.jpg",
+      "retrieved": "2026-09-08"
+    }
+  ]
+}

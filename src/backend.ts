@@ -9,12 +9,19 @@ export interface Statement {
   run(): Promise<{ meta: { changes?: number } }>;
 }
 export interface Database { prepare(sql: string): Statement; batch(statements: Statement[]): Promise<unknown[]> }
+export interface WorkersAiBinding {
+  run(model: string, input: Record<string, unknown>): Promise<unknown>;
+}
 export interface BackendEnv {
   DB?: Database;
   ASSETS?: { fetch(request: Request): Promise<Response> };
+  AI?: WorkersAiBinding;
   MODERATOR_TOKEN?: string;
   AI_ENABLED?: string;
   AI_VALIDATED?: string;
+  AI_EXPERIMENTAL?: string;
+  AI_PROVIDER?: string;
+  AI_MODEL?: string;
   GEMINI_API_KEY?: string;
   GEMINI_MODEL?: string;
 }

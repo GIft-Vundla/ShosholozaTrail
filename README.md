@@ -8,7 +8,7 @@ The current build is **working towards TRL 5; validation is incomplete**. It doe
 
 The pilot uses a PWA with vendored Leaflet and Turf assets, Cloudflare Workers and D1. This differs intentionally from the React Native/Supabase scale architecture in the original team profile: the pilot favors install-free QR entry, HTTPS hosting, offline use and a low-cost deployment path. The native scale architecture remains roadmap work.
 
-AI is optional and off by default. Prepared stories, source passages, deterministic challenge answers, hints, journey triggers, waiting mode and saved work remain usable without it. The room and moderation APIs are online-only and are explicitly excluded from service-worker caching.
+AI remains optional. This local experiment enables a clearly labelled, source-locked Workers AI mode while keeping the release-validation flag false. It can only select an exact excerpt from one registered source, and draft sources are returned with a human-review-pending label. Prepared stories, source passages, deterministic challenge answers, hints, journey triggers, waiting mode and saved work remain usable without it. The AI, room and moderation APIs are online-only and are explicitly excluded from service-worker caching.
 
 The current corridor line joins sourced OpenStreetMap station anchors with authored straight connectors. It is displayed as an **unverified schematic** and must not be used as rail routing, live tracking, departure, alighting or safety advice.
 
@@ -29,11 +29,11 @@ npm run dev
 
 Open the local URL printed by Wrangler. Use **Run labelled replay** for a conference-room demonstration; the UI labels this source as synthetic replay at all times. **Start live GPS** requests foreground browser geolocation and does not imply background or locked-screen support.
 
-`npm run harness:r3` writes a real synthetic-laboratory run to `results/r3.json`. It does not create corridor or physical-phone evidence. `npm run harness:ai` currently verifies the disabled-provider fallback path and keeps the provider R10 status at `NOT RUN`. `npm run security:scan` requires `dist/`, scans the working tree, public and built output, and Git patch history, and reports binary artifacts that still require manual review.
+`npm run harness:r3` writes a real synthetic-laboratory run to `results/r3.json`. It does not create corridor or physical-phone evidence. `npm run harness:ai` without `--provider` verifies only the disabled fallback and keeps R10 at `NOT RUN`; the experimental binding does not turn that fallback run into provider evidence. `npm run security:scan` requires `dist/`, scans the working tree, public and built output, and Git patch history, and reports binary artifacts that still require manual review.
 
 ## Deployment
 
-Configure the D1 binding and apply `migrations/0001.sql`, then deploy with Wrangler. Keep provider credentials in Cloudflare Worker secrets; never place them in `.dev.vars`, repository files, browser assets, screenshots or evidence exports. `AI_ENABLED` remains `false` until the fixed 30/10/10 provider evaluation and failure gates pass.
+Configure the D1 binding and apply `migrations/0001.sql`, then deploy with Wrangler. The Workers AI binding uses the Cloudflare account directly and requires no provider secret. The experiment sets `AI_ENABLED=true`, `AI_EXPERIMENTAL=true`, and keeps `AI_VALIDATED=false`; this permits local source-locked testing without claiming the fixed 30/10/10 provider gate has passed. If another provider is used later, keep its credential in a Cloudflare Worker secret and never place it in `.dev.vars`, repository files, browser assets, screenshots or evidence exports.
 
 T1 passes only when all of the following are retained for the exact release:
 
