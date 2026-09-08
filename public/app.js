@@ -3,11 +3,13 @@ import { installPack, packStatus } from './storage/pack.js';
 import { createJourneyEngine } from './engine/journey.js';
 import { createReplaySource } from './engine/replay.js';
 import { createGpsSource } from './engine/gps.js';
+import { createImmersiveMap, sliceLineAtDistance } from './map/immersive-map.js';
+import { mountLocalizedAnimation } from './animations/localized-scenes.js';
 const bootAt = performance.now();
 const $ = s => document.querySelector(s);
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const main = $('#main');
-let pack, hubs, route, sources, engine, positionSource, map, marker, latestFix, routeLayer, traversedLayer, hubMarkers = new Map(), attractionMarkers = new Map(), currentMode = 'manual', engineMode = 'gps', waiting = false, draftDirty = false, mapFollowing = true, journeyViewEngaged = false, lastMapFollowAt = 0;
+let pack, hubs, route, sources, engine, positionSource, map, latestFix, currentMode = 'manual', engineMode = 'gps', waiting = false, draftDirty = false, mapFollowing = true, mapPreviewStop = null, activeScene = null;
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const say = text => { $('#message').textContent = text; };
 const json = async url => { const r = await fetch(url); if (!r.ok) throw new Error(`${url} unavailable`); return r.json(); };
@@ -28,10 +30,13 @@ function setMode(mode) {
    stageMode.textContent = mode === 'replay' ? 'SIMULATED REPLAY' : mode === 'gps' ? 'LIVE GPS' : 'EXPLORE MAP';
    stageMode.className = `journey-mode ${mode}`;
  }
- const train = marker?.getElement?.()?.querySelector('.train-marker');
- if (train) train.className = `train-marker ${mode}`;
- const trainElement = marker?.getElement?.();
- if (trainElement) trainElement.setAttribute('aria-label', mode === 'replay' ? 'Simulated train position' : mode === 'gps' ? 'Current GPS position' : 'Last journey position');
+}
+function mountHubScene(target, hubId, options = {}) {
+ activeScene?.destroy?.();
+ const host = typeof target === 'string' ? $(target) : target;
+ if (!host) return null;
+ activeScene = mountLocalizedAnimation(host, hubId, { durationSeconds: 9, controls: true, ...options });
+ return activeScene;
 }
 function showJourneyStoryCard(hubId, { encountered = false } = {}) {
  const c = chapterByHub(hubId), station = hubs.stations.find(item => item.hubId === hubId), card = $('#map-story-card');
@@ -39,66 +44,30 @@ function showJourneyStoryCard(hubId, { encountered = false } = {}) {
  const body = Array.isArray(c.body) ? c.body.join(' ') : c.body;
  const summary = body.length > 230 ? `${body.slice(0, 227).trim()}…` : body;
  card.hidden = false;
- card.innerHTML = `<button id="close-story-preview" class="story-preview-close" type="button" aria-label="Close story preview">×</button><p class="eyebrow">${encountered ? 'Story unlocked' : 'Story stop'} · ${escape(station.name)}</p><h2>${escape(c.title)}</h2><p>${escape(summary)}</p><div class="story-preview-meta"><span>${c.depth === 'deep' ? 'Story + activity' : 'Short chapter'}</span><span>Text available offline</span></div><a class="button" data-nav href="${chapterLink(c)}">Open this chapter</a><p><small>${escape(c.locationNotice)}</small></p>`;
- $('#close-story-preview')?.addEventListener('click', () => { card.hidden = true; });
+ card.innerHTML = `<button id="close-story-preview" class="story-preview-close" type="button" aria-label="Close story preview">×</button><div id="map-local-scene" class="map-local-scene"></div><p class="eyebrow">${encountered ? 'Story unlocked' : 'Story stop'} · ${escape(station.name)}</p><h2>${escape(c.title)}</h2><p>${escape(summary)}</p><div class="story-preview-meta"><span>Localized scene</span><span>${c.depth === 'deep' ? 'Story + activity' : 'Short chapter'}</span><span>Text available offline</span></div><a class="button" data-nav href="${chapterLink(c)}">Open this chapter</a><p><small>${escape(c.locationNotice)}</small></p>`;
+ mountHubScene('#map-local-scene', hubId);
+ if (!encountered) map?.flyToHub?.(hubId);
+ $('#close-story-preview')?.addEventListener('click', () => { activeScene?.pause?.(); card.hidden = true; });
 }
 function showAttractionCard(attraction) {
  const c = chapterByHub(attraction.hubId), card = $('#map-story-card');
  if (!c || !card) return;
  card.hidden = false;
- card.innerHTML = `<button id="close-story-preview" class="story-preview-close" type="button" aria-label="Close attraction preview">×</button><p class="eyebrow">Nearby attraction · ${escape(c.title.split(':')[0])}</p><h2>${escape(attraction.name)}</h2><p>This place is associated with the story hub. Visibility from the train and rail access are not established.</p><div class="story-preview-meta"><span>Mapped attraction</span><span>Location not field verified</span></div><a class="button" data-nav href="${chapterLink(c)}">Open the hub chapter</a>${attraction.coordinateSourceUrl ? `<p><small><a href="${escape(attraction.coordinateSourceUrl)}" target="_blank" rel="noopener noreferrer">View coordinate source ↗</a></small></p>` : ''}`;
- $('#close-story-preview')?.addEventListener('click', () => { card.hidden = true; });
-}
-function routePrefixAt(distanceMetres) {
- const coordinates = route.geometry.coordinates;
- if (!coordinates.length) return [];
- const total = Number(route.properties?.lengthMetres) || 1;
- const target = Math.max(0, Math.min(total, Number(distanceMetres) || 0));
- const segmentLengths = [];
- let measuredTotal = 0;
- const haversine = (a, b) => {
-   const rad = value => value * Math.PI / 180, radius = 6371008.8;
-   const dLat = rad(b[1] - a[1]), dLon = rad(b[0] - a[0]);
-   const value = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[1])) * Math.cos(rad(b[1])) * Math.sin(dLon / 2) ** 2;
-   return 2 * radius * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
- };
- for (let i = 1; i < coordinates.length; i++) { const length = haversine(coordinates[i - 1], coordinates[i]); segmentLengths.push(length); measuredTotal += length; }
- const measuredTarget = target / total * measuredTotal, result = [coordinates[0]];
- let cumulative = 0;
- for (let i = 1; i < coordinates.length; i++) {
-   const length = segmentLengths[i - 1];
-   if (cumulative + length <= measuredTarget) { result.push(coordinates[i]); cumulative += length; continue; }
-   const fraction = length ? (measuredTarget - cumulative) / length : 0;
-   const from = coordinates[i - 1], to = coordinates[i];
-   result.push([from[0] + (to[0] - from[0]) * fraction, from[1] + (to[1] - from[1]) * fraction]);
-   break;
- }
- return result.map(([lon, lat]) => [lat, lon]);
+ card.innerHTML = `<button id="close-story-preview" class="story-preview-close" type="button" aria-label="Close attraction preview">×</button><div id="map-local-scene" class="map-local-scene"></div><p class="eyebrow">Nearby attraction · ${escape(c.title.split(':')[0])}</p><h2>${escape(attraction.name)}</h2><p>This place is associated with the story hub. Visibility from the train and rail access are not established.</p><div class="story-preview-meta"><span>Localized scene</span><span>Mapped attraction</span><span>Location not field verified</span></div><a class="button" data-nav href="${chapterLink(c)}">Open the hub chapter</a>${attraction.coordinateSourceUrl ? `<p><small><a href="${escape(attraction.coordinateSourceUrl)}" target="_blank" rel="noopener noreferrer">View coordinate source ↗</a></small></p>` : ''}`;
+ mountHubScene('#map-local-scene', attraction.hubId);
+ map?.flyToHub?.(attraction.hubId, { zoom: 12 });
+ $('#close-story-preview')?.addEventListener('click', () => { activeScene?.pause?.(); card.hidden = true; });
 }
 function updateJourneyMap(fix, snapshot) {
  if (!map || !fix) return;
- const latLng = [fix.lat, fix.lon];
- if (marker) marker.setLatLng(latLng);
- else {
-   marker = L.marker(latLng, { keyboard: false, interactive: false, zIndexOffset: 1000, icon: L.divIcon({ className: 'train-marker-shell', html: `<span class="train-marker ${currentMode}" aria-hidden="true">🚆</span>`, iconSize: [42, 42], iconAnchor: [21, 21] }) }).addTo(map);
-   marker.getElement?.()?.setAttribute('aria-label', currentMode === 'replay' ? 'Simulated train position' : 'Current GPS position');
- }
  const accepted = snapshot?.lastAccepted;
+ const distanceMetres = accepted && accepted.t === fix.t ? accepted.s : fix.s;
+ map.updatePosition({ ...fix, s: distanceMetres, source: currentMode }, { distanceMetres, pitch: waiting ? 0 : 58 });
  if (accepted && accepted.t === fix.t) {
-   traversedLayer?.setLatLngs(routePrefixAt(accepted.s));
    const total = Number(route.properties?.lengthMetres) || 1, percent = Math.max(0, Math.min(100, accepted.s / total * 100));
    if ($('#journey-progress')) $('#journey-progress').textContent = `${Math.round(percent)}% of the schematic corridor traversed`;
    if ($('#journey-progress-bar')) $('#journey-progress-bar').value = percent;
- }
- if (!mapFollowing || waiting) return;
- const now = performance.now();
- if (!journeyViewEngaged) {
-   journeyViewEngaged = true;
-   map.setView(latLng, Math.max(map.getZoom(), 7), { animate: !reducedMotion() });
-   lastMapFollowAt = now;
- } else if (now - lastMapFollowAt > 800) {
-   map.panTo(latLng, { animate: !reducedMotion(), duration: .65, easeLinearity: .35 });
-   lastMapFollowAt = now;
+   $('#map')?.setAttribute('data-route-progress', String(percent));
  }
 }
 function renderChapterQueue() {
@@ -113,7 +82,7 @@ async function loadEngine(mode) {
  engineMode = mode;
  engine = createJourneyEngine({ route, zones: hubs.triggerZones, fired: saved?.fired || [], queue: saved?.queue || [],
  persist: (snapshot, events) => persistJourney(snapshot, events, `journey-${mode}`),
- onEvent: event => { if (event.fired) { say(`New chapter queued: ${chapterByHub(event.hubId)?.title || event.hubId}. Your current activity stays open.`); showJourneyStoryCard(event.hubId, { encountered: true }); hubMarkers.get(event.hubId)?.getElement?.()?.querySelector('.hub-marker')?.classList.add('hub-marker--reached'); } renderChapterQueue(); },
+ onEvent: event => { if (event.fired) { say(`New chapter queued: ${chapterByHub(event.hubId)?.title || event.hubId}. Your current activity stays open.`); showJourneyStoryCard(event.hubId, { encountered: true }); document.querySelector(`.immersive-hub[data-hub="${CSS.escape(event.hubId)}"]`)?.classList.add('immersive-hub--reached'); } renderChapterQueue(); },
  onState: () => {} });
  renderChapterQueue();
 }
@@ -143,8 +112,7 @@ async function startJourney(mode) {
  // A replay and a physical journey never share fired chapters or queues.
  if (engineMode !== mode) await loadEngine(mode);
  await put('state', 'journey-last-mode', mode);
- journeyViewEngaged = false;
- lastMapFollowAt = 0;
+ mapPreviewStop?.(); mapPreviewStop = null;
  setMode(mode);
  if (mode === 'replay') {
    const trace = await json('/data/traces/demo-corridor.json');
@@ -154,62 +122,102 @@ async function startJourney(mode) {
  renderChapterQueue();
  say(mode === 'replay' ? 'Synthetic replay started. This is not a field test or a live train location.' : 'GPS started. Keep this page visible. Precise positions stay on this device.');
 }
-function stopJourney() { positionSource?.stop(); positionSource = null; waiting = false; journeyViewEngaged = false; $('#waiting').hidden = true; document.body.classList.remove('low-power'); setMode('manual'); say('Position updates stopped. Explore any story stop on the map.'); }
+function stopJourney() { positionSource?.stop(); positionSource = null; mapPreviewStop?.(); mapPreviewStop = null; waiting = false; if ($('#waiting')) $('#waiting').hidden = true; document.body.classList.remove('low-power'); map?.setCinematic?.(!reducedMotion()); setMode('manual'); say('Position updates stopped. Explore any story stop on the map.'); }
+function localMapConfig() {
+ const browserKey = sessionStorage.getItem('shosholoza-maptiler-browser-key')?.trim();
+ if (!browserKey) return {};
+ const encoded = encodeURIComponent(browserKey);
+ return {
+   streetsTiles: [`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${encoded}`],
+   outdoorTiles: [`https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}.png?key=${encoded}`],
+   darkTiles: [`https://api.maptiler.com/maps/dataviz-dark/{z}/{x}/{y}.png?key=${encoded}`],
+   satelliteTiles: [`https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${encoded}`],
+   hybridLabelTiles: [`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${encoded}`],
+   satelliteMaxZoom: 20,
+   satelliteAttribution: 'MapTiler / OpenStreetMap contributors',
+ };
+}
+function setPreviewProgress(distanceMetres) {
+ const total = Number(route.properties?.lengthMetres) || 1;
+ const percent = Math.max(0, Math.min(100, Number(distanceMetres) / total * 100));
+ if ($('#journey-progress')) $('#journey-progress').textContent = `${Math.round(percent)}% of the schematic corridor previewed`;
+ if ($('#journey-progress-bar')) $('#journey-progress-bar').value = percent;
+ if ($('#route-scrubber')) $('#route-scrubber').value = percent;
+ $('#map')?.setAttribute('data-route-progress', String(percent));
+}
 async function renderJourney() {
  const status = await packStatus();
- main.innerHTML = `<section class="journey-hero"><div><p class="eyebrow">Pretoria → Cape Town · Seven story stops</p><h1>Watch the landscape.<br>Meet its stories.</h1><p class="intro">Follow a live foreground position or preview the experience with clearly labelled synthetic coordinates. Select any numbered stop to explore manually.</p></div><div class="journey-compass" aria-hidden="true"><span>N</span><i></i><small>1,356 km schematic</small></div></section><section id="journey-stage" class="journey-stage" aria-label="Journey player"><div class="stage-bar"><div><span id="journey-mode" class="journey-mode manual">EXPLORE MAP</span><strong id="journey-progress">Choose a position source to begin</strong></div><div class="stage-tools"><label class="follow-control"><input id="follow-map" type="checkbox" checked> Follow train</label></div></div><div id="map" aria-label="Interactive schematic corridor with story stops and nearby attractions"></div><progress id="journey-progress-bar" class="journey-progress-bar" value="0" max="100" aria-label="Schematic journey progress"></progress><aside id="map-story-card" class="map-story-card" aria-live="polite" hidden></aside><p class="map-key"><span class="key-line schematic"></span>Unverified schematic corridor <span class="key-line travelled"></span>Traversed section <span class="key-stop">01</span>Story stop <span class="key-attraction" aria-hidden="true">◆</span>Nearby attraction. Attraction visibility and rail access are not established. No departure or safe-alighting advice.</p></section><div class="journey-controls"><section class="panel pack-panel"><p class="section-label">Before you board</p><h2>Take the stories with you.</h2><p>Download the chapters, map overview and activities for disconnected reading. AI is off by default.</p><button id="install">${status ? 'Check and install pack update' : 'Download offline pack'}</button><progress id="download-progress" value="0" max="1" hidden></progress><p id="pack-state" class="muted">${status ? `Ready · ${(status.installedBytes/1048576).toFixed(1)} MB · installed ${escape(status.installedAt)}` : 'No complete pack installed yet.'}</p></section><section class="panel position-panel"><p class="section-label">Choose your position source</p><h2>Travel with the map.</h2><p>Live GPS needs your permission and a visible page. Positions are processed locally. Replay uses synthetic coordinates.</p><div class="actions"><button id="gps">Start live GPS</button><button id="replay" class="secondary">Run labelled replay</button><button id="stop" class="secondary">Stop</button></div><p id="journey-state">Journey state: unknown</p></section></div><section class="panel chapter-panel"><div><p class="section-label">The corridor collection</p><h2>Seven places, ready when you are.</h2></div><ol class="route-list">${pack.chapters.map((c,index)=>`<li><span class="route-number">${String(index+1).padStart(2,'0')}</span><a data-nav href="${chapterLink(c)}">${escape(c.title)}</a><small>${c.depth === 'deep' ? 'Story + activity' : 'Short chapter'}</small></li>`).join('')}</ol></section>`;
- map = L.map('map', { zoomControl: true, attributionControl: true, preferCanvas: false });
- routeLayer = L.geoJSON(route, { style: { className:'route-schematic',color:'#c98d55',weight:4,dashArray:'3 10',lineCap:'round',opacity:.9 } }).addTo(map);
- map.fitBounds(routeLayer.getBounds(), {padding:[28,28], animate:false});
- const [firstLon, firstLat] = route.geometry.coordinates[0];
- traversedLayer = L.polyline([[firstLat, firstLon]], { className:'route-traversed',color:'#f7d26a',weight:6,lineCap:'round',opacity:1 }).addTo(map);
- map.attributionControl.addAttribution('Station anchors © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · schematic connectors unverified');
- hubMarkers = new Map();
- for (const [index, station] of hubs.stations.entries()) {
-   const reached = engine.snapshot().fired.includes(station.hubId);
-   const hubMarker = L.marker([station.lat,station.lon], { keyboard:true, riseOnHover:true, title:`${station.name}: open story preview`, alt:`Story stop ${index+1}, ${station.name}`, icon:L.divIcon({className:'hub-marker-shell',html:`<span class="hub-marker${reached?' hub-marker--reached':''}" data-hub="${escape(station.hubId)}"><span aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="sr-only">Open ${escape(station.name)} story preview</span></span>`,iconSize:[36,36],iconAnchor:[18,18]}) }).addTo(map);
-   hubMarker.bindTooltip(`${station.name} · ${chapterByHub(station.hubId)?.depth === 'deep' ? 'story + activity' : 'short chapter'}`, {direction:'top',offset:[0,-18]});
-   hubMarker.on('click', () => showJourneyStoryCard(station.hubId));
-   const hubElement = hubMarker.getElement?.();
-   if (hubElement) {
-     hubElement.setAttribute('role', 'button');
-     hubElement.setAttribute('aria-label', `Open ${station.name} story preview`);
-     hubElement.addEventListener('keydown', event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); showJourneyStoryCard(station.hubId); } });
-   }
-   hubMarkers.set(station.hubId, hubMarker);
- }
- attractionMarkers = new Map();
- for (const attraction of hubs.attractions || []) {
-   if (!Number.isFinite(attraction.lat) || !Number.isFinite(attraction.lon)) continue;
-   const attractionMarker = L.marker([attraction.lat, attraction.lon], { keyboard:true, riseOnHover:true, title:`${attraction.name}: nearby attraction`, alt:`Nearby attraction, ${attraction.name}`, icon:L.divIcon({className:'attraction-marker-shell',html:`<span class="attraction-marker" data-attraction="${escape(attraction.id)}"><span aria-hidden="true">◆</span><span class="sr-only">Open ${escape(attraction.name)} attraction preview</span></span>`,iconSize:[30,30],iconAnchor:[15,15]}) }).addTo(map);
-   attractionMarker.bindTooltip(`${attraction.name} · nearby attraction`, {direction:'top',offset:[0,-15]});
-   attractionMarker.on('click', () => showAttractionCard(attraction));
-   const attractionElement = attractionMarker.getElement?.();
-   if (attractionElement) {
-     attractionElement.setAttribute('role', 'button');
-     attractionElement.setAttribute('aria-label', `Open ${attraction.name} attraction preview`);
-     attractionElement.addEventListener('keydown', event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); showAttractionCard(attraction); } });
-   }
-   attractionMarkers.set(attraction.id, attractionMarker);
- }
+ const hasMapTiler = Boolean(sessionStorage.getItem('shosholoza-maptiler-browser-key'));
+ main.innerHTML = `<section class="journey-hero"><div><p class="eyebrow">Pretoria to Cape Town / Seven story stops</p><h1>Watch the landscape.<br>Meet its stories.</h1><p class="intro">Explore a cinematic route, switch between street, terrain, dark, satellite and hybrid views, then open a scene drawn for each place.</p></div><div class="journey-compass" aria-hidden="true"><span>N</span><i></i><small>1,356 km schematic</small></div></section>
+ <section id="journey-stage" class="journey-stage" aria-label="Interactive journey map">
+  <div class="stage-bar"><div><span id="journey-mode" class="journey-mode manual">EXPLORE MAP</span><strong id="journey-progress">Move the route preview or choose a position source</strong></div><div class="stage-tools"><label class="follow-control"><input id="follow-map" type="checkbox" checked> Follow train</label><label class="follow-control"><input id="cinematic-camera" type="checkbox" ${reducedMotion() ? '' : 'checked'}> Cinematic camera</label></div></div>
+  <div id="map" aria-label="Interactive corridor map with story stops and nearby attractions"></div>
+  <div class="route-scrub"><label for="route-scrubber">Explore the route</label><input id="route-scrubber" type="range" min="0" max="100" value="0" step="0.25"><button id="cinematic-preview" class="secondary" type="button">Play cinematic preview</button><button id="fit-route" class="secondary" type="button">Fit whole route</button></div>
+  <progress id="journey-progress-bar" class="journey-progress-bar" value="0" max="100" aria-label="Schematic journey progress"></progress>
+  <aside id="map-story-card" class="map-story-card" aria-live="polite" hidden></aside>
+  <p class="map-key"><span class="key-line schematic"></span>Unverified schematic corridor <span class="key-line travelled"></span>Previewed or traversed section <span class="key-stop">01</span>Story stop <span class="key-attraction" aria-hidden="true">?</span>Nearby attraction. Satellite images and terrain tiles are visual context; rail alignment, train visibility and safe access are not established.</p>
+ </section>
+ <div class="journey-controls">
+  <section class="panel map-provider-panel"><p class="section-label">Optional sharper imagery</p><h2>Use your free MapTiler browser key locally.</h2><p>The built-in views need no account. A MapTiler key improves imagery and is held in this tab only; it is never committed or added to the offline pack. Restrict it to your local origin in MapTiler.</p><label for="maptiler-key">MapTiler browser key</label><input id="maptiler-key" type="password" autocomplete="off" placeholder="Paste a restricted browser key"><div class="actions"><button id="apply-maptiler" type="button">${hasMapTiler ? 'Replace local key' : 'Use key for this tab'}</button><button id="clear-maptiler" class="secondary" type="button">Clear local key</button></div><p id="map-provider-state" class="muted">${hasMapTiler ? 'MapTiler is configured for this tab.' : 'Keyless OpenStreetMap, OpenTopoMap, CARTO and NASA GIBS views are active.'}</p></section>
+  <section class="panel pack-panel"><p class="section-label">Before you board</p><h2>Take the stories with you.</h2><p>Download the chapters, local animations, route overview and activities for disconnected reading. External basemap tiles are not bulk-downloaded.</p><button id="install">${status ? 'Check and install pack update' : 'Download offline pack'}</button><progress id="download-progress" value="0" max="1" hidden></progress><p id="pack-state" class="muted">${status ? `Ready / ${(status.installedBytes/1048576).toFixed(1)} MB / installed ${escape(status.installedAt)}` : 'No complete pack installed yet.'}</p></section>
+  <section class="panel position-panel"><p class="section-label">Choose your position source</p><h2>Travel with the map.</h2><p>Live GPS needs your permission and a visible page. Positions stay on this device. Replay uses synthetic coordinates and is not a field test.</p><div class="actions"><button id="gps">Start live GPS</button><button id="replay" class="secondary">Run labelled replay</button><button id="stop" class="secondary">Stop</button></div><p id="journey-state">Journey state: unknown</p></section>
+ </div>
+ <section class="panel chapter-panel"><div><p class="section-label">The corridor collection</p><h2>Seven places, ready when you are.</h2></div><ol class="route-list">${pack.chapters.map((c,index)=>`<li><span class="route-number">${String(index+1).padStart(2,'0')}</span><a data-nav href="${chapterLink(c)}">${escape(c.title)}</a><small>${c.depth === 'deep' ? 'Story + activity' : 'Short chapter'}</small></li>`).join('')}</ol></section>`;
+ const stage = $('#journey-stage');
+ map = createImmersiveMap({
+   container: 'map', controlsContainer: $('#map'), route, hubs: hubs.stations, attractions: hubs.attractions,
+   initialStyle: navigator.onLine ? 'streets' : 'offline', reducedMotion: reducedMotion(), cinematic: !reducedMotion(), mapConfig: localMapConfig(),
+   onHubSelect: station => showJourneyStoryCard(station.hubId),
+   onAttractionSelect: attraction => showAttractionCard(attraction),
+   onProgress: ({ distanceMetres }) => setPreviewProgress(distanceMetres),
+   onStatus: ({ status: mapStatus }) => { if (mapStatus === 'map-resource-error') $('#map-provider-state').textContent = 'A basemap resource did not load. Try another view; the route and stories remain available.'; },
+ });
+ map.addStyleControl();
+ $('#map').dataset.userExploring = 'false';
+ const markExploring = event => { if (!event.originalEvent) return; mapFollowing = false; map.setFollow(false); $('#follow-map').checked = false; $('#map').dataset.userExploring = 'true'; };
+ map.map.on('dragstart', markExploring); map.map.on('rotatestart', markExploring); map.map.on('pitchstart', markExploring);
  if (latestFix && currentMode !== 'manual') updateJourneyMap(latestFix, engine.snapshot());
+ bind('#route-scrubber', event => {
+   positionSource?.stop(); positionSource = null; mapPreviewStop?.(); mapPreviewStop = null;
+   const percent = Number(event.currentTarget.value), distanceMetres = Number(route.properties?.lengthMetres) * percent / 100;
+   const point = sliceLineAtDistance(route, distanceMetres).at(-1);
+   currentMode = 'preview'; $('#position-label').textContent = 'CINEMATIC PREVIEW / illustrative'; $('#position-label').className = 'badge replay';
+   $('#journey-mode').textContent = 'ROUTE PREVIEW'; $('#journey-mode').className = 'journey-mode replay';
+   map.setFollow(mapFollowing); map.updatePosition({ lon: point[0], lat: point[1], s: distanceMetres, source: 'replay' }, { duration: 350, zoom: 7.1 });
+   setPreviewProgress(distanceMetres);
+ }, 'input');
+ bind('#cinematic-preview', () => {
+   positionSource?.stop(); positionSource = null; mapPreviewStop?.(); mapFollowing = true; map.setFollow(true); $('#follow-map').checked = true; $('#map').dataset.userExploring = 'false';
+   currentMode = 'preview'; $('#position-label').textContent = 'CINEMATIC PREVIEW / illustrative'; $('#position-label').className = 'badge replay'; $('#journey-mode').textContent = 'ROUTE PREVIEW'; $('#journey-mode').className = 'journey-mode replay';
+   mapPreviewStop = map.playRoutePreview({ duration: reducedMotion() ? 1 : 16000, onComplete: () => { mapPreviewStop = null; say('Cinematic route preview complete. Choose a story stop or move the route control.'); } });
+   say('Playing an illustrative route preview. This is not live positioning or field evidence.');
+ });
+ bind('#fit-route', () => { mapFollowing = false; map.setFollow(false); $('#follow-map').checked = false; $('#map').dataset.userExploring = 'true'; map.fitRoute(); });
  bind('#install', async () => {
    $('#install').disabled = true; $('#download-progress').hidden = false;
-   try { const status = await installPack({onProgress:(bytes,total)=>{ $('#download-progress').value = bytes/total; $('#pack-state').textContent=`${bytes.toLocaleString()} / ${total.toLocaleString()} bytes verified`; }}); $('#pack-state').textContent=`Ready · ${status.files} verified files · ${(status.installedBytes/1048576).toFixed(1)} MB`; say('Offline pack installed. Stories and saved postcards are available after reconnect-free reload.'); }
+   try { const status = await installPack({onProgress:(bytes,total)=>{ $('#download-progress').value = bytes/total; $('#pack-state').textContent=`${bytes.toLocaleString()} / ${total.toLocaleString()} bytes verified`; }}); $('#pack-state').textContent=`Ready / ${status.files} verified files / ${(status.installedBytes/1048576).toFixed(1)} MB`; say('Offline pack installed. Stories, animations and the fallback route are available after a disconnected reload.'); }
    finally { $('#install').disabled = false; }
  });
  bind('#gps',()=>startJourney('gps')); bind('#replay',()=>startJourney('replay')); bind('#stop',stopJourney);
- bind('#follow-map', e => { mapFollowing = e.currentTarget.checked; say(mapFollowing ? 'Map follow on.' : 'Map follow off. You can explore the corridor freely.'); }, 'change');
+ bind('#follow-map', event => { mapFollowing = event.currentTarget.checked; map.setFollow(mapFollowing); $('#map').dataset.userExploring = String(!mapFollowing); say(mapFollowing ? 'Map follow on.' : 'Map follow off. You can explore the corridor freely.'); }, 'change');
+ bind('#cinematic-camera', event => { map.setCinematic(event.currentTarget.checked); say(event.currentTarget.checked ? 'Cinematic camera on.' : 'Flat camera on.'); }, 'change');
+ bind('#apply-maptiler', () => { const key = $('#maptiler-key').value.trim(); if (!key) throw new Error('Paste a MapTiler browser key first.'); sessionStorage.setItem('shosholoza-maptiler-browser-key', key); render(); say('MapTiler is active for this tab. The key was not written to the project.'); });
+ bind('#clear-maptiler', () => { sessionStorage.removeItem('shosholoza-maptiler-browser-key'); render(); say('Local MapTiler key cleared. Keyless map views are active.'); });
  renderChapterQueue();
 }
 async function renderStories(hubId) {
- if (!hubId) { main.innerHTML = `<section class="collection-hero"><p class="eyebrow">The corridor collection</p><h1>Seven places.<br>Different perspectives.</h1><p class="intro">Explore every chapter manually. These original source summaries await human editorial approval. Attractions are associated with towns; they are not promised views from the train.</p></section><div class="cards story-collection">${pack.chapters.map((c,i)=>`<article class="card story-tile"><div class="story-tile-art" aria-hidden="true"><span>0${i+1}</span></div><p class="eyebrow">${c.depth === 'deep' ? 'Story + challenge + postcard' : 'Short sourced chapter'}</p><h2>${escape(c.title)}</h2><p>${escape((Array.isArray(c.body)?c.body.join(' '):c.body).slice(0,140))}…</p><a data-nav href="${chapterLink(c)}">Open chapter →</a></article>`).join('')}</div>`; return; }
+ if (!hubId) {
+  main.innerHTML = `<section class="collection-hero"><p class="eyebrow">The corridor collection</p><h1>Seven places.<br>Seven moving scenes.</h1><p class="intro">Each illustration is locally drawn from the chapter themes and source register. Explore every chapter manually; historical summaries still await human editorial approval.</p></section><div class="cards story-collection">${pack.chapters.map((c,i)=>`<article class="card story-tile"><div class="story-tile-art" data-localized-scene="${escape(c.hubId)}"></div><p class="eyebrow">0${i+1} / ${c.depth === 'deep' ? 'Story + challenge + postcard' : 'Short sourced chapter'}</p><h2>${escape(c.title)}</h2><p>${escape((Array.isArray(c.body)?c.body.join(' '):c.body).slice(0,140))}...</p><a data-nav href="${chapterLink(c)}">Open chapter</a></article>`).join('')}</div>`;
+  for (const host of document.querySelectorAll('[data-localized-scene]')) mountLocalizedAnimation(host, host.dataset.localizedScene, { controls: false, durationSeconds: 11 });
+  return;
+ }
  const started = performance.now(); const c = chapterByHub(hubId); if (!c) throw new Error('Chapter not found');
  if (engine.snapshot().queue.includes(c.hubId)) await engine.acknowledgeChapter(c.hubId);
  renderChapterQueue();
  const progressKey = `challenge-${currentMode}-${c.id}`;
  const progress = await get('state', progressKey);
- main.innerHTML = `<article class="story"><a class="story-back" data-nav href="/stories">← All chapters</a><div class="story-hero-card"><div class="story-hero-art" aria-hidden="true"><span>${escape(c.title.split(':')[0])}</span></div><div class="story-hero-copy"><p class="eyebrow">${escape(c.depth)} chapter · ${escape(currentMode)}</p><h1>${escape(c.title)}</h1><div class="story-facts"><span>Text transcript</span><span>Offline ready</span><span>${c.sourceIds.length} ${c.sourceIds.length === 1 ? 'source' : 'sources'}</span></div><p><small>${escape(c.locationNotice)}</small></p></div></div><div class="story-body">${(Array.isArray(c.body)?c.body:[c.body]).map(p=>`<p>${escape(p)}</p>`).join('')}</div><details class="story-transcript"><summary>Reading transcript</summary><p>${escape(c.transcript)}</p><p class="muted">Recorded narration is not yet available.</p></details>${c.activity ? `<section class="panel"><p class="eyebrow">Adventure · sourced answers</p><h2>${escape(c.activity.question)}</h2><form id="challenge"><label for="answer">Your answer</label><input id="answer" required autocomplete="off"><div class="actions"><button>Check answer</button><button id="hint" class="secondary" type="button">Show a hint</button></div></form><p id="answer-result" role="status">${progress?.complete ? 'Completed on this device.' : ''}</p><p id="hint-text" class="hint" hidden></p></section><section class="panel"><h2>A moment to create</h2><p>${escape(c.creativePrompt)}</p><a class="button" data-nav href="/creative?hub=${encodeURIComponent(c.hubId)}">Make a postcard</a></section>` : '<p class="notice">This is a short chapter. Mode activities are available at Kimberley, Beaufort West and Matjiesfontein.</p>'}<section class="story-sources"><h2>Where this story comes from</h2>${sourceCards(c.sourceIds)}</section><section class="panel"><h2>Optional assistance</h2><p>AI generation is off until its grounding evaluation passes. The source passages above and prepared hints work offline.</p><button id="ai-check" class="secondary">Check assistive fallback</button><p id="ai-result" role="status"></p></section></article>`;
+ main.innerHTML = `<article class="story"><a class="story-back" data-nav href="/stories">← All chapters</a><div class="story-hero-card"><div id="story-local-scene" class="story-hero-art"></div><div class="story-hero-copy"><p class="eyebrow">${escape(c.depth)} chapter · ${escape(currentMode)}</p><h1>${escape(c.title)}</h1><div class="story-facts"><span>Text transcript</span><span>Offline ready</span><span>${c.sourceIds.length} ${c.sourceIds.length === 1 ? 'source' : 'sources'}</span></div><p><small>${escape(c.locationNotice)}</small></p></div></div><div class="story-body">${(Array.isArray(c.body)?c.body:[c.body]).map(p=>`<p>${escape(p)}</p>`).join('')}</div><details class="story-transcript"><summary>Reading transcript</summary><p>${escape(c.transcript)}</p><p class="muted">Recorded narration is not yet available.</p></details>${c.activity ? `<section class="panel"><p class="eyebrow">Adventure · sourced answers</p><h2>${escape(c.activity.question)}</h2><form id="challenge"><label for="answer">Your answer</label><input id="answer" required autocomplete="off"><div class="actions"><button>Check answer</button><button id="hint" class="secondary" type="button">Show a hint</button></div></form><p id="answer-result" role="status">${progress?.complete ? 'Completed on this device.' : ''}</p><p id="hint-text" class="hint" hidden></p></section><section class="panel"><h2>A moment to create</h2><p>${escape(c.creativePrompt)}</p><a class="button" data-nav href="/creative?hub=${encodeURIComponent(c.hubId)}">Make a postcard</a></section>` : '<p class="notice">This is a short chapter. Mode activities are available at Kimberley, Beaufort West and Matjiesfontein.</p>'}<section class="story-sources"><h2>Where this story comes from</h2>${sourceCards(c.sourceIds)}</section><section class="panel"><h2>Optional assistance</h2><p>AI generation is off until its grounding evaluation passes. The source passages above and prepared hints work offline.</p><button id="ai-check" class="secondary">Check assistive fallback</button><p id="ai-result" role="status"></p></section></article>`;
+ mountHubScene('#story-local-scene', c.hubId, { durationSeconds: 12 });
  let hint = 0;
  bind('#hint',()=>{ $('#hint-text').hidden=false; $('#hint-text').textContent=c.activity.hints[Math.min(hint++,2)]; $('#hint').textContent=`Hint ${Math.min(hint,3)} of 3`; });
  bind('#challenge',async e=>{ e.preventDefault(); const normalize=s=>s.trim().normalize('NFKC').toLocaleLowerCase('en').replace(/[.,!?]/g,''); const accepted=[c.activity.answer,...(c.activity.acceptedAnswers||[])].some(a=>normalize(String(a))===normalize($('#answer').value)); if(accepted)await put('state',progressKey,{complete:true,at:new Date().toISOString(),positionMode:currentMode}); $('#answer-result').textContent=accepted?`Correct. ${currentMode === 'replay' ? 'Replay' : currentMode === 'gps' ? 'Live-GPS journey' : 'Manual'} progress saved on this device.`:'Not quite. Try a prepared hint and read the source.'; },'submit');
@@ -269,7 +277,7 @@ async function renderEvidence(){
  bind('#evidence-export',async()=>{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),r3,r10,status,metrics,events,endurance},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shosholoza-evidence.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
 }
 async function navigate(path){if(draftDirty&&!confirm('Leave this postcard without saving your latest changes?'))return;draftDirty=false;history.pushState({},'',path);await render();}
-async function render(){if(map){map.remove();map=null;marker=null;routeLayer=null;traversedLayer=null;hubMarkers=new Map();attractionMarkers=new Map();journeyViewEngaged=false;}for(const a of document.querySelectorAll('nav a')){if(a.pathname==='/'?location.pathname==='/':location.pathname.startsWith(a.pathname))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}const path=location.pathname;try{if(path.startsWith('/stories'))await renderStories(path.split('/')[2]);else if(path==='/creative')await renderCreative();else if(path==='/carriage')await renderCarriage();else if(path==='/contribute')await renderContribute();else if(path==='/evidence')await renderEvidence();else await renderJourney();}catch(error){main.innerHTML='<h1>This screen could not open.</h1><p id="screen-error"></p><a href="/">Return to journey</a>';$('#screen-error').textContent=error.message;} }
+async function render(){if(map){mapPreviewStop?.();mapPreviewStop=null;map.destroy?.();map=null;}activeScene?.destroy?.();activeScene=null;for(const a of document.querySelectorAll('nav a')){if(a.pathname==='/'?location.pathname==='/':location.pathname.startsWith(a.pathname))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}const path=location.pathname;try{if(path.startsWith('/stories'))await renderStories(path.split('/')[2]);else if(path==='/creative')await renderCreative();else if(path==='/carriage')await renderCarriage();else if(path==='/contribute')await renderContribute();else if(path==='/evidence')await renderEvidence();else await renderJourney();}catch(error){main.innerHTML='<h1>This screen could not open.</h1><p id="screen-error"></p><a href="/">Return to journey</a>';$('#screen-error').textContent=error.message;} }
 window.addEventListener('popstate',()=>{draftDirty=false;render();});document.addEventListener('click',e=>{const a=e.target.closest('a[data-nav]');if(a&&!e.ctrlKey&&!e.metaKey){e.preventDefault();navigate(a.href);}});window.addEventListener('beforeunload',e=>{if(draftDirty){e.preventDefault();e.returnValue='';}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&currentMode==='gps'){positionSource?.stop();positionSource=null;waiting=false;$('#waiting').hidden=true;document.body.classList.remove('low-power');say('Live GPS paused while hidden. Restart it when ready.');setMode('manual');}});
 try{

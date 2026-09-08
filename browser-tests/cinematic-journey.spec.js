@@ -8,14 +8,13 @@ test.beforeEach(async ({ context, page }) => {
 
 test('map keeps route provenance visible and opens a sourced story card from a keyboard-accessible hub', async ({ page }) => {
   await expect(page.locator('.map-key')).toContainText(/unverified|not verified/i);
-  await expect(page.locator('.leaflet-control-attribution')).toContainText(/OpenStreetMap/i);
+  await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/OpenStreetMap/i);
 
-  const hubs = page.locator('.hub-marker');
+  const hubs = page.locator('.immersive-hub');
   await expect(hubs).toHaveCount(7);
-  const firstHub = hubs.first();
-  const firstInteractiveMarker = firstHub.locator('..');
-  await expect(firstInteractiveMarker).toHaveAttribute('tabindex', '0');
+  const firstInteractiveMarker = hubs.first();
   await firstInteractiveMarker.focus();
+  await expect(firstInteractiveMarker).toBeFocused();
   await page.keyboard.press('Enter');
 
   const card = page.locator('#map-story-card');
@@ -28,11 +27,11 @@ test('map keeps route provenance visible and opens a sourced story card from a k
     const data = await fetch('/data/hubs.json').then(response => response.json());
     return data.attractions.filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon)).length;
   });
-  const attractions = page.locator('.attraction-marker');
+  const attractions = page.locator('.immersive-attraction');
   await expect(attractions).toHaveCount(expectedAttractions);
-  const firstAttraction = attractions.first().locator('..');
-  await expect(firstAttraction).toHaveAttribute('tabindex', '0');
+  const firstAttraction = attractions.first();
   await firstAttraction.focus();
+  await expect(firstAttraction).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(card).toBeVisible();
   await expect(card).toContainText(/visibility from the train and rail access are not established/i);
@@ -45,14 +44,13 @@ test('labelled replay moves a train and progressively reveals the traversed rout
   await page.getByRole('button', { name: /run labelled replay/i }).click();
 
   await expect(page.locator('#position-label')).toContainText('SIMULATED REPLAY');
-  const train = page.locator('.train-marker.replay');
+  const train = page.locator('.immersive-train--replay');
   await expect(train).toBeVisible();
-  await expect(train.locator('..')).toHaveAttribute('aria-label', /simulated|replay/i);
+  await expect(train).toHaveAttribute('aria-label', /simulated|replay/i);
 
   await expect.poll(() => page.locator('#journey-progress-bar').evaluate(element => element.value)).toBeGreaterThan(0);
   await expect(page.locator('#journey-progress')).toContainText(/%|km/i);
-  await expect(page.locator('.route-traversed')).toHaveCount(1);
-  await expect(page.locator('.route-traversed')).toHaveAttribute('d', /\S+/);
+  await expect.poll(async () => Number(await page.locator('#map').getAttribute('data-route-progress'))).toBeGreaterThan(0);
 });
 
 test('reduced-motion preference removes cinematic animation while retaining journey status', async ({ page }) => {
@@ -61,7 +59,7 @@ test('reduced-motion preference removes cinematic animation while retaining jour
   await expect(page.locator('#map')).toBeVisible();
   await page.getByRole('button', { name: /run labelled replay/i }).click();
 
-  const train = page.locator('.train-marker.replay');
+  const train = page.locator('.immersive-train--replay');
   await expect(train).toBeVisible();
   const motion = await train.evaluate(element => {
     const style = getComputedStyle(element);

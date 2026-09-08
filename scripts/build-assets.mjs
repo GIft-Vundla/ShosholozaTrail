@@ -2,11 +2,15 @@ import { mkdir, cp, readdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { build } from 'esbuild';
 await mkdir('public/vendor', { recursive: true });
-await rm('public/vendor/leaflet', { recursive: true, force: true });
-await mkdir('public/vendor/leaflet', { recursive: true });
-for (const file of ['leaflet.js', 'leaflet.css']) await cp(`node_modules/leaflet/dist/${file}`, `public/vendor/leaflet/${file}`);
-await cp('node_modules/leaflet/dist/images', 'public/vendor/leaflet/images', { recursive: true });
-await cp('node_modules/leaflet/LICENSE', 'public/vendor/leaflet/LICENSE');
+// MapLibre is served from the same origin so the immersive map has no runtime
+// dependency on a JavaScript CDN. Basemap tiles remain provider-hosted and are
+// never prefetched by the offline pack.
+await rm('public/vendor/maplibre-gl', { recursive: true, force: true });
+await mkdir('public/vendor/maplibre-gl', { recursive: true });
+for (const file of ['maplibre-gl.js', 'maplibre-gl.css']) {
+  await cp(`node_modules/maplibre-gl/dist/${file}`, `public/vendor/maplibre-gl/${file}`);
+}
+await cp('node_modules/maplibre-gl/LICENSE.txt', 'public/vendor/maplibre-gl/LICENSE.txt');
 await build({ stdin: { contents: "export {nearestPointOnLine,point,distance,along,length} from '@turf/turf';", resolveDir: process.cwd() }, bundle: true, format: 'esm', minify: true, outfile: 'public/vendor/turf.js' });
 await cp('node_modules/@turf/turf/LICENSE', 'public/vendor/TURF-LICENSE');
 // These directories are generated copies. Clear stale harness traces/results so

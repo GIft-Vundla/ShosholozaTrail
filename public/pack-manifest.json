@@ -1,12 +1,37 @@
 {
   "version": 1,
-  "hash": "7baf7340ab669beb38b80a117ddebc55d73d0f8a584e492e63193f74c88d3563",
-  "bytes": 398733,
+  "hash": "3a1b5af160793abbfd76996d55ea045bacda4009da29ba62a01356c0fcf1f98e",
+  "bytes": 1299475,
   "assets": [
     {
+      "url": "/animations/README.md",
+      "bytes": 1223,
+      "sha256": "4a7055f31c0cc68b6246be02d723ed3efb8e740090c2e13f1918ca7a54c4462f"
+    },
+    {
+      "url": "/animations/gallery.html",
+      "bytes": 1412,
+      "sha256": "87bc8750bb4ae6ecee58e2ab8177d5ce0e67e7ba8e018e0e14bdf1a99f255f70"
+    },
+    {
+      "url": "/animations/localized-scenes.css",
+      "bytes": 3942,
+      "sha256": "409582f5c67856787661e8525ede1d4c783ff335d5ba7b3a515ee6a2ddbd68db"
+    },
+    {
+      "url": "/animations/localized-scenes.js",
+      "bytes": 13279,
+      "sha256": "8fe1b843c717007233574b17ecfdb8f449d677d0edd1d91d8fa8e4e7c9027c4d"
+    },
+    {
+      "url": "/animations/scenes.v1.json",
+      "bytes": 2478,
+      "sha256": "5b5f39ff4fef7e21ae29f8b75684043541b5e4fd141ce11ceadcce7d42fcb116"
+    },
+    {
       "url": "/app.js",
-      "bytes": 45320,
-      "sha256": "fbdef3d6154880f7e21439e596ed92494653dee57f46c64c260bb9610125246e"
+      "bytes": 47332,
+      "sha256": "d4f6d6f055682c777a8f68c3f1e0794c7985d35a4280a2cf8cae0820a4bb5ea4"
     },
     {
       "url": "/data/hubs.json",
@@ -65,18 +90,33 @@
     },
     {
       "url": "/index.html",
-      "bytes": 1608,
-      "sha256": "b20a7a5581ab7c147afadc385903c580a7fa7d38b14c716e423dcf009a36f3a1"
+      "bytes": 1739,
+      "sha256": "27ea3097e36fb551cab652b393bfceae85b07206a08b9e2518ab694ad62061a9"
     },
     {
       "url": "/journey.css",
-      "bytes": 10857,
-      "sha256": "b33b591584c9df98bd62bd2d595ac7328e2f3c5593e9c772786a0ca6bf0e523f"
+      "bytes": 12357,
+      "sha256": "70656a44100d570854f7274f31f8de2e60f0e1ef4c0540870bb7693514059054"
     },
     {
       "url": "/manifest.webmanifest",
       "bytes": 253,
       "sha256": "bb8baa93f4ff6e098786a270b828ab49869328846d542ea371d344298fb718f6"
+    },
+    {
+      "url": "/map/README.md",
+      "bytes": 2021,
+      "sha256": "91866c3ff3b8842c3b97c8c0ef2bfc9d9d7e609d58a62fff3c8ea20a54b99b7d"
+    },
+    {
+      "url": "/map/immersive-map.css",
+      "bytes": 4734,
+      "sha256": "682b0b5dee909ce34d35f41b99ba3a005c1586e17cc7d4b4b7e26fc4185b8c04"
+    },
+    {
+      "url": "/map/immersive-map.js",
+      "bytes": 22092,
+      "sha256": "5fb9b3710474020241b23ead78f31515318a6dadecef26f0e1e8eced7b26ce82"
     },
     {
       "url": "/results/r10.json",
@@ -109,44 +149,19 @@
       "sha256": "f9b32b82fd5a1d3a990526d86da97f42fb805d9f4d9f978125c4679b674fce44"
     },
     {
-      "url": "/vendor/leaflet/LICENSE",
-      "bytes": 1395,
-      "sha256": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb"
+      "url": "/vendor/maplibre-gl/LICENSE.txt",
+      "bytes": 5984,
+      "sha256": "ee5fc05a0677eaf69601d2c7db0d9ecd6cc27c3abc1d0733bc9ed34707cf8ef2"
     },
     {
-      "url": "/vendor/leaflet/images/layers-2x.png",
-      "bytes": 1259,
-      "sha256": "066daca850d8ffbef007af00b06eac0015728dee279c51f3cb6c716df7c42edf"
+      "url": "/vendor/maplibre-gl/maplibre-gl.css",
+      "bytes": 69430,
+      "sha256": "43c1d886b5fdf0aac4e7135bd6f84b823d9f48283a648012665f9be52c01389f"
     },
     {
-      "url": "/vendor/leaflet/images/layers.png",
-      "bytes": 696,
-      "sha256": "1dbbe9d028e292f36fcba8f8b3a28d5e8932754fc2215b9ac69e4cdecf5107c6"
-    },
-    {
-      "url": "/vendor/leaflet/images/marker-icon-2x.png",
-      "bytes": 2464,
-      "sha256": "00179c4c1ee830d3a108412ae0d294f55776cfeb085c60129a39aa6fc4ae2528"
-    },
-    {
-      "url": "/vendor/leaflet/images/marker-icon.png",
-      "bytes": 1466,
-      "sha256": "574c3a5cca85f4114085b6841596d62f00d7c892c7b03f28cbfa301deb1dc437"
-    },
-    {
-      "url": "/vendor/leaflet/images/marker-shadow.png",
-      "bytes": 618,
-      "sha256": "264f5c640339f042dd729062cfc04c17f8ea0f29882b538e3848ed8f10edb4da"
-    },
-    {
-      "url": "/vendor/leaflet/leaflet.css",
-      "bytes": 14806,
-      "sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6"
-    },
-    {
-      "url": "/vendor/leaflet/leaflet.js",
-      "bytes": 147552,
-      "sha256": "db49d009c841f5ca34a888c96511ae936fd9f5533e90d8b2c4d57596f4e5641a"
+      "url": "/vendor/maplibre-gl/maplibre-gl.js",
+      "bytes": 940760,
+      "sha256": "aa49ba072cb2d4621c365e501867cbc0ffead0d4a42dd79cb8f182525082451a"
     },
     {
       "url": "/vendor/turf.js",

@@ -1,0 +1,29 @@
+.maplibregl-map { font: inherit; }
+.maplibregl-ctrl-group { overflow: hidden; border: 1px solid rgba(255,255,255,.22); border-radius: 14px; box-shadow: 0 8px 26px rgba(4,18,15,.28); }
+.maplibregl-ctrl-group button { min-width: 29px; min-height: 29px; }
+.maplibregl-ctrl-attrib { font-size: 10px; background: rgba(255,255,255,.88) !important; }
+.immersive-train, .immersive-hub, .immersive-attraction { appearance: none; cursor: pointer; font: inherit; }
+.immersive-train { width: 48px; height: 48px; display: grid; place-items: center; padding: 0; border: 3px solid #173f35; border-radius: 50%; background: #fff5d3; color: #173f35; font-size: 25px; box-shadow: 0 0 0 8px rgba(255,218,111,.22), 0 10px 28px rgba(3,17,14,.45); animation: immersive-train-pulse 1.8s ease-in-out infinite; }
+.immersive-train--replay { border-color: #8f4d1b; background: #ffd66b; }
+.immersive-train--gps { border-color: #0d5e3c; background: #b8f0c9; }
+.immersive-hub { position: relative; z-index: 5; min-width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 2px solid #fff2c7; border-radius: 50%; background: #153f35; color: #fff2c7; box-shadow: 0 6px 18px rgba(3,17,14,.38); transition: transform .25s ease, box-shadow .25s ease; }
+.immersive-hub strong { position: absolute; left: 50%; top: calc(100% + 7px); width: max-content; max-width: 150px; padding: 4px 8px; transform: translateX(-50%); border-radius: 8px; color: #fff6dd; background: rgba(6,26,21,.86); font-size: 11px; line-height: 1.1; letter-spacing: .03em; pointer-events: none; }
+.immersive-hub:hover, .immersive-hub:focus-visible { transform: scale(1.16); box-shadow: 0 0 0 7px rgba(255,214,107,.24), 0 8px 24px rgba(3,17,14,.46); }
+.immersive-hub--pulse { animation: immersive-hub-pulse 1.2s ease-in-out 2; }
+.immersive-attraction { z-index: 2; width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border: 2px solid #fff2c7; background: #9c4e26; color: #fff2c7; transform: rotate(45deg); border-radius: 7px; box-shadow: 0 6px 16px rgba(3,17,14,.4); }
+.immersive-attraction > span { transform: rotate(-45deg); }
+.immersive-attraction:hover, .immersive-attraction:focus-visible { filter: brightness(1.2); scale: 1.16; }
+.immersive-style-control { position: absolute; z-index: 4; right: 14px; bottom: 42px; display: grid; gap: 7px; padding: 8px; border: 1px solid rgba(255,255,255,.2); border-radius: 17px; background: rgba(8,27,22,.82); box-shadow: 0 14px 32px rgba(3,17,14,.34); backdrop-filter: blur(12px); }
+.immersive-style-button { width: 72px; padding: 5px 6px; display: grid; grid-template-columns: 24px 1fr; align-items: center; gap: 6px; border: 0; border-radius: 10px; color: #fff5d8; background: transparent; font: 600 10px/1.1 inherit; text-align: left; cursor: pointer; }
+.immersive-style-button:hover, .immersive-style-button:focus-visible { background: rgba(255,255,255,.13); }
+.immersive-style-button[aria-pressed="true"] { color: #1a382f; background: #ffe08a; box-shadow: 0 3px 11px rgba(0,0,0,.24); }
+.immersive-map-status { grid-column: 1 / -1; max-width: 220px; margin: 1px 4px 2px; color: #fff2ca; font-size: 10px; line-height: 1.25; }
+.immersive-style-swatch { width: 24px; height: 24px; display: block; border: 1px solid rgba(255,255,255,.5); border-radius: 7px; background: #d8ded5 linear-gradient(135deg, transparent 45%, #809488 46% 54%, transparent 55%); }
+.immersive-style-swatch--outdoor { background: repeating-radial-gradient(ellipse at 80% 80%, #dfe8bd 0 3px, #738c5c 4px 5px, #c6d89c 6px 8px); }
+.immersive-style-swatch--dark { background: #091b16 linear-gradient(135deg, transparent 42%, #d8a74d 44% 51%, transparent 53%); }
+.immersive-style-swatch--satellite { background: linear-gradient(135deg,#193c3a,#55764e 35%,#866a43 56%,#304a31); }
+.immersive-style-swatch--hybrid { background: linear-gradient(135deg,#193c3a,#55764e 35%,#866a43 56%,#304a31); box-shadow: inset 0 0 0 2px #f4e1ad; }
+@keyframes immersive-train-pulse { 50% { box-shadow: 0 0 0 13px rgba(255,218,111,.06), 0 12px 30px rgba(3,17,14,.48); } }
+@keyframes immersive-hub-pulse { 50% { transform: scale(1.28); box-shadow: 0 0 0 13px rgba(255,214,107,.08), 0 8px 26px rgba(3,17,14,.5); } }
+@media (max-width: 640px) { .immersive-style-control { right: 8px; bottom: 36px; grid-template-columns: repeat(5, 42px); } .immersive-style-button { width: 40px; display: grid; grid-template-columns: 1fr; padding: 4px; } .immersive-style-button > span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); } .immersive-style-swatch { width: 32px; height: 32px; } }
+@media (prefers-reduced-motion: reduce) { .immersive-train, .immersive-hub--pulse { animation: none; } .immersive-hub { transition: none; } }

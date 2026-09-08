@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ShosholozaTrail localized animation gallery</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #080d14; color: #f8f1df; }
+    body { max-width: 78rem; margin: auto; padding: clamp(1rem, 4vw, 3rem); }
+    h1 { margin-block-end: .3rem; font-size: clamp(1.7rem, 4vw, 3rem); }
+    header p { max-width: 52rem; color: #bfc8d2; line-height: 1.55; }
+    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); gap: 1.25rem; margin-block-start: 2rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <p>Local development preview</p>
+    <h1>Seven places, seven visual stories</h1>
+    <p>Each scene is an interpretive code-native illustration grounded in the current chapter theme. No archival image or exact historic reconstruction is shown.</p>
+  </header>
+  <main id="gallery"></main>
+  <script type="module">
+    import { listLocalizedScenes, mountLocalizedAnimation } from "./localized-scenes.js";
+    const gallery = document.querySelector("#gallery");
+    for (const { hubId } of listLocalizedScenes()) {
+      const host = document.createElement("section");
+      gallery.append(host);
+      mountLocalizedAnimation(host, hubId, { durationSeconds: 10 });
+    }
+  </script>
+</body>
+</html>

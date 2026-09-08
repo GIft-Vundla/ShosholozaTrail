@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "status": "interpretive-illustrations-editorial-review-pending",
+  "mediaPolicy": "Code-native vector artwork only. No archival image is reproduced or implied.",
+  "scenes": [
+    {"hubId":"pretoria","title":"A light for remembrance","motif":"Rising light and seven quiet rays","palette":["#0d2035","#f2b84b","#f8f1df"],"sourceIds":["freedom-park"],"interpretation":"Abstract light marks remembrance and the beginning of a careful journey."},
+    {"hubId":"kimberley","title":"Words, earth and industry","motif":"Written lines orbit an abstract spiral beside a headgear motif","palette":["#24170f","#df8d45","#8bd6c7"],"sourceIds":["sol-plaatje","big-hole"],"interpretation":"The spiral and structure are symbolic; they do not reproduce mine shape, scale or engineering."},
+    {"hubId":"de-aar","title":"Lines from a junction","motif":"Rail lines converge and a letter travels outward","palette":["#151c2b","#e2bb67","#72b7ce"],"sourceIds":["schreiner-de-aar"],"interpretation":"Converging paths connect the chapter's documented letter with travel; no operational railway claim is made."},
+    {"hubId":"beaufort-west","title":"Reading the layers","motif":"Karoo strata reveal an abstract fossil trace","palette":["#241a18","#d47d55","#e8cf91"],"sourceIds":["sanparks-karoo"],"interpretation":"Layer and fossil forms evoke geology and palaeontology; they do not identify a species or what is visible from the train."},
+    {"hubId":"matjiesfontein","title":"Uses across a lifetime","motif":"A railway-era streetscape draws in as lamps illuminate","palette":["#101e27","#f0b958","#b4d0cc"],"sourceIds":["matjiesfontein-history"],"interpretation":"A stylised streetscape connects rail, writing and changing building uses; it is not an architectural reconstruction."},
+    {"hubId":"worcester","title":"A route of public memory","motif":"Woven paths join public markers","palette":["#17221f","#e39a5c","#6dc5a4"],"sourceIds":["worcester-heritage"],"interpretation":"The weave represents connected public memory and does not map private homes or exact heritage-route geometry."},
+    {"hubId":"cape-town","title":"Streets remembered","motif":"A street grid appears, recedes and returns in fragments","palette":["#12172a","#efb14b","#78b9d4"],"sourceIds":["district-six"],"interpretation":"The changing grid responds to the museum exhibition title Streets: Retracing District Six; it does not reconstruct erased buildings or residents' testimony."}
+  ]
+}
+
