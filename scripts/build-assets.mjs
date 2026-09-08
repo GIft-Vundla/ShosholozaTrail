@@ -21,9 +21,9 @@ await mkdir('public/data/traces', { recursive: true });
 for (const file of ['route.geojson', 'hubs.json', 'pack.v1.json', 'sources.json']) {
   await cp(`data/${file}`, `public/data/${file}`);
 }
-// The detailed rail geometry is served to /ride on demand. Keep it outside the
-// installable passenger pack so a normal offline install does not absorb the
-// large online-only ride asset.
+// The detailed rail geometry is part of the passenger pack so the verified
+// corridor, ride controls and discoveries continue without a network. Online
+// imagery/terrain enhance it when available.
 await cp('data/route-ride.geojson', 'public/data/route-ride.geojson');
 await cp('data/traces/demo-corridor.json', 'public/data/traces/demo-corridor.json');
 await mkdir('public/results', { recursive: true });
@@ -38,7 +38,7 @@ async function walk(dir) {
 }
 const assets = [];
 for (const file of (await walk('public')).sort()) {
-  if (file.endsWith('/pack-manifest.json') || file.endsWith('/sw.js') || file.endsWith('/data/route-ride.geojson') || file.includes('/data/traces/') && !file.includes('/demo')) continue;
+  if (file.endsWith('/pack-manifest.json') || file.endsWith('/sw.js') || file.includes('/data/traces/') && !file.includes('/demo')) continue;
   const bytes = await readFile(file);
   assets.push({ url: file.slice(6), bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') });
 }

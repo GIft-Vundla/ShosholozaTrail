@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Pause, Play, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Pause, Play, Volume2, VolumeX, X } from 'lucide-react';
 import type { Map as MapType, StyleSpecification } from 'maplibre-gl';
 import maplibregl from '../vendor/maplibre';
 import { STOPS } from '../data';
@@ -17,6 +17,7 @@ import {
 import { LocalizedScene } from './LocalizedScene';
 import { AiAssistant } from './AiAssistant';
 import { buildRideWorldModel, installRideWorld, updateRideWorld, type RideHubData } from '../ride-world';
+import { RideSoundscape } from '../ride-audio';
 
 type RideMapController = {
   setCamera(distanceMetres: number, bearingOffset: number, pitch: number): void;
@@ -33,7 +34,9 @@ type SkyPeriod = 'dawn' | 'midday' | 'dusk' | 'night';
 type SkyPalette = { sky: string; horizon: string; fog: string };
 
 const CAMERA_LOOK_AHEAD_METRES = 240;
-const DEFAULT_PITCH = 85;
+const DEFAULT_PITCH = 87;
+const RIDE_ZOOM = 16;
+const TERRAIN_EXAGGERATION = 1.8;
 const SKY_PALETTES: Record<SkyPeriod, SkyPalette> = {
   dawn: { sky: '#3a5a80', horizon: '#e8956b', fog: '#d8a882' },
   midday: { sky: '#8fb8e0', horizon: '#e8d3b0', fog: '#d9c9ae' },
@@ -94,6 +97,8 @@ export function Ride() {
   const triggerModuleRef = useRef<TriggerModule | null>(null);
   const openHubRef = useRef<(hubId: string) => void>(() => undefined);
   const lookStatusRef = useRef<'available' | 'earned' | 'missed'>('available');
+  const soundRef = useRef<RideSoundscape | null>(null);
+  const soundedDiscoveries = useRef(0);
   const [route, setRoute] = useState<RideRoute | null>(null);
   const [hubData, setHubData] = useState<RideHubData | null>(null);
   const [waypoints, setWaypoints] = useState<RideWaypoint[]>([]);
@@ -112,6 +117,7 @@ export function Ride() {
   const [storyOpen, setStoryOpen] = useState(false);
   const [bearing, setBearing] = useState(0);
   const [pitch, setPitch] = useState(DEFAULT_PITCH);
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const reducedMotion = useMemo(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
 
   openHubRef.current = hubId => {
@@ -182,7 +188,7 @@ export function Ride() {
   }, []);
 
   useEffect(() => {
-    if (!route || !hubData || !mapElement.current || !online) return;
+    if (!route || !hubData || !mapElement.current) return;
     let removed = false;
     let map: MapType | null = null;
     let skyFrame: number | null = null;
@@ -204,8 +210,10 @@ export function Ride() {
       if (removed || !mapElement.current) return;
       const runtimeConfig = config as Record<string, unknown>;
       const basemaps = module.createBasemapStyles(runtimeConfig);
-      const style = addTerrainToSatelliteStyle(basemaps.satellite.style, basemaps.outdoor?.style) as StyleSpecification;
-      style.glyphs = 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf';
+      const style = (online
+        ? addTerrainToSatelliteStyle(basemaps.satellite.style, basemaps.outdoor?.style)
+        : structuredClone(basemaps.offline.style)) as StyleSpecification;
+      if (online) style.glyphs = 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf';
       // Rural Esri coverage often has no native tile above z17. Let MapLibre
       // overzoom the last real image instead of exposing provider "tile not
       // available" placeholders at the low aerial ride camera.
@@ -215,8 +223,8 @@ export function Ride() {
         container: mapElement.current,
         style,
         center: coordinates[0],
-        zoom: 16.5,
-        pitch: reducedMotion ? 76 : DEFAULT_PITCH,
+        zoom: RIDE_ZOOM,
+        pitch: reducedMotion ? 78 : DEFAULT_PITCH,
         bearing: 0,
         maxPitch: 88,
         attributionControl: { compact: true },
@@ -256,7 +264,7 @@ export function Ride() {
         const ahead = coordinateAtDistance(coordinates, cumulative, distanceMetres + CAMERA_LOOK_AHEAD_METRES);
         const routeBearing = Math.atan2(ahead[0] - here[0], ahead[1] - here[1]) * 180 / Math.PI;
         updateSky(distanceMetres);
-        map.jumpTo({ center: here, zoom: 16.5, pitch: nextPitch, bearing: routeBearing + bearingOffset });
+        map.jumpTo({ center: here, zoom: RIDE_ZOOM, pitch: nextPitch, bearing: routeBearing + bearingOffset });
         const now = performance.now();
         if (now - lastWorldUpdate > 80 || distanceMetres === 0) {
           updateRideWorld(map, world, distanceMetres, discoveredRef.current);
@@ -266,13 +274,13 @@ export function Ride() {
       controller.current = { setCamera, destroy: () => map?.remove() };
       map.on('load', () => {
         if (!map || removed) return;
-        installRideWorld(map, world, hubId => openHubRef.current(hubId));
+        installRideWorld(map, world, hubId => openHubRef.current(hubId), !online);
         map.addSource('ride-route', { type: 'geojson', data: route });
         map.addLayer({ id: 'ride-track', type: 'line', source: 'ride-route', paint: { 'line-color': '#f4bd4f', 'line-width': ['interpolate', ['linear'], ['zoom'], 8, 1.4, 14, 3.2, 18, 8], 'line-opacity': .92 } });
-        if (map.getSource('elevation')) {
-          try { map.setTerrain({ source: 'elevation', exaggeration: 1.4 }); } catch { /* Terrain tiles may still be arriving. */ }
+        if (online && map.getSource('elevation')) {
+          try { map.setTerrain({ source: 'elevation', exaggeration: TERRAIN_EXAGGERATION }); } catch { /* Terrain tiles may still be arriving. */ }
         }
-        setCamera(waypoints[indexRef.current]?.distanceMetres ?? 0, 0, reducedMotion ? 76 : DEFAULT_PITCH);
+        setCamera(waypoints[indexRef.current]?.distanceMetres ?? 0, 0, reducedMotion ? 78 : DEFAULT_PITCH);
         setMapReady(true);
       });
     }).catch(() => {
@@ -291,7 +299,7 @@ export function Ride() {
   }, [hubData, online, reducedMotion, route, waypoints]);
 
   const processJourney = useCallback((from: number, to: number) => {
-    if (!hubData || !triggerModuleRef.current) return;
+    if (!hubData || !triggerModuleRef.current) return [];
     const crossed = triggerModuleRef.current.crossingZones(from, to, hubData.triggerZones);
     if (crossed.length) {
       const next = new Set(discoveredRef.current);
@@ -310,6 +318,7 @@ export function Ride() {
       }
     }
     controller.current?.setCamera(to, lookRef.current.bearing, lookRef.current.pitch);
+    return crossed.map(zone => zone.hubId);
   }, [hubData]);
 
   const travelTo = useCallback((target: number, duration = 1_400) => {
@@ -320,12 +329,16 @@ export function Ride() {
     const to = waypoints[target].distanceMetres;
     const finish = () => {
       frame.current = null;
-      processJourney(from, to);
+      const crossedHubs = processJourney(from, to);
       indexRef.current = target;
       setCurrent(target);
       setMoving(false);
-      const hub = waypoints[target].hubIndex;
-      if (hub !== undefined && !autoRef.current) { setArrival(hub); setAuto(false); }
+      const waypointHub = waypoints[target].hubIndex;
+      const crossedHub = crossedHubs.at(-1);
+      const hub = waypointHub ?? (crossedHub ? STOPS.findIndex(stop => stop.id === crossedHub) : -1);
+      if (hub !== undefined && hub >= 0) {
+        autoRef.current = false; setAuto(false); setArrival(hub); setStoryOpen(false);
+      }
     };
     if (reducedMotion || duration === 0) {
       controller.current.setCamera(to, lookRef.current.bearing, lookRef.current.pitch);
@@ -374,7 +387,36 @@ export function Ride() {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
     if (travelTimer.current !== null) clearTimeout(travelTimer.current);
     if (holdRef.current.timer !== null) clearTimeout(holdRef.current.timer);
+    soundRef.current?.destroy();
   }, []);
+
+  useEffect(() => {
+    soundRef.current?.setMotion(moving || auto, speed);
+  }, [auto, moving, speed]);
+
+  useEffect(() => {
+    if (!soundEnabled) { soundedDiscoveries.current = discovered.length; return; }
+    if (discovered.length > soundedDiscoveries.current) soundRef.current?.chime();
+    soundedDiscoveries.current = discovered.length;
+  }, [discovered.length, soundEnabled]);
+
+  useEffect(() => {
+    if (!soundEnabled || arrival === null) return;
+    const stop = STOPS[arrival];
+    soundRef.current?.chime();
+    const timer = window.setTimeout(() => soundRef.current?.announce(stop.name, stop.teaser), 520);
+    return () => window.clearTimeout(timer);
+  }, [arrival, soundEnabled]);
+
+  const toggleSound = async () => {
+    if (soundEnabled) {
+      soundRef.current?.mute(); setSoundEnabled(false); return;
+    }
+    soundRef.current ??= new RideSoundscape();
+    await soundRef.current.enable();
+    soundRef.current.setMotion(moving || auto, speed);
+    setSoundEnabled(true);
+  };
 
   const setLook = (nextBearing: number, nextPitch: number) => {
     const normalizedBearing = ((nextBearing + 180) % 360 + 360) % 360 - 180;
@@ -422,8 +464,11 @@ export function Ride() {
   });
   const discoveredBillboards = (hubData?.stations.filter(item => discovered.includes(item.hubId)).length ?? 0)
     + (hubData?.attractions.filter(item => discovered.includes(item.hubId)).length ?? 0);
+  const worcesterZone = hubData?.triggerZones.find(zone => zone.hubId === 'worcester');
+  const challengeStart = worcesterZone ? Math.max(0, worcesterZone.stationAlongMetres - 40_000) : Infinity;
+  const challengeEnd = worcesterZone ? worcesterZone.stationAlongMetres + 8_000 : -Infinity;
+  const challengeVisible = distanceTravelled >= challengeStart && distanceTravelled <= challengeEnd;
 
-  if (!online) return <RideUnavailable title="The Ride needs a signal" message="Satellite imagery and terrain are online data. Reconnect to enter the ride, or use the packaged journey overview now." />;
   if (state !== 'ready' || !route) return <RideUnavailable loading={state === 'loading'} title={state === 'loading' ? 'Preparing the track' : 'The Ride is waiting for verified track data'} message={message} invalid={state === 'error'} />;
 
   return <main className="ride" data-route-state={state} data-world-ready={String(mapReady)} data-reduced-motion={String(reducedMotion)} data-camera-mode="maplibre-camera" data-sky-period={skyPeriod} data-bearing={bearing} data-pitch={pitch} data-discovered-billboards={discoveredBillboards} data-look-award={lookStatus}>
@@ -451,7 +496,11 @@ export function Ride() {
 
     <header className="ride-header">
       <Link to="/journey" className="ride-back"><ArrowLeft /> Route overview</Link>
-      <p className="ride-source" data-testid="ride-source">{describeRouteSource(route)} / {matchedArrivals} arrivals / {discoveredBillboards} billboards lit</p>
+      <div className="ride-header-tools">
+        {!online && <span className="ride-offline-badge">Offline rail world</span>}
+        <button className="ride-sound-toggle" onClick={() => void toggleSound()} aria-pressed={soundEnabled} aria-label={soundEnabled ? 'Mute ride sound' : 'Turn on ride sound'}>{soundEnabled ? <Volume2 /> : <VolumeX />}<span>{soundEnabled ? 'Sound on' : 'Sound off'}</span></button>
+        <p className="ride-source" data-testid="ride-source">{describeRouteSource(route)} / {matchedArrivals} arrivals / {discoveredBillboards} billboards lit</p>
+      </div>
     </header>
 
     <aside className="ride-readout" aria-live="polite">
@@ -460,10 +509,10 @@ export function Ride() {
       <small>Interactive rail-world simulation on mapped geometry / imagery and vector context, not footage</small>
     </aside>
 
-    <aside className={`ride-look-challenge ${lookStatus}`} aria-live="polite">
+    {challengeVisible && <aside className={`ride-look-challenge ${lookStatus}`} aria-live="polite">
       <span>Hex River challenge</span>
       <strong>{lookStatus === 'earned' ? 'Look-left view collected' : lookStatus === 'missed' ? 'Passed — open Worcester anyway' : 'Look left through the Hex'}</strong>
-    </aside>
+    </aside>}
 
     <nav className="ride-look-controls" aria-label="Look around">
       <button onClick={() => setLook(bearing - 12, pitch)} aria-label="Look left"><ChevronLeft /></button>
@@ -514,6 +563,7 @@ export function Ride() {
       </button>)}
     </nav>
 
+    {activeStop && <div className="ride-arrival-wash" aria-hidden="true" />}
     {activeStop && <section className="ride-arrival" aria-label={`${activeStop.name} arrival`}>
       <button className="ride-arrival-close" onClick={() => setArrival(null)} aria-label="Return to the track"><X /></button>
       <div className="ride-arrival-photo"><img src={activeStop.image} alt={`${activeStop.name} place photograph`} /><span>Arrived / {Math.round(distanceTravelled / 1000)} km</span></div>

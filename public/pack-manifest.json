@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "hash": "8676b7cf236aea4cadc2eb4e116739bed50bfc7b014a03ae5650b6f30625ab25",
-  "bytes": 3717939,
+  "hash": "9dfeb0f61b80cfbe0483d63b0bbfbd8ae43f9a1d74b77619c12473942048902c",
+  "bytes": 5326233,
   "assets": [
     {
       "url": "/animations/README.md",
@@ -29,14 +29,14 @@
       "sha256": "0d3a07435463825f34cda0cd09727dca8a5e789cb223b34d2aeb466d1fdc7b5c"
     },
     {
-      "url": "/app-assets/index-0lG9T-gN.css",
-      "bytes": 32950,
-      "sha256": "2313df327e6cae47a17cddfbaeda81fca7ab48e14381030257b7a3205b803678"
+      "url": "/app-assets/index-DJvD_6s3.js",
+      "bytes": 302860,
+      "sha256": "ebfe90f15e3132fb8cc1defeb8cc0ba8f954909b610f3a55256a6653a7c556a0"
     },
     {
-      "url": "/app-assets/index-DtN9EDDP.js",
-      "bytes": 298505,
-      "sha256": "1416b3356c153f49831ed800bfb595ccf952cc82c4e9861ffd7e2b3061b6b031"
+      "url": "/app-assets/index-DK9a32Xa.css",
+      "bytes": 35437,
+      "sha256": "7c2a8e6285faea48e056d2de7c6444bdf1d38326161962a35360bc0e500b36bc"
     },
     {
       "url": "/app.html",
@@ -45,8 +45,8 @@
     },
     {
       "url": "/app.js",
-      "bytes": 51530,
-      "sha256": "82ee15ab8f0dcd9bb8acce182e9b0a591e9a05736dda47dd7cb5181152acb764"
+      "bytes": 51561,
+      "sha256": "24f9a8136adb19117dc841d0496fbc27a3eb101f8458a005cecb83359beec30c"
     },
     {
       "url": "/assets/photo-credits.json",
@@ -107,6 +107,11 @@
       "url": "/data/pack.v1.json",
       "bytes": 13971,
       "sha256": "ee00400acd55f3bb49213f24444333014fb73aaa10d06e098f09e29a6644b3d2"
+    },
+    {
+      "url": "/data/route-ride.geojson",
+      "bytes": 1601421,
+      "sha256": "4af7762f6552ce7c3e57911ca91c4ffca4cac3bdd061686687c6702ed6e401ac"
     },
     {
       "url": "/data/route.geojson",
@@ -196,7 +201,7 @@
     {
       "url": "/index.html",
       "bytes": 735,
-      "sha256": "cc6c2ed505252f8f406c456fb62649e692fa1f763e40a844d43553d1ade51981"
+      "sha256": "339668c85ba856103dc524c4ac6f9328224f991e297acac63ef67e604d3a5896"
     },
     {
       "url": "/journey.css",

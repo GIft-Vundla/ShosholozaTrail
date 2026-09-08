@@ -44,7 +44,7 @@ test('rail ride output is detailed, continuous and provenance-backed', async () 
   }
 });
 
-test('overview is simplified and public lazy ride copy is exact', async () => {
+test('overview is simplified and the detailed ride is copied into the offline pack', async () => {
   const overview = await load('data/route.geojson');
   const ride = await load('data/route-ride.geojson');
   const publicRide = await load('public/data/route-ride.geojson');
@@ -55,7 +55,7 @@ test('overview is simplified and public lazy ride copy is exact', async () => {
   assert.deepEqual(publicRide, ride);
   const buildScript = await readFile(new URL('scripts/build-assets.mjs', ROOT), 'utf8');
   assert.match(buildScript, /cp\('data\/route-ride\.geojson', 'public\/data\/route-ride\.geojson'\)/);
-  assert.match(buildScript, /file\.endsWith\('\/data\/route-ride\.geojson'\)/);
+  assert.doesNotMatch(buildScript, /file\.endsWith\('\/data\/route-ride\.geojson'\)/);
 });
 
 test('Hex River candidate contains curved mapped geometry', async () => {

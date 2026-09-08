@@ -83,7 +83,7 @@ test('waiting enters low-power mode with truthful copy and no visual animation',
   expect(animationName).toBe('none');
 });
 
-test('installed pack reopens the journey and a chapter with the browser offline', async ({ context, page }) => {
+test('installed pack reopens the journey, chapter and verified rail ride offline', async ({ context, page }) => {
   await page.getByRole('button', { name: /download offline pack|check and install pack update/i }).click();
   await expect(page.locator('#pack-state')).toContainText(/Ready .* verified files/i, { timeout: 20_000 });
   await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null)).toBe(true);
@@ -97,4 +97,9 @@ test('installed pack reopens the journey and a chapter with the browser offline'
   await page.goto('/app', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('#map')).toBeVisible();
   await expect(page.locator('.map-key')).toContainText(/OSM-mapped rail candidate/i);
+
+  await page.goto('/ride?hub=pretoria', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.ride')).toHaveAttribute('data-world-ready', 'true', { timeout: 20_000 });
+  await expect(page.getByText('Offline rail world')).toBeVisible();
+  await expect(page.getByLabel('Pretoria arrival')).toBeVisible();
 });

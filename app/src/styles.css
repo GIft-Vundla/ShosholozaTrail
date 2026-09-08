@@ -75,3 +75,22 @@
 @media(max-width:850px){.ai-guide-shell{grid-template-columns:1fr;padding:105px 18px 92px;gap:28px;align-items:start}.ai-guide-intro h1{font-size:48px}.ai-guide-intro>p:not(.eyebrow){font-size:15px}.ai-guide-intro>small{margin-top:15px}.ai-chat{height:680px;min-height:0}.ai-message{max-width:94%}}
 @media(max-width:520px){.ai-chat{height:calc(100vh - 310px);min-height:520px;border-radius:22px}.ai-chat-history{padding:15px}.ai-chat-header{padding:13px 15px}.ai-suggestions{padding-inline:13px}.ai-chat-form{margin-inline:12px}.ai-chat-note{margin-inline:15px}}
 @media(prefers-reduced-motion:reduce){.ai-message.thinking p span{animation:none}.ai-chat-history{scroll-behavior:auto}}
+
+/* Ride polish: keep the route readout clear, stage arrivals, and expose sound/offline state. */
+.ride-header-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;pointer-events:auto}
+.ride-sound-toggle,.ride-offline-badge{min-height:38px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(8,16,25,.82);color:#eef2f6;backdrop-filter:blur(14px);box-shadow:0 12px 35px rgba(0,0,0,.22)}
+.ride-sound-toggle{display:flex;align-items:center;gap:7px;padding:8px 12px;cursor:pointer;font-size:11px;font-weight:750}
+.ride-sound-toggle[aria-pressed="true"]{border-color:rgba(244,189,79,.7);color:#f4bd4f}.ride-sound-toggle svg{width:16px;height:16px}
+.ride-offline-badge{display:inline-flex;align-items:center;padding:8px 12px;color:#f4bd4f;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.09em}
+.ride-atmosphere{mix-blend-mode:normal;background:linear-gradient(180deg,rgba(15,34,56,.08),transparent 40%,rgba(4,8,14,.12) 67%,rgba(4,8,14,.78) 100%);box-shadow:inset 0 0 70px rgba(3,7,12,.32)}
+.ride-look-challenge{left:auto;right:82px;top:96px;bottom:auto;max-width:250px;animation:ride-challenge-in .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes ride-challenge-in{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+.ride-arrival-wash{position:absolute;z-index:10;inset:0;background:radial-gradient(circle at 70% 38%,rgba(244,189,79,.22),transparent 32%),linear-gradient(90deg,rgba(5,10,17,.18),rgba(5,10,17,.62));pointer-events:none;animation:ride-wash-in .65s ease both}
+.ride-arrival{animation:ride-card-in .65s cubic-bezier(.16,.88,.24,1)}
+.ride-arrival-photo{overflow:hidden}.ride-arrival-photo img{animation:ride-arrival-photo 5s cubic-bezier(.2,.7,.2,1) both}
+.ride-arrival-photo span{animation:ride-arrival-label .8s .25s ease both}
+@keyframes ride-wash-in{from{opacity:0}to{opacity:1}}
+@keyframes ride-arrival-photo{from{transform:scale(1.12);filter:saturate(.7) brightness(.72)}to{transform:scale(1);filter:saturate(1.08) brightness(1)}}
+@keyframes ride-arrival-label{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:780px){.ride-header-tools{max-width:64vw;flex-wrap:wrap}.ride-header-tools .ride-source{display:none}.ride-sound-toggle span{display:none}.ride-sound-toggle{width:38px;padding:0;justify-content:center}.ride-offline-badge{font-size:8px;padding:6px 9px}.ride-look-challenge{left:12px;right:auto;top:84px;bottom:auto;max-width:210px}.ride-readout{bottom:180px}}
+@media(prefers-reduced-motion:reduce){.ride-look-challenge,.ride-arrival-wash,.ride-arrival,.ride-arrival-photo img,.ride-arrival-photo span{animation:none}}

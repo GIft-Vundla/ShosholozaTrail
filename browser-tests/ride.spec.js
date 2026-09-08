@@ -15,9 +15,19 @@ const routeFixture = {
     coordinates: [[28.19, -25.75], [28.17, -25.86], [28.1, -26.02], [28.05, -26.2]],
   },
 };
+const hubsFixture = {
+  version: '1.0.0-osm-rail-candidate',
+  hubOrder: ['pretoria', 'johannesburg'],
+  stations: [
+    { id: 'pretoria', hubId: 'pretoria', name: 'Pretoria', lon: 28.19, lat: -25.75 },
+    { id: 'johannesburg', hubId: 'johannesburg', name: 'Johannesburg', lon: 28.05, lat: -26.2 },
+  ],
+  triggerZones: [{ id: 'johannesburg', hubId: 'johannesburg', sEnter: 45_000, sExit: 55_000, stationAlongMetres: 52_000 }],
+  attractions: [],
+};
 
 const mapModule = `
-export function createBasemapStyles(){return {satellite:{style:{version:8,sources:{},layers:[{id:'background',type:'background',paint:{'background-color':'#152b3b'}}]}}}}
+export function createBasemapStyles(){const style={version:8,sources:{},layers:[{id:'background',type:'background',paint:{'background-color':'#152b3b'}}]};return {satellite:{style},offline:{style}}}
 `;
 
 async function openFixtureRide(page, reducedMotion = false) {
@@ -38,6 +48,10 @@ test('ride uses verified route properties, arrival content and step/look control
   await expect(page.locator('.ride')).toHaveAttribute('data-world-ready', 'true');
   await expect(page.getByRole('navigation', { name: 'Ride speed' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Discovered places' })).toBeVisible();
+  await expect(page.locator('.ride-look-challenge')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Turn on ride sound' })).toHaveAttribute('aria-pressed', 'false');
+  await page.getByRole('button', { name: 'Turn on ride sound' }).click();
+  await expect(page.getByRole('button', { name: 'Mute ride sound' })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('img', { name: 'Pretoria place photograph' })).toHaveAttribute('src', '/assets/photos/pretoria.webp');
   await page.getByRole('button', { name: 'Return to the track' }).click();
   await expect(page.getByRole('button', { name: 'Step forward; hold for continuous ride' })).toBeEnabled();
@@ -45,6 +59,16 @@ test('ride uses verified route properties, arrival content and step/look control
   await expect(page.locator('.ride')).toHaveAttribute('data-bearing', '12');
   await page.getByRole('button', { name: 'Step forward; hold for continuous ride' }).click();
   await expect(page.locator('.ride-readout span')).not.toHaveText('0 km travelled', { timeout: 3_000 });
+});
+
+test('verified rail world switches to its packaged renderer when offline', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'onLine', { configurable: true, get: () => false }));
+  await page.route('**/data/route-ride.geojson', route => route.fulfill({ contentType: 'application/geo+json', body: JSON.stringify(routeFixture) }));
+  await page.route('**/data/hubs.json', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify(hubsFixture) }));
+  await page.route('**/map/immersive-map.js', route => route.fulfill({ contentType: 'text/javascript', body: mapModule }));
+  await page.goto('/ride?hub=pretoria');
+  await expect(page.locator('.ride')).toHaveAttribute('data-world-ready', 'true');
+  await expect(page.getByText('Offline rail world')).toBeVisible();
 });
 
 test('reduced motion keeps instant stepping and disables continuous motion', async ({ page }) => {
