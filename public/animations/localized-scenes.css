@@ -4,7 +4,8 @@
   --scene-ground: var(--ink);
   position: relative;
   overflow: hidden;
-  min-block-size: 15rem;
+  min-block-size: 20rem;
+  aspect-ratio: 16 / 9;
   border-radius: 1.25rem;
   color: var(--scene-ink);
   background: var(--scene-ground);
@@ -14,6 +15,9 @@
 .st-local-scene__photo{z-index:-3;object-fit:cover;transform:scale(1);opacity:1}
 .st-local-scene__shade{z-index:-2;background:linear-gradient(115deg,rgb(17 26 41/.25),rgb(17 26 41/.72))}
 .st-local-scene svg{z-index:-1;display:block;opacity:.88}
+.st-local-scene--kimberley .st-local-scene__photo{object-position:50% 52%;transform-origin:51% 57%;opacity:1}
+.st-local-scene--kimberley .st-local-scene__shade{background:linear-gradient(115deg,rgb(17 26 41/.03),rgb(17 26 41/.14))}
+.st-local-scene--kimberley svg{opacity:.74}
 .st-local-scene__caption{position:absolute;inset:auto 0 0;z-index:2;display:grid;grid-template-columns:1fr auto;align-items:end;gap:.25rem 1rem;padding:3.2rem 1rem .8rem;font:600 .76rem/1.3 var(--font-body);letter-spacing:.03em;background:linear-gradient(transparent,rgb(4 8 13/.94))}
 .st-local-scene__caption small{color:rgb(248 242 232/.92);font-weight:600}
 .st-local-scene__credit{grid-column:1/-1;color:rgb(248 242 232/.76);font-size:.67rem;font-weight:400}
@@ -21,6 +25,9 @@
 .st-local-scene__control{grid-column:2;grid-row:1;min-width:4.25rem;min-height:2.4rem;padding:.45rem .8rem;border:1px solid rgb(255 255 255/.3);border-radius:999px;color:inherit;background:rgb(4 8 13/.58);cursor:pointer}
 .st-local-scene__control:focus-visible{outline:3px solid var(--scene-accent);outline-offset:2px}
 .st-local-scene[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-photo var(--scene-duration,9s) ease-in-out infinite alternate}
+.st-local-scene--kimberley[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-kimberley-crater var(--scene-duration,9s) cubic-bezier(.2,.72,.2,1) infinite alternate}
+.st-local-scene--kimberley[data-static="false"]:not([data-paused="true"]) .scene-kimberley-marker{transform-origin:53px 43px;animation:st-kimberley-marker var(--scene-duration,9s) ease-in-out infinite alternate}
+.st-local-scene--kimberley[data-static="false"]:not([data-paused="true"]) .scene-kimberley-pulse{transform-origin:410px 254px;animation:st-kimberley-pulse calc(var(--scene-duration,9s)*.55) ease-out infinite}
 .st-local-scene[data-static="false"]:not([data-paused="true"]) .scene-rise,
 .st-local-scene[data-static="false"]:not([data-paused="true"]) .scene-draw{animation:st-rise var(--scene-duration,9s) cubic-bezier(.2,.8,.2,1) infinite}
 .st-local-scene[data-static="false"]:not([data-paused="true"]) .scene-pulse,
@@ -34,6 +41,9 @@
 .st-local-scene[data-static="false"]:not([data-paused="true"]) .scene-skyline{transform-origin:center bottom;animation:st-skyline var(--scene-duration,9s) cubic-bezier(.2,.8,.2,1) infinite}
 .st-local-scene[data-paused="true"] *{animation-play-state:paused!important}
 @keyframes st-photo{from{transform:scale(1);opacity:.86}to{transform:scale(1.1) translate3d(-1.2%, -1%, 0);opacity:1}}
+@keyframes st-kimberley-crater{0%{transform:scale(1.03) rotate(-.65deg) translate3d(.5%,.2%,0);opacity:1}48%{transform:scale(1.13) rotate(.2deg) translate3d(-.35%,-.5%,0);opacity:1}100%{transform:scale(1.25) rotate(1.05deg) translate3d(-1.1%,-1.4%,0);opacity:1}}
+@keyframes st-kimberley-marker{from{transform:translate3d(0,-5px,0);opacity:.38}to{transform:translate3d(0,0,0);opacity:.66}}
+@keyframes st-kimberley-pulse{0%{transform:scale(.65);opacity:.8}75%,100%{transform:scale(1.65);opacity:0}}
 @keyframes st-rise{0%,12%{transform:translate3d(0,28px,0);opacity:.25}48%,82%{transform:translate3d(0,0,0);opacity:1}100%{transform:translate3d(0,-5px,0);opacity:.55}}
 @keyframes st-pulse{0%,100%{transform:scale(.9);opacity:.4}50%{transform:scale(1.08);opacity:1}}
 @keyframes st-orbit{to{transform:rotate(360deg)}}
@@ -43,4 +53,4 @@
 @keyframes st-memory{0%,22%,100%{opacity:.25;transform:scale(.98)}48%,72%{opacity:1;transform:scale(1)}}
 @keyframes st-bloom{0%,18%{transform:scale(.72);opacity:.2}55%,100%{transform:scale(1);opacity:1}}
 @keyframes st-skyline{0%,15%{transform:scaleY(.08);opacity:.25}55%,100%{transform:scaleY(1);opacity:.86}}
-@media(prefers-reduced-motion:reduce){.st-local-scene *,.st-local-scene *::before,.st-local-scene *::after{animation:none!important}.st-local-scene__photo,.st-local-scene svg{transform:none!important;opacity:1!important}}
+@media(prefers-reduced-motion:reduce){.st-local-scene *,.st-local-scene *::before,.st-local-scene *::after{animation:none!important}.st-local-scene__photo,.st-local-scene svg{transform:none!important;opacity:1!important}.st-local-scene--kimberley .st-local-scene__photo{transform:scale(1.14) translate3d(-.35%,-.65%,0)!important}}

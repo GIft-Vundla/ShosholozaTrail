@@ -238,7 +238,11 @@ export function createImmersiveMap(options) {
     map.addSource('journey-route', { type: 'geojson', data: route });
     map.addSource('journey-progress', { type: 'geojson', data: normalizeFeature({ type: 'LineString', coordinates: [route.geometry.coordinates[0], route.geometry.coordinates[0]] }) });
     map.addLayer({ id: 'journey-route-shadow', type: 'line', source: 'journey-route', paint: { 'line-color': '#06110e', 'line-width': 10, 'line-opacity': 0.68, 'line-blur': 2 } });
-    map.addLayer({ id: 'journey-route-line', type: 'line', source: 'journey-route', paint: { 'line-color': '#d69b52', 'line-width': 4, 'line-opacity': 0.9, 'line-dasharray': [1.2, 2.2] }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
+    const verifiedRail = route.properties?.railAlignmentVerified === true;
+    map.addLayer({ id: 'journey-route-line', type: 'line', source: 'journey-route', paint: {
+      'line-color': '#d69b52', 'line-width': 4, 'line-opacity': 0.9,
+      ...(verifiedRail ? {} : { 'line-dasharray': [1.2, 2.2] }),
+    }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
     map.addLayer({ id: 'journey-progress-glow', type: 'line', source: 'journey-progress', paint: { 'line-color': '#ffd66b', 'line-width': 12, 'line-opacity': 0.24, 'line-blur': 4 } });
     map.addLayer({ id: 'journey-progress-line', type: 'line', source: 'journey-progress', paint: { 'line-color': '#ffe08a', 'line-width': 6, 'line-opacity': 1 }, layout: { 'line-cap': 'round', 'line-join': 'round' } });
     setRouteProgress(distanceMetres, { animate: false });
@@ -249,7 +253,9 @@ export function createImmersiveMap(options) {
     for (const [index, hub] of (options.hubs ?? []).entries()) {
       const longitude = Number(hub.lon ?? hub.longitude), latitude = Number(hub.lat ?? hub.latitude);
       if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) continue;
-      const element = markerButton('immersive-hub', `Open ${hub.name} story`, `<span>${String(index + 1).padStart(2, '0')}</span><strong>${hub.name}</strong>`);
+      const storyPending = String(hub.storyTriggerStatus ?? '').startsWith('not-created');
+      const markerLabel = storyPending ? `View ${hub.name} mapped station` : `Open ${hub.name} story`;
+      const element = markerButton('immersive-hub', markerLabel, `<span>${String(index + 1).padStart(2, '0')}</span><strong>${hub.name}</strong>`);
       element.dataset.hub = hub.hubId ?? hub.id;
       element.addEventListener('click', () => options.onHubSelect?.(hub));
       const marker = new maplibre.Marker({ element, anchor: 'center' }).setLngLat([longitude, latitude]).addTo(map);

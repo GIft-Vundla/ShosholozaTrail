@@ -14,7 +14,7 @@ def source(id, title, url, institution, passage, publication=None):
 
 sources = [
     source('osm-stations', 'OpenStreetMap station anchor records', 'https://www.openstreetmap.org/copyright', 'OpenStreetMap contributors',
-           'Seven mapped station or stop-position anchors were retrieved from the OpenStreetMap API. Their selected node IDs, versions and coordinates are recorded in data/provenance/osm-stations-selected.json. Connecting these points with straight lines produces an unresolved schematic, not sourced railway geometry.'),
+           'Eight mapped station or stop-position anchors were retrieved from OpenStreetMap. Their selected node IDs, versions and coordinates are recorded in data/provenance/osm-stations-selected.json. Eligible railway ways from a dated OpenStreetMap extract were graphed by node ID and routed between consecutive anchors; the resulting alignment is an automated geographic candidate pending human operational-route review.'),
     source('osm-attraction-coordinates', 'OpenStreetMap attraction coordinate records', 'https://www.openstreetmap.org/copyright', 'OpenStreetMap contributors',
            'Five attraction map positions were selected by exact OpenStreetMap feature ID. Nominatim supplied a representative point for each feature. IDs, coordinates and direct object URLs are recorded in data/provenance/attractions-selected.json. These mapped positions are not field verified and make no claim about rail access or visibility.'),
     source('freedom-park', 'Freedom Park', 'https://www.freedompark.co.za/', 'Freedom Park',
@@ -78,7 +78,7 @@ chapters = [
 def write(name, obj):
     (ROOT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-sources[0]['rights'] = 'OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Station extract and derivative schematic distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible.'
+sources[0]['rights'] = 'OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Station records and derived rail candidate are distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible.'
 next(record for record in sources if record['id'] == 'osm-attraction-coordinates')['rights'] = 'OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Selected feature positions are distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible.'
 write('sources.json', dict(version=VERSION, records=sources))
 write('pack.v1.json', dict(version=VERSION, language='en', status='editorial-draft-human-review-pending',

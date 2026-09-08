@@ -11,7 +11,7 @@ export function DestinationPanel({ stop, index, onClose, onJump }: {
   onJump: (index: number) => void;
 }) {
   const [tab, setTab] = useState('Highlights');
-  const tabs = ['Highlights', 'Culture', 'Experiences', 'Gallery', 'Local Voices'];
+  const tabs = ['Highlights', 'Culture', 'Experiences', 'Gallery'];
 
   return <div className="panel-layer">
     <button className="panel-backdrop" onClick={onClose} aria-label="Close destination" />
@@ -44,7 +44,6 @@ export function DestinationPanel({ stop, index, onClose, onJump }: {
         {tab === 'Culture' && <><p className="story-copy">{stop.culture}</p><h3>Taste of the place</h3>{stop.food.map(food => <div className="food-row" key={food}>{food}</div>)}</>}
         {tab === 'Experiences' && stop.attractions.map(attraction => <article className="experience" key={attraction.name}><MapPin /><div><h3>{attraction.name}</h3><p>{attraction.blurb}</p></div></article>)}
         {tab === 'Gallery' && <div className="gallery"><img src={stop.image} alt={stop.name} /><div>{stop.name}</div><div>{stop.province}</div></div>}
-        {tab === 'Local Voices' && <blockquote>“{stop.voice.quote}”<footer>{stop.voice.name} · {stop.voice.role}</footer></blockquote>}
       </div>
       <footer className="route-list"><p className="eyebrow">Where you are on the trail</p>{STOPS.map((item, itemIndex) => <button key={item.id} className={itemIndex === index ? 'active' : ''} onClick={() => onJump(itemIndex)}><span>{itemIndex + 1}</span>{item.name}<small>{item.km} km</small></button>)}</footer>
     </section>

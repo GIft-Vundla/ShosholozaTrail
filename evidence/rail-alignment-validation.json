@@ -1,0 +1,112 @@
+{
+  "testedAt": "2026-09-08T11:39:07.821569+00:00",
+  "routeSha256": "4af7762f6552ce7c3e57911ca91c4ffca4cac3bdd061686687c6702ed6e401ac",
+  "publicCopySha256": "4af7762f6552ce7c3e57911ca91c4ffca4cac3bdd061686687c6702ed6e401ac",
+  "pointCount": 76536,
+  "overviewPointCount": 2000,
+  "measuredLengthKm": 1582.417,
+  "declaredLengthKm": 1582.417,
+  "maximumAdjacentSpacingMetres": 24.375,
+  "railAlignmentVerified": true,
+  "resolvedSegments": [
+    "pretoria--johannesburg",
+    "johannesburg--kimberley",
+    "kimberley--de-aar",
+    "de-aar--beaufort-west",
+    "beaufort-west--matjiesfontein",
+    "matjiesfontein--worcester",
+    "worcester--cape-town"
+  ],
+  "unresolvedSegments": [],
+  "endpointChecks": {
+    "startToPretoriaMetres": 15.905,
+    "endToCapeTownMetres": 32.967
+  },
+  "segments": [
+    {
+      "id": "pretoria--johannesburg",
+      "confidence": "osm-mapped-connected-candidate",
+      "lengthKm": 69.486,
+      "startSnapMetres": 15.886,
+      "endSnapMetres": 34.036,
+      "osmWayCount": 80,
+      "precedingJunctionConnector": null
+    },
+    {
+      "id": "johannesburg--kimberley",
+      "confidence": "osm-mapped-connected-candidate",
+      "lengthKm": 482.43,
+      "startSnapMetres": 34.036,
+      "endSnapMetres": 0.0,
+      "osmWayCount": 121,
+      "precedingJunctionConnector": null
+    },
+    {
+      "id": "kimberley--de-aar",
+      "confidence": "osm-mapped-connected-candidate",
+      "lengthKm": 235.645,
+      "startSnapMetres": 0.0,
+      "endSnapMetres": 0.0,
+      "osmWayCount": 59,
+      "precedingJunctionConnector": null
+    },
+    {
+      "id": "de-aar--beaufort-west",
+      "confidence": "osm-mapped-connected-candidate",
+      "lengthKm": 259.299,
+      "startSnapMetres": 0.0,
+      "endSnapMetres": 28.662,
+      "osmWayCount": 62,
+      "precedingJunctionConnector": null
+    },
+    {
+      "id": "beaufort-west--matjiesfontein",
+      "confidence": "osm-mapped-connected-candidate",
+      "lengthKm": 230.333,
+      "startSnapMetres": 28.662,
+      "endSnapMetres": 0.0,
+      "osmWayCount": 106,
+      "precedingJunctionConnector": null
+    },
+    {
+      "id": "matjiesfontein--worcester",
+      "confidence": "osm-mapped-connected-candidate",
+      "lengthKm": 130.185,
+      "startSnapMetres": 0.0,
+      "endSnapMetres": 11.734,
+      "osmWayCount": 54,
+      "precedingJunctionConnector": null
+    },
+    {
+      "id": "worcester--cape-town",
+      "confidence": "osm-mapped-connected-candidate",
+      "lengthKm": 174.697,
+      "startSnapMetres": 11.734,
+      "endSnapMetres": 33.313,
+      "osmWayCount": 115,
+      "precedingJunctionConnector": null
+    }
+  ],
+  "hexRiver": {
+    "bounds": [
+      19.35,
+      -33.75,
+      19.85,
+      -33.35
+    ],
+    "pointCount": 3067,
+    "alongLengthKm": 61.44,
+    "endpointDistanceKm": 51.768,
+    "sinuosity": 1.1868
+  },
+  "checks": {
+    "eightStationAnchors": true,
+    "sevenResolvedSegments": true,
+    "lengthSanity1200To1900Km": true,
+    "maximumSpacingAtMost25Metres": true,
+    "endpointsWithin50Metres": true,
+    "hexRiverCurved": true,
+    "publicCopyExact": true
+  },
+  "passed": true
+}

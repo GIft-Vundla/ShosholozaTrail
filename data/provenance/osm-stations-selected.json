@@ -3,7 +3,7 @@
   "attribution": "© OpenStreetMap contributors",
   "license": "ODbL-1.0",
   "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/",
-  "retrievedAt": "2026-09-07T22:21:34.347891+00:00",
+  "retrievedAt": "2026-09-08T10:49:30.235147+00:00",
   "records": [
     {
       "hubId": "pretoria",
@@ -22,6 +22,24 @@
       "retrievalUrl": "https://api.openstreetmap.org/api/0.6/map?bbox=28.184,-25.765,28.196,-25.755",
       "rawSha256": "bd603dc1a128a05cfc8add6195effbfdcffe0cbf4482353a3ee76b3b69a9a082",
       "sourceUrl": "https://www.openstreetmap.org/node/799906122"
+    },
+    {
+      "hubId": "johannesburg",
+      "osmType": "node",
+      "osmId": 326084268,
+      "lat": -26.1976708,
+      "lon": 28.0423048,
+      "version": 14,
+      "timestamp": "2025-09-17T07:23:31Z",
+      "tags": {
+        "name": "Johannesburg Park Station",
+        "public_transport": "station",
+        "railway": "station",
+        "ref": "JHB"
+      },
+      "retrievalUrl": "https://api.openstreetmap.org/api/0.6/node/326084268",
+      "rawSha256": "3cb62a62393bac59447610c0b9c254aef7f1a1d935754919ef5a42f94e543a0c",
+      "sourceUrl": "https://www.openstreetmap.org/node/326084268"
     },
     {
       "hubId": "kimberley",

@@ -5,6 +5,7 @@ import { useState } from 'react';
 const LINKS: [string, string][] = [
   ['/', 'Home'],
   ['/journey', 'The Journey'],
+  ['/ride', 'The Ride'],
   ['/destinations', 'Destinations'],
   ['/stories', 'Stories'],
   ['/plan', 'Plan Your Trip'],
@@ -32,8 +33,8 @@ export function SiteHeader({ tone = 'light' }: { tone?: 'light' | 'onImage' }) {
             </NavLink>
           ))}
           <a href={ENGINE}>Live Journey</a>
-          <Link className="start-pill" to="/journey">
-            Start Journey
+          <Link className="start-pill" to="/ride">
+            Start Ride
           </Link>
         </nav>
         <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu">

@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-09-08T10:03:04.839Z",
+  "capturedAt": "2026-09-08T10:36:07.460Z",
   "environment": "Playwright headless Chromium requestAnimationFrame sample in a separate no-video context; not a DevTools Performance-panel recording",
   "captures": [
     {
@@ -47,8 +47,8 @@
     {
       "hubId": "johannesburg",
       "frameStats": {
-        "frames": 180,
-        "measuredMs": 3000,
+        "frames": 181,
+        "measuredMs": 3017,
         "approximateFps": 60,
         "p95FrameMs": 16.7
       },

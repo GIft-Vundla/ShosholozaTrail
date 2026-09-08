@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "hash": "411218544172a732325cf9fa06853e18526ba3ec5b3c798e5a3ef35481940098",
-  "bytes": 3452266,
+  "hash": "11cb0a4b6e0989140c191dfdd3addaf6d900425d99bbad3faa69b8c7a8f6e5ad",
+  "bytes": 3609500,
   "assets": [
     {
       "url": "/animations/README.md",
@@ -15,28 +15,28 @@
     },
     {
       "url": "/animations/localized-scenes.css",
-      "bytes": 4655,
-      "sha256": "bebe48f5e2614dbde87ae37d0f1b1b5a3a3bcecc5a2979bf145db98b30277dbe"
+      "bytes": 6170,
+      "sha256": "59cacb69e713af7608d862d5e8bd0261217a6af98dbf24f944e5a968309bcc56"
     },
     {
       "url": "/animations/localized-scenes.js",
-      "bytes": 18438,
-      "sha256": "a66aa2606a212f74673ab44021f538ba763dc5222e6fdd95428de1d6838e5af7"
+      "bytes": 18079,
+      "sha256": "33cf69cbcae43007526449432d1eadb806e86a3909bef5977eb38992f62914bd"
     },
     {
       "url": "/animations/scenes.v1.json",
-      "bytes": 2394,
-      "sha256": "d3684a277e96998e5d53745164bf4e8feefcd5082f580691514ea9c84dd6db51"
+      "bytes": 2438,
+      "sha256": "0d3a07435463825f34cda0cd09727dca8a5e789cb223b34d2aeb466d1fdc7b5c"
     },
     {
-      "url": "/app-assets/index-Bh_LZmHX.js",
-      "bytes": 266756,
-      "sha256": "b2136970e9eef553fef68a5f0737779d481ebb6ea8f827d4a7985b02d6d2af58"
+      "url": "/app-assets/index-B-nslnRe.js",
+      "bytes": 279260,
+      "sha256": "db6c345e9673a5357d663f03a99cc654df0a5703592617affa7f2cc04ee1ec1b"
     },
     {
-      "url": "/app-assets/index-CBsvlfJ1.css",
-      "bytes": 19184,
-      "sha256": "d1bdcbe0c485270f0c28a1f38a7953cf6c1d3de8177d5d3c13005ba34b6b875e"
+      "url": "/app-assets/index-DsAHnFCt.css",
+      "bytes": 25488,
+      "sha256": "10f40e666a10e95b36fbd7db3029a531f08c9c62c95222c356b3bab7e62055f9"
     },
     {
       "url": "/app.html",
@@ -45,8 +45,8 @@
     },
     {
       "url": "/app.js",
-      "bytes": 51177,
-      "sha256": "0b2333f8ddc192a01c32430c014839463f9750fe94e1a2720439b8a3c6ea304c"
+      "bytes": 51460,
+      "sha256": "ad7e1b435d4bec6b296b62a5636a020c0e44179cfb63abfbf0770fd4ccda1bee"
     },
     {
       "url": "/assets/photo-credits.json",
@@ -100,8 +100,8 @@
     },
     {
       "url": "/data/hubs.json",
-      "bytes": 15934,
-      "sha256": "8419223fbaeff71a91b796f07230fe3199e512b4744dff83c96b5e1fd6abc23e"
+      "bytes": 16977,
+      "sha256": "3a759e03786468b553eb4381ced3c144b1ce16b8d65c7c73c13548ddf50548c4"
     },
     {
       "url": "/data/pack.v1.json",
@@ -110,18 +110,18 @@
     },
     {
       "url": "/data/route.geojson",
-      "bytes": 2834,
-      "sha256": "8db06dd85ca98db35fb69f7ec7c857c43aea9bab777652bd4786069c28a69a51"
+      "bytes": 134350,
+      "sha256": "e887225116be84e810d0197d07043d7f7ef8fab9449f36d0c186ab1747c5a57c"
     },
     {
       "url": "/data/sources.json",
-      "bytes": 11313,
-      "sha256": "1e931a5b35668e1b4215fdbfabed5ea7ed95644bc524d1be1d2713ac790548a2"
+      "bytes": 11423,
+      "sha256": "8e12c80f52d9c7a5f0c0d0bec0ada78520bdbf139dd3bf4a526d4a993a4500db"
     },
     {
       "url": "/data/traces/demo-corridor.json",
-      "bytes": 3531,
-      "sha256": "eee26569a3ddda8cc2cdd23ac45b4133411bf65b891727629295b61c8143f897"
+      "bytes": 3543,
+      "sha256": "9567fca1c36c61d1266d93305f431295354748bb8505d6c056f67c27fa225055"
     },
     {
       "url": "/engine/gps.js",
@@ -196,12 +196,12 @@
     {
       "url": "/index.html",
       "bytes": 735,
-      "sha256": "fdea48c2cc7810f5c2220974fe2d76bd4dd13305c9b193b33e271c3dbb317f31"
+      "sha256": "19673c3668d4cc894abcafa92bd91b52271636f788e6f26a7c5f5ca940918cbf"
     },
     {
       "url": "/journey.css",
-      "bytes": 13016,
-      "sha256": "313a9d6e1d23d60909e73dd98e6bde93e06311d4d713706da2793e0f47449669"
+      "bytes": 13073,
+      "sha256": "2d368252416fb54fae1348623f63bcd895ed7a7bc0f13f4a3b7e21c7dd0f96a4"
     },
     {
       "url": "/manifest.webmanifest",
@@ -220,8 +220,8 @@
     },
     {
       "url": "/map/immersive-map.js",
-      "bytes": 25784,
-      "sha256": "335c07c1f2b81950478cb087b790e52debc8ad904d2a17cca5a9ef68f120e72f"
+      "bytes": 26086,
+      "sha256": "d2765a0e061942f8176c775aff000e958f4c2b10ab2e8645facea70d76e0a771"
     },
     {
       "url": "/results/r10.json",
@@ -229,9 +229,14 @@
       "sha256": "3aa4a788098aaa7bf4e25aa8f7eeb95aced847f967e60f0daf3b9fb58dd58d79"
     },
     {
+      "url": "/results/r3-corridor.json",
+      "bytes": 3903,
+      "sha256": "c9c9c466064cb5a019095354b492b6175ba2e88aaf6397cc7e42efc4ee29a6ae"
+    },
+    {
       "url": "/results/r3.json",
       "bytes": 76123,
-      "sha256": "2d1948a5fc5ac78542a71ab4e2e59af28d683ee0792bb1a8d4f3287ec7fb8560"
+      "sha256": "76a0af49a024302b396bd916efc06a857cdafe53050eaca9a8d072841fd26d95"
     },
     {
       "url": "/storage/drafts.js",

@@ -93,7 +93,7 @@ export async function generateCorridorDemo() {
   };
   const trace = { header: { traceId: 'synthetic-matjiesfontein-delay-v1', provenance: 'synthetic',
     routeVersion: route.properties.routeVersion ?? route.properties.version, confidence: route.properties.confidence,
-    notes: 'Authored demonstration near Matjiesfontein on unverified schematic station connectors. Not measured rail travel or a field test. Movement, nine stationary minutes, then resumed movement.' },
+    notes: 'Authored demonstration near Matjiesfontein on the automated OSM rail candidate. Not measured rail travel or a field test. Movement, nine stationary minutes, then resumed movement.' },
     fixes: [at(start, t), at(start + 200, t + 10000), at(start + 400, t + 20000), at(stoppedAt, t + 30000),
       ...Array.from({ length: 19 }, (_, i) => at(stoppedAt, t + 60000 + i * 30000)),
       at(stoppedAt + 300, t + 630000), at(stoppedAt + 600, t + 660000)] };

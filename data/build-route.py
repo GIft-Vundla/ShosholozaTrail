@@ -1,4 +1,8 @@
-"""Build an explicitly unresolved schematic from OSM station anchors, NOT rail alignment."""
+"""Legacy schematic generator retained for archaeology; use acquire-rail.py."""
+import sys
+
+if '--legacy-schematic' not in sys.argv:
+    raise SystemExit('Deprecated: use data/acquire-rail.py. Pass --legacy-schematic only to intentionally recreate the obsolete seven-point fixture.')
 import hashlib
 import json
 import math

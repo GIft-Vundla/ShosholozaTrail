@@ -8,26 +8,28 @@ hubs = json.loads((ROOT / 'hubs.json').read_text(encoding='utf-8'))
 pack = json.loads((ROOT / 'pack.v1.json').read_text(encoding='utf-8'))
 sources = json.loads((ROOT / 'sources.json').read_text(encoding='utf-8'))
 
-expected_hubs = ['pretoria', 'kimberley', 'de-aar', 'beaufort-west', 'matjiesfontein', 'worcester', 'cape-town']
-assert hubs['hubOrder'] == expected_hubs
-assert [record['hubId'] for record in hubs['stations']] == expected_hubs
-assert [record['hubId'] for record in hubs['triggerZones']] == expected_hubs
-assert [record['hubId'] for record in pack['chapters']] == expected_hubs
+expected_stations = ['pretoria', 'johannesburg', 'kimberley', 'de-aar', 'beaufort-west', 'matjiesfontein', 'worcester', 'cape-town']
+expected_story_hubs = ['pretoria', 'kimberley', 'de-aar', 'beaufort-west', 'matjiesfontein', 'worcester', 'cape-town']
+assert hubs['hubOrder'] == expected_stations
+assert [record['hubId'] for record in hubs['stations']] == expected_stations
+assert [record['hubId'] for record in hubs['triggerZones']] == expected_story_hubs
+assert [record['hubId'] for record in pack['chapters']] == expected_story_hubs
 assert {record['recordType'] for record in hubs['stations']} == {'station'}
 assert {record['recordType'] for record in hubs['triggerZones']} == {'trigger-zone'}
 assert {record['recordType'] for record in hubs['attractions']} == {'attraction'}
 assert {record['markerRole'] for record in hubs['stations']} == {'rail-station-anchor'}
 assert {record['markerRole'] for record in hubs['triggerZones']} == {'story-unlock-zone'}
 assert {record['markerRole'] for record in hubs['attractions']} == {'nearby-attraction'}
-assert route['properties']['railAlignmentVerified'] is False
-assert route['properties']['confidence'] == 'unresolved'
-assert route['properties']['geometryType'] == 'schematic-station-connectors'
-assert route['properties']['style']['dashArray']
+assert route['properties']['railAlignmentVerified'] is True
+assert route['properties']['confidence'] == 'osm-mapped-connected-candidate'
+assert route['properties']['geometryType'] == 'osm-rail-graph-shortest-path-candidate'
+assert route['properties']['unresolvedSegments'] == []
+assert route['properties']['reviewStatus'] == 'automated-candidate-human-operational-route-review-pending'
 
 source_ids = {record['id'] for record in sources['records']}
 station_positions = {(record['lat'], record['lon']) for record in hubs['stations']}
 for attraction in hubs['attractions']:
-    assert attraction['hubId'] in expected_hubs
+    assert attraction['hubId'] in expected_stations
     assert set(attraction['sourceIds']) <= source_ids
     assert attraction['relationshipToRail'].startswith('Associated with the story hub;')
     assert attraction['visibilityFromTrain'] == 'not-established'
@@ -46,4 +48,5 @@ for attraction in hubs['attractions']:
 
 assert sum(chapter['depth'] == 'deep' for chapter in pack['chapters']) == 3
 assert sum(chapter['depth'] == 'short' for chapter in pack['chapters']) == 4
-print(f"Validated seven hubs, {len(hubs['attractions'])} attractions, separate record types, source linkage, and unresolved route labelling.")
+assert next(record for record in hubs['stations'] if record['hubId'] == 'johannesburg')['storyTriggerStatus'] == 'not-created-no-sourced-chapter'
+print(f"Validated eight mapped stations, seven sourced story zones, {len(hubs['attractions'])} attractions, source linkage, and OSM rail-candidate labelling.")

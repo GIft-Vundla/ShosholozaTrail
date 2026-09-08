@@ -56,6 +56,7 @@ body {
 .map-key .key-line { display: inline-block; width: 23px; height: 3px; vertical-align: middle; margin: 0 6px 0 14px; }
 .map-key .key-line:first-child { margin-left: 0; }
 .key-line.schematic { border-top: 3px dotted var(--gold2); }
+.key-line.mapped { border-top: 3px solid var(--gold2); }
 .key-line.travelled { background: var(--gold); }
 .key-stop { display: inline-grid; place-items: center; width: 20px; height: 20px; margin: 0 6px 0 14px; border-radius: 50%; background: var(--cream); color: var(--ink); font-size: 8px; font-weight: 800; }
 .key-attraction { display: inline-block; margin: 0 6px 0 14px; color: var(--gold2); font-size: 17px; line-height: 1; }

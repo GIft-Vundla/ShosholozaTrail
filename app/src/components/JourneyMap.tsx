@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import maplibregl from '../vendor/maplibre';
-import { STOPS, TOTAL_KM } from '../data';
+import { STOPS } from '../data';
+import { coordinateAtDistance, cumulativeDistances, readRideRoute, type Coordinate } from '../ride-model';
 
 type Position = { lon: number; lat: number };
 type MapController = {
@@ -30,19 +31,6 @@ function loadMapConfig(): Promise<Record<string, unknown>> {
   return mapConfigPromise;
 }
 
-function positionAt(progress: number): Position {
-  const km = Math.max(0, Math.min(TOTAL_KM, progress * TOTAL_KM));
-  let index = STOPS.findIndex(stop => stop.km >= km);
-  if (index <= 0) return { lon: STOPS[0].lon, lat: STOPS[0].lat };
-  if (index < 0) index = STOPS.length - 1;
-  const before = STOPS[index - 1], after = STOPS[index];
-  const portion = (km - before.km) / Math.max(1, after.km - before.km);
-  return {
-    lon: before.lon + (after.lon - before.lon) * portion,
-    lat: before.lat + (after.lat - before.lat) * portion,
-  };
-}
-
 export function JourneyMap({ progress, focus, onSelect }: {
   progress: number;
   current: number;
@@ -54,13 +42,16 @@ export function JourneyMap({ progress, focus, onSelect }: {
   const controlsRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<MapController | null>(null);
   const distanceRef = useRef(0);
+  const coordinatesRef = useRef<Coordinate[]>(STOPS.map(stop => [stop.lon, stop.lat]));
+  const cumulativeRef = useRef(cumulativeDistances(coordinatesRef.current));
   const progressRef = useRef(progress);
   const focusRef = useRef(focus);
   const onSelectRef = useRef(onSelect);
   progressRef.current = progress;
   focusRef.current = focus;
   onSelectRef.current = onSelect;
-  const [status, setStatus] = useState('Loading geographic map…');
+  const [status, setStatus] = useState('Loading geographic map...');
+  const [routeSource, setRouteSource] = useState('Loading mapped rail geometry...');
 
   useEffect(() => {
     let cancelled = false;
@@ -68,19 +59,30 @@ export function JourneyMap({ progress, focus, onSelect }: {
     void Promise.all([
       import(/* @vite-ignore */ moduleUrl) as Promise<ImmersiveModule>,
       loadMapConfig(),
-    ]).then(([module, mapConfig]) => {
+      fetch('/data/route.geojson', { cache: 'no-store', headers: { Accept: 'application/geo+json, application/json' } })
+        .then(async response => {
+          if (!response.ok) throw new Error('overview-route-unavailable');
+          return readRideRoute(await response.json());
+        })
+        .catch(() => null),
+    ]).then(([module, mapConfig, verifiedRoute]) => {
       if (cancelled || !canvasRef.current || !controlsRef.current) return;
-      const coordinates = STOPS.map(stop => [stop.lon, stop.lat] as [number, number]);
+      const coordinates = verifiedRoute?.geometry.coordinates
+        ?? STOPS.map(stop => [stop.lon, stop.lat] as Coordinate);
       const lengthMetres = coordinates.slice(1).reduce(
-        (sum, point, index) => sum + module.haversineMetres(coordinates[index], point),
-        0,
+        (sum, point, index) => sum + module.haversineMetres(coordinates[index], point), 0,
       );
       distanceRef.current = lengthMetres;
+      coordinatesRef.current = coordinates;
+      cumulativeRef.current = cumulativeDistances(coordinates);
+      setRouteSource(verifiedRoute
+        ? `Mapped rail geometry / ${String(verifiedRoute.properties.confidence ?? 'verified').replaceAll('-', ' ')}`
+        : 'Station-connector fallback / mapped rail overview unavailable');
       const controller = module.createImmersiveMap({
         maplibre: maplibregl,
         container: canvasRef.current,
         controlsContainer: controlsRef.current,
-        route: {
+        route: verifiedRoute ?? {
           type: 'Feature',
           properties: { lengthMetres, confidence: 'unresolved', geometryType: 'schematic-station-connectors' },
           geometry: { type: 'LineString', coordinates },
@@ -100,10 +102,10 @@ export function JourneyMap({ progress, focus, onSelect }: {
       });
       controllerRef.current = controller;
       controller.addStyleControl();
-      const latestProgress = progressRef.current;
-      const position = positionAt(latestProgress);
-      controller.setRouteProgress(latestProgress * lengthMetres, { animate: false });
-      controller.updatePosition({ ...position, s: latestProgress * lengthMetres, source: 'replay' }, { duration: 0 });
+      const distance = progressRef.current * lengthMetres;
+      const position = coordinateAtDistance(coordinatesRef.current, cumulativeRef.current, distance);
+      controller.setRouteProgress(distance, { animate: false });
+      controller.updatePosition({ lon: position[0], lat: position[1], s: distance, source: 'replay' }, { duration: 0 });
     }).catch(() => {
       if (!cancelled) setStatus('The geographic map could not load. Open the journey engine for its offline route.');
     });
@@ -118,8 +120,9 @@ export function JourneyMap({ progress, focus, onSelect }: {
     const controller = controllerRef.current;
     if (!controller || !distanceRef.current) return;
     const distance = progress * distanceRef.current;
+    const position = coordinateAtDistance(coordinatesRef.current, cumulativeRef.current, distance);
     controller.setRouteProgress(distance);
-    controller.updatePosition({ ...positionAt(progress), s: distance, source: 'replay' }, { duration: 850, zoom: 7.2 });
+    controller.updatePosition({ lon: position[0], lat: position[1], s: distance, source: 'replay' }, { duration: 850, zoom: 7.2 });
   }, [progress]);
 
   useEffect(() => {
@@ -132,6 +135,7 @@ export function JourneyMap({ progress, focus, onSelect }: {
   return <div className="journey-map real-journey-map">
     <div ref={canvasRef} className="journey-map-canvas" aria-label="Interactive Pretoria to Cape Town story map" />
     <div ref={controlsRef} className="react-map-controls" />
+    <p className="journey-map-provenance" data-testid="journey-route-source">{routeSource}</p>
     {status && <p className="journey-map-loading" role="status">{status}</p>}
   </div>;
 }

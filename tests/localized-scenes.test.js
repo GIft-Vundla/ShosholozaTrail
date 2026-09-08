@@ -31,3 +31,20 @@ test('localized motion CSS animates only transform and opacity', async () => {
     for (const property of declarations) assert.ok(['transform','opacity'].includes(property), `${property} is not compositor-only`);
   }
 });
+
+test('Kimberley keeps the real crater dominant and moves the photographic camera', async () => {
+  const [runtime, css] = await Promise.all([
+    readFile('public/animations/localized-scenes.js', 'utf8'),
+    readFile('public/animations/localized-scenes.css', 'utf8'),
+  ]);
+  const scenesStart = runtime.indexOf('const LOCALIZED_SCENES');
+  const kimberleyStart = runtime.indexOf('  kimberley: {', scenesStart);
+  const kimberley = runtime.slice(kimberleyStart, runtime.indexOf('  "de-aar": {', kimberleyStart));
+  assert.doesNotMatch(kimberley, /<rect\s+width="800"\s+height="420"/i, 'a full-frame vector panel would hide the crater');
+  assert.doesNotMatch(kimberley, /class="scene-orbit"/, 'the old abstract orange spiral must not return');
+  assert.match(kimberley, /scene-kimberley-marker/);
+  assert.match(css, /st-local-scene--kimberley \.st-local-scene__shade\{[^}]*\.14\)/);
+  assert.match(css, /@keyframes st-kimberley-crater\{[^}]*scale\(1\.03\)[\s\S]*scale\(1\.25\)/);
+  assert.match(css, /st-local-scene--kimberley \.st-local-scene__photo\{[^}]*opacity:1/);
+  assert.match(css, /prefers-reduced-motion:reduce[\s\S]*st-local-scene--kimberley \.st-local-scene__photo/);
+});

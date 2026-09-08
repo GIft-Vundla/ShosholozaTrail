@@ -6,12 +6,12 @@
       "title": "OpenStreetMap station anchor records",
       "url": "https://www.openstreetmap.org/copyright",
       "institution": "OpenStreetMap contributors",
-      "passage": "Seven mapped station or stop-position anchors were retrieved from the OpenStreetMap API. Their selected node IDs, versions and coordinates are recorded in data/provenance/osm-stations-selected.json. Connecting these points with straight lines produces an unresolved schematic, not sourced railway geometry.",
+      "passage": "Eight mapped station or stop-position anchors were retrieved from OpenStreetMap. Their selected node IDs, versions and coordinates are recorded in data/provenance/osm-stations-selected.json. Eligible railway ways from a dated OpenStreetMap extract were graphed by node ID and routed between consecutive anchors; the resulting alignment is an automated geographic candidate pending human operational-route review.",
       "passageType": "original-paraphrase",
       "publicationDate": null,
       "reviewDate": "2026-09-08",
       "reviewStatus": "automated-source-review; human-review-pending",
-      "rights": "OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Station extract and derivative schematic distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible."
+      "rights": "OpenStreetMap data © OpenStreetMap contributors, licensed ODbL 1.0. Station records and derived rail candidate are distributed under ODbL 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . Source attribution must remain visible."
     },
     {
       "id": "osm-attraction-coordinates",

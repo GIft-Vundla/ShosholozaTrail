@@ -1,7 +1,8 @@
 {
-  "version": "0.1.0-unresolved-schematic",
+  "version": "1.0.0-osm-rail-candidate",
   "hubOrder": [
     "pretoria",
+    "johannesburg",
     "kimberley",
     "de-aar",
     "beaufort-west",
@@ -10,7 +11,7 @@
     "cape-town"
   ],
   "recordTypeDefinitions": {
-    "station": "Mapped rail anchor used to define the current schematic corridor.",
+    "station": "Mapped station anchor snapped to the OSM rail candidate.",
     "trigger-zone": "Independent along-route interval used to unlock a hub story.",
     "attraction": "Place associated with a hub story. It is not a rail stop, route waypoint, promised view, or permission to disembark."
   },
@@ -28,7 +29,24 @@
       "sourceUrl": "https://www.openstreetmap.org/node/799906122",
       "confidence": "osm-mapped-not-field-verified",
       "positionType": "mapped-station-point",
-      "markerRole": "rail-station-anchor"
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "available"
+    },
+    {
+      "id": "johannesburg-station",
+      "hubId": "johannesburg",
+      "name": "Johannesburg",
+      "lat": -26.1976708,
+      "lon": 28.0423048,
+      "recordType": "station",
+      "sourceId": "osm-stations",
+      "osmType": "node",
+      "osmId": 326084268,
+      "sourceUrl": "https://www.openstreetmap.org/node/326084268",
+      "confidence": "osm-mapped-not-field-verified",
+      "positionType": "mapped-station-point",
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "not-created-no-sourced-chapter"
     },
     {
       "id": "kimberley-station",
@@ -43,7 +61,8 @@
       "sourceUrl": "https://www.openstreetmap.org/node/247327890",
       "confidence": "osm-mapped-not-field-verified",
       "positionType": "mapped-station-point",
-      "markerRole": "rail-station-anchor"
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "available"
     },
     {
       "id": "de-aar-station",
@@ -58,7 +77,8 @@
       "sourceUrl": "https://www.openstreetmap.org/node/247327813",
       "confidence": "osm-mapped-not-field-verified",
       "positionType": "mapped-station-point",
-      "markerRole": "rail-station-anchor"
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "available"
     },
     {
       "id": "beaufort-west-station",
@@ -73,7 +93,8 @@
       "sourceUrl": "https://www.openstreetmap.org/node/8148099536",
       "confidence": "osm-mapped-not-field-verified",
       "positionType": "mapped-station-point",
-      "markerRole": "rail-station-anchor"
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "available"
     },
     {
       "id": "matjiesfontein-station",
@@ -88,7 +109,8 @@
       "sourceUrl": "https://www.openstreetmap.org/node/249333087",
       "confidence": "osm-mapped-not-field-verified",
       "positionType": "mapped-stop-position",
-      "markerRole": "rail-station-anchor"
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "available"
     },
     {
       "id": "worcester-station",
@@ -103,7 +125,8 @@
       "sourceUrl": "https://www.openstreetmap.org/node/9155692732",
       "confidence": "osm-mapped-not-field-verified",
       "positionType": "mapped-station-point",
-      "markerRole": "rail-station-anchor"
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "available"
     },
     {
       "id": "cape-town-station",
@@ -118,7 +141,8 @@
       "sourceUrl": "https://www.openstreetmap.org/node/288676470",
       "confidence": "osm-mapped-not-field-verified",
       "positionType": "mapped-station-point",
-      "markerRole": "rail-station-anchor"
+      "markerRole": "rail-station-anchor",
+      "storyTriggerStatus": "available"
     }
   ],
   "triggerZones": [
@@ -129,82 +153,82 @@
       "sEnter": 0,
       "sExit": 800.0,
       "stationAlongMetres": 0.0,
-      "routeVersion": "0.1.0-unresolved-schematic",
-      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "routeVersion": "1.0.0-osm-rail-candidate",
+      "confidence": "synthetic-test-zone-on-osm-rail-candidate",
       "markerRole": "story-unlock-zone",
-      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+      "designBasis": "800 m on either side of the nearest mapped rail node, clipped at route endpoints; not field calibrated"
     },
     {
       "id": "kimberley-trigger",
       "recordType": "trigger-zone",
       "hubId": "kimberley",
-      "sEnter": 472172.8525516245,
-      "sExit": 473772.8525516245,
-      "stationAlongMetres": 472972.8525516245,
-      "routeVersion": "0.1.0-unresolved-schematic",
-      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "sEnter": 551239.4672627094,
+      "sExit": 552839.4672627094,
+      "stationAlongMetres": 552039.4672627094,
+      "routeVersion": "1.0.0-osm-rail-candidate",
+      "confidence": "synthetic-test-zone-on-osm-rail-candidate",
       "markerRole": "story-unlock-zone",
-      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+      "designBasis": "800 m on either side of the nearest mapped rail node, clipped at route endpoints; not field calibrated"
     },
     {
       "id": "de-aar-trigger",
       "recordType": "trigger-zone",
       "hubId": "de-aar",
-      "sEnter": 697288.2356578384,
-      "sExit": 698888.2356578384,
-      "stationAlongMetres": 698088.2356578384,
-      "routeVersion": "0.1.0-unresolved-schematic",
-      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "sEnter": 786929.5896998417,
+      "sExit": 788529.5896998417,
+      "stationAlongMetres": 787729.5896998417,
+      "routeVersion": "1.0.0-osm-rail-candidate",
+      "confidence": "synthetic-test-zone-on-osm-rail-candidate",
       "markerRole": "story-unlock-zone",
-      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+      "designBasis": "800 m on either side of the nearest mapped rail node, clipped at route endpoints; not field calibrated"
     },
     {
       "id": "beaufort-west-trigger",
       "recordType": "trigger-zone",
       "hubId": "beaufort-west",
-      "sEnter": 930419.421550668,
-      "sExit": 932019.421550668,
-      "stationAlongMetres": 931219.421550668,
-      "routeVersion": "0.1.0-unresolved-schematic",
-      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "sEnter": 1046277.591852177,
+      "sExit": 1047877.591852177,
+      "stationAlongMetres": 1047077.591852177,
+      "routeVersion": "1.0.0-osm-rail-candidate",
+      "confidence": "synthetic-test-zone-on-osm-rail-candidate",
       "markerRole": "story-unlock-zone",
-      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+      "designBasis": "800 m on either side of the nearest mapped rail node, clipped at route endpoints; not field calibrated"
     },
     {
       "id": "matjiesfontein-trigger",
       "recordType": "trigger-zone",
       "hubId": "matjiesfontein",
-      "sEnter": 1141076.4667871192,
-      "sExit": 1142676.4667871192,
-      "stationAlongMetres": 1141876.4667871192,
-      "routeVersion": "0.1.0-unresolved-schematic",
-      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "sEnter": 1276663.8960475822,
+      "sExit": 1278263.8960475822,
+      "stationAlongMetres": 1277463.8960475822,
+      "routeVersion": "1.0.0-osm-rail-candidate",
+      "confidence": "synthetic-test-zone-on-osm-rail-candidate",
       "markerRole": "story-unlock-zone",
-      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+      "designBasis": "800 m on either side of the nearest mapped rail node, clipped at route endpoints; not field calibrated"
     },
     {
       "id": "worcester-trigger",
       "recordType": "trigger-zone",
       "hubId": "worcester",
-      "sEnter": 1256154.7316623055,
-      "sExit": 1257754.7316623055,
-      "stationAlongMetres": 1256954.7316623055,
-      "routeVersion": "0.1.0-unresolved-schematic",
-      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "sEnter": 1406878.2194856394,
+      "sExit": 1408478.2194856394,
+      "stationAlongMetres": 1407678.2194856394,
+      "routeVersion": "1.0.0-osm-rail-candidate",
+      "confidence": "synthetic-test-zone-on-osm-rail-candidate",
       "markerRole": "story-unlock-zone",
-      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+      "designBasis": "800 m on either side of the nearest mapped rail node, clipped at route endpoints; not field calibrated"
     },
     {
       "id": "cape-town-trigger",
       "recordType": "trigger-zone",
       "hubId": "cape-town",
-      "sEnter": 1355081.5025033648,
-      "sExit": 1355881.5025033648,
-      "stationAlongMetres": 1355881.5025033648,
-      "routeVersion": "0.1.0-unresolved-schematic",
-      "confidence": "synthetic-test-zone-on-unresolved-schematic",
+      "sEnter": 1581617.154871751,
+      "sExit": 1582417.154871751,
+      "stationAlongMetres": 1582417.154871751,
+      "routeVersion": "1.0.0-osm-rail-candidate",
+      "confidence": "synthetic-test-zone-on-osm-rail-candidate",
       "markerRole": "story-unlock-zone",
-      "designBasis": "800 m on either side of mapped anchor, clipped at corridor endpoints; not field calibrated"
+      "designBasis": "800 m on either side of the nearest mapped rail node, clipped at route endpoints; not field calibrated"
     }
   ],
   "attractions": [
@@ -391,6 +415,6 @@
       "osmId": 250299433
     }
   ],
-  "mapNotice": "Stations, trigger zones and attractions are independent records. Attraction coordinates never alter route geometry or trigger intervals.",
-  "measurementMethod": "Cumulative haversine distance on LineString, Earth mean radius 6371008.8 m; metres from Pretoria"
+  "mapNotice": "Eight mapped stations and seven sourced story trigger zones are independent records. Johannesburg is a mapped ride arrival without a sourced chapter trigger. The route is an automated OSM graph candidate pending human operational review.",
+  "measurementMethod": "Cumulative haversine distance on OSM rail candidate LineString, Earth mean radius 6371008.8 m; metres from Pretoria"
 }

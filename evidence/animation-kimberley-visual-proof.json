@@ -1,0 +1,52 @@
+{
+  "capturedAt": "2026-09-08T10:35:41.615Z",
+  "scene": "kimberley",
+  "errors": [],
+  "initialTransform": {
+    "matrix": "matrix(1.06809, -0.00607958, 0.00607958, 1.06809, 1.65343, -0.362171)",
+    "scale": 1.068,
+    "rotationDegrees": -0.326
+  },
+  "pushedTransform": {
+    "matrix": "matrix(1.24946, 0.0228498, -0.0228498, 1.24946, -11.9143, -8.86443)",
+    "scale": 1.25,
+    "rotationDegrees": 1.048
+  },
+  "visualMetrics": {
+    "photoOpacity": 1,
+    "photoFilter": "none",
+    "shade": "linear-gradient(115deg, rgba(17, 26, 41, 0.03), rgba(17, 26, 41, 0.14))",
+    "overlayElementCoverage": 0.046,
+    "overlayUnionSpan": 0.308,
+    "overlayUnion": {
+      "left": 409.0035400390625,
+      "top": 41.24510192871094,
+      "right": 854.8571166992188,
+      "bottom": 342.1392822265625
+    },
+    "treatedLuminance": 83.36,
+    "referenceLuminance": 86.49,
+    "brightnessRatio": 0.964
+  },
+  "waitingPauseStable": true,
+  "reducedMotion": {
+    "staticState": "true",
+    "animationName": "none",
+    "transform": "matrix(1.14, 0, 0, 1.14, -3.5112, -3.66795)"
+  },
+  "performance": {
+    "environment": "separate Playwright Chromium context; no screenshots or video during RAF sample",
+    "frames": 180,
+    "measuredMs": 3000,
+    "approximateFps": 60,
+    "p95FrameMs": 16.8
+  },
+  "acceptance": {
+    "brightnessAtLeastSixtyPercent": true,
+    "overlayAtMostOneThird": true,
+    "photographicPushVisible": true,
+    "reducedMotionCompleteStill": true,
+    "waitingPause": true,
+    "noRuntimeErrors": true
+  }
+}

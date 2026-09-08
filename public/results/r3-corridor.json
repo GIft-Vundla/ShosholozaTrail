@@ -1,0 +1,177 @@
+{
+  "requirement": "R3-corridor",
+  "status": "PASS",
+  "executionScope": "synthetic-traces-on-shipped-osm-corridor",
+  "runner": "harness/run-corridor-traces.js",
+  "traceCount": 126,
+  "eligible": 126,
+  "fired": 126,
+  "correctHub": 126,
+  "wrongHub": 0,
+  "duplicates": 0,
+  "missed": 0,
+  "generatedAt": "2026-09-08T11:39:11.419Z",
+  "engineVersion": "1.0.0",
+  "routeVersion": "1.0.0-osm-rail-candidate",
+  "routeSha256": "e887225116be84e810d0197d07043d7f7ef8fab9449f36d0c186ab1747c5a57c",
+  "provenance": "synthetic positions sampled from the shipped OSM rail candidate",
+  "acceptance": {
+    "minimumEligible": 100,
+    "minimumCorrectFraction": 0.95,
+    "maximumWrongHub": 0,
+    "maximumDuplicates": 0
+  },
+  "limitations": [
+    "Positions are generated from mapped corridor geometry; they are not phone GPS or field observations.",
+    "This verifies trigger behavior on the shipped curved alignment and does not establish operational passenger service or TRL 5."
+  ],
+  "byProfile": {
+    "40kmh/1s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "40kmh/1s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "40kmh/5s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "40kmh/5s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "40kmh/15s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "40kmh/15s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "80kmh/1s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "80kmh/1s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "80kmh/5s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "80kmh/5s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "80kmh/15s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "80kmh/15s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "120kmh/1s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "120kmh/1s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "120kmh/5s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "120kmh/5s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "120kmh/15s/reverse": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    },
+    "120kmh/15s/forward": {
+      "eligible": 7,
+      "fired": 7,
+      "correctHub": 7,
+      "wrongHub": 0,
+      "duplicates": 0,
+      "missed": 0
+    }
+  },
+  "failures": [],
+  "correctFraction": 1,
+  "passed": true
+}

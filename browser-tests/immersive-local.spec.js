@@ -12,7 +12,8 @@ const SCENE_HUB_IDS = [
   'worcester',
   'cape-town',
 ];
-const MAP_HUB_IDS = SCENE_HUB_IDS.filter((id) => id !== 'johannesburg');
+const MAP_HUB_IDS = SCENE_HUB_IDS;
+const STORY_HUB_IDS = SCENE_HUB_IDS.filter((id) => id !== 'johannesburg');
 
 async function openShell(page) {
   await page.goto('/app');
@@ -174,7 +175,7 @@ test.describe('immersive map application contract', () => {
 
   test('opens the matching localized scene from each hub marker', async ({ page }) => {
     await requireImmersiveMap(page);
-    for (const hubId of MAP_HUB_IDS) {
+    for (const hubId of STORY_HUB_IDS) {
       await page.getByRole('button', { name: /fit whole route/i }).click();
       const marker = page.locator(`.immersive-hub[data-hub="${hubId}"], [data-hub-marker="${hubId}"]`).first();
       await expect(marker).toBeVisible();
@@ -199,7 +200,7 @@ test.describe('immersive map application contract', () => {
     await expect(map).toBeVisible();
     await expect(map).toHaveAttribute('data-active-style', 'offline');
     await expect(page.getByText(/offline map|offline route|external map.*unavailable/i)).toBeVisible();
-    await expect(page.getByText(/unverified schematic/i)).toBeVisible();
+    await expect(page.getByText(/OSM-mapped rail candidate/i)).toBeVisible();
     await expect(page.getByText(/OpenStreetMap/i)).toBeVisible();
   });
 });

@@ -57,22 +57,22 @@ export const LOCALIZED_SCENES = Object.freeze({
     `
   },
   kimberley: {
-    title: "Words, earth and industry",
-    description: "The licensed Big Hole photograph gains inward-moving rings and a rising interpretive headgear silhouette.",
+    title: "Into Kimberley's Big Hole",
+    description: "The licensed photograph stays in full view while the camera spirals toward the flooded crater. A small headgear silhouette adds mining context.",
     sourceIds: ["sol-plaatje", "big-hole"],
     colors: ["#24170f", "#df8d45", "#8bd6c7"],
     art: () => `
-      <rect width="800" height="420" fill="#24170f"/>
-      <g class="scene-orbit" fill="none" stroke="#df8d45" stroke-linecap="round">
-        <path d="M125 218c0-90 145-143 232-83 78 54 44 156-45 162-71 4-116-63-68-106 38-34 94-10 90 31-3 29-38 39-56 22" stroke-width="7"/>
-        <path d="M102 218c0-111 177-178 286-102" stroke-opacity=".4" stroke-width="2"/>
+      <g transform="translate(626 35)">
+        <g class="scene-kimberley-marker">
+          <path d="M17 78V30h72v48M7 78h98M29 30L53 4l24 26M53 4v74M17 48h72M89 49l37 29"
+            fill="none" stroke="#f8f2e8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="53" cy="4" r="4" fill="#f4bd4f"/>
+        </g>
       </g>
-      <g class="scene-draw" style="--path-length:900" fill="none" stroke="#8bd6c7" stroke-width="6" stroke-linejoin="round">
-        <path d="M500 316V112h128v204M480 316h170M520 112l44-54 44 54M564 58v258M500 148h128M500 204h128"/>
-        <path d="M628 149l65 57v110"/>
+      <g class="scene-kimberley-pulse" fill="none" stroke="#f4bd4f" stroke-width="3" opacity=".82">
+        <circle cx="410" cy="254" r="12"/>
+        <circle cx="410" cy="254" r="22" opacity=".42"/>
       </g>
-      <g class="scene-shift" stroke="#f8f1df" stroke-opacity=".58" stroke-width="3">${tags.writtenLines()}</g>
-      <text x="96" y="347" fill="#f8f1df" font-family="serif" font-size="24" font-style="italic">words hold many ways into a city</text>
     `
   },
   "de-aar": {
@@ -217,7 +217,7 @@ export function createLocalizedAnimation(hubId, options = {}) {
   const caption = document.createElement("figcaption");
   caption.className = "st-local-scene__caption";
   const copy = document.createElement("small");
-  copy.textContent = `Place-specific animated scene · ${scene.title}. Added motion is interpretive.`;
+  copy.textContent = `${scene.title} · ${scene.description}`;
   caption.append(copy);
 
   const credit = PHOTO_CREDITS[normalizedId];

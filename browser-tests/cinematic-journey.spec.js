@@ -7,11 +7,12 @@ test.beforeEach(async ({ context, page }) => {
 });
 
 test('map keeps route provenance visible and opens a sourced story card from a keyboard-accessible hub', async ({ page }) => {
-  await expect(page.locator('.map-key')).toContainText(/unverified|not verified/i);
+  await expect(page.locator('.map-key')).toContainText(/OSM-mapped rail candidate/i);
+  await expect(page.locator('.map-key')).toContainText(/human or organiser review/i);
   await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/OpenStreetMap/i);
 
   const hubs = page.locator('.immersive-hub');
-  await expect(hubs).toHaveCount(7);
+  await expect(hubs).toHaveCount(8);
   const firstInteractiveMarker = hubs.first();
   await firstInteractiveMarker.focus();
   await expect(firstInteractiveMarker).toBeFocused();
@@ -95,5 +96,5 @@ test('installed pack reopens the journey and a chapter with the browser offline'
 
   await page.goto('/app', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('#map')).toBeVisible();
-  await expect(page.locator('.map-key')).toContainText(/unverified|not verified/i);
+  await expect(page.locator('.map-key')).toContainText(/OSM-mapped rail candidate/i);
 });
