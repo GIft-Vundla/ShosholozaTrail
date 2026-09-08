@@ -18,6 +18,9 @@
 .st-local-scene--kimberley .st-local-scene__photo{object-position:50% 52%;transform-origin:51% 57%;opacity:1}
 .st-local-scene--kimberley .st-local-scene__shade{background:linear-gradient(115deg,rgb(17 26 41/.03),rgb(17 26 41/.14))}
 .st-local-scene--kimberley svg{opacity:.74}
+.st-local-scene--de-aar .st-local-scene__shade,.st-local-scene--beaufort-west .st-local-scene__shade,.st-local-scene--matjiesfontein .st-local-scene__shade,.st-local-scene--worcester .st-local-scene__shade,.st-local-scene--cape-town .st-local-scene__shade{background:linear-gradient(115deg,rgb(17 26 41/.06),rgb(17 26 41/.24))}
+.st-local-scene--de-aar svg,.st-local-scene--beaufort-west svg,.st-local-scene--matjiesfontein svg,.st-local-scene--worcester svg,.st-local-scene--cape-town svg{opacity:.62}
+.st-local-scene--de-aar .st-local-scene__photo{object-position:50% 52%}.st-local-scene--beaufort-west .st-local-scene__photo{object-position:48% 48%}.st-local-scene--matjiesfontein .st-local-scene__photo{object-position:50% 54%}.st-local-scene--worcester .st-local-scene__photo{object-position:50% 48%}.st-local-scene--cape-town .st-local-scene__photo{object-position:50% 45%}
 .st-local-scene__caption{position:absolute;inset:auto 0 0;z-index:2;display:grid;grid-template-columns:1fr auto;align-items:end;gap:.25rem 1rem;padding:3.2rem 1rem .8rem;font:600 .76rem/1.3 var(--font-body);letter-spacing:.03em;background:linear-gradient(transparent,rgb(4 8 13/.94))}
 .st-local-scene__caption small{color:rgb(248 242 232/.92);font-weight:600}
 .st-local-scene__credit{grid-column:1/-1;color:rgb(248 242 232/.76);font-size:.67rem;font-weight:400}
@@ -26,6 +29,7 @@
 .st-local-scene__control:focus-visible{outline:3px solid var(--scene-accent);outline-offset:2px}
 .st-local-scene[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-photo var(--scene-duration,9s) ease-in-out infinite alternate}
 .st-local-scene--kimberley[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-kimberley-crater var(--scene-duration,9s) cubic-bezier(.2,.72,.2,1) infinite alternate}
+.st-local-scene--de-aar[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-de-aar-photo var(--scene-duration,9s) ease-in-out infinite alternate}.st-local-scene--beaufort-west[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-beaufort-photo var(--scene-duration,9s) ease-in-out infinite alternate}.st-local-scene--matjiesfontein[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-matjies-photo var(--scene-duration,9s) ease-in-out infinite alternate}.st-local-scene--worcester[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-worcester-photo var(--scene-duration,9s) ease-in-out infinite alternate}.st-local-scene--cape-town[data-static="false"]:not([data-paused="true"]) .scene-photo{animation:st-cape-photo var(--scene-duration,9s) ease-in-out infinite alternate}
 .st-local-scene--kimberley[data-static="false"]:not([data-paused="true"]) .scene-kimberley-marker{transform-origin:53px 43px;animation:st-kimberley-marker var(--scene-duration,9s) ease-in-out infinite alternate}
 .st-local-scene--kimberley[data-static="false"]:not([data-paused="true"]) .scene-kimberley-pulse{transform-origin:410px 254px;animation:st-kimberley-pulse calc(var(--scene-duration,9s)*.55) ease-out infinite}
 .st-local-scene[data-static="false"]:not([data-paused="true"]) .scene-rise,
@@ -42,6 +46,7 @@
 .st-local-scene[data-paused="true"] *{animation-play-state:paused!important}
 @keyframes st-photo{from{transform:scale(1);opacity:.86}to{transform:scale(1.1) translate3d(-1.2%, -1%, 0);opacity:1}}
 @keyframes st-kimberley-crater{0%{transform:scale(1.03) rotate(-.65deg) translate3d(.5%,.2%,0);opacity:1}48%{transform:scale(1.13) rotate(.2deg) translate3d(-.35%,-.5%,0);opacity:1}100%{transform:scale(1.25) rotate(1.05deg) translate3d(-1.1%,-1.4%,0);opacity:1}}
+@keyframes st-de-aar-photo{from{transform:scale(1.02) translate3d(-1%,0,0);opacity:.92}to{transform:scale(1.15) translate3d(2%,-1.5%,0);opacity:1}}@keyframes st-beaufort-photo{from{transform:scale(1.02) translate3d(0,1%,0);opacity:.92}to{transform:scale(1.17) translate3d(-1.5%,-2%,0);opacity:1}}@keyframes st-matjies-photo{from{transform:scale(1.04) translate3d(-1.5%,0,0);opacity:.94}to{transform:scale(1.19) translate3d(2%,-1.5%,0);opacity:1}}@keyframes st-worcester-photo{from{transform:scale(1.02) translate3d(1%,0,0);opacity:.92}to{transform:scale(1.16) translate3d(-2%,-2%,0);opacity:1}}@keyframes st-cape-photo{from{transform:scale(1.03) translate3d(0,1%,0);opacity:.94}to{transform:scale(1.18) translate3d(-1%,-2.5%,0);opacity:1}}
 @keyframes st-kimberley-marker{from{transform:translate3d(0,-5px,0);opacity:.38}to{transform:translate3d(0,0,0);opacity:.66}}
 @keyframes st-kimberley-pulse{0%{transform:scale(.65);opacity:.8}75%,100%{transform:scale(1.65);opacity:0}}
 @keyframes st-rise{0%,12%{transform:translate3d(0,28px,0);opacity:.25}48%,82%{transform:translate3d(0,0,0);opacity:1}100%{transform:translate3d(0,-5px,0);opacity:.55}}

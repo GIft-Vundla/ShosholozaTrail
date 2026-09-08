@@ -14,7 +14,8 @@ function secure(response: Response): Response {
     'https://*.tiles.maps.eox.at',
     'https://services.arcgisonline.com',
     'https://s3.amazonaws.com',
-    'https://api.maptiler.com'
+    'https://api.maptiler.com',
+    'https://tiles.openfreemap.org'
   ].join(' ');
   headers.set('X-Content-Type-Options', 'nosniff');
   // MapTiler's origin restrictions validate the cross-origin Referer. Send the

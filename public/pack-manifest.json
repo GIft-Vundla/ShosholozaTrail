@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "hash": "a3c69bc7366bd0b368d395385b40610e22d88fdfbaef3791a03b8ddd3b3ba78d",
-  "bytes": 3620447,
+  "hash": "ff146461f5843f24bb346e31316cc37a1a41fb44888b341f88baf507c9d0edb2",
+  "bytes": 3717937,
   "assets": [
     {
       "url": "/animations/README.md",
@@ -10,18 +10,18 @@
     },
     {
       "url": "/animations/gallery.html",
-      "bytes": 1412,
-      "sha256": "87bc8750bb4ae6ecee58e2ab8177d5ce0e67e7ba8e018e0e14bdf1a99f255f70"
+      "bytes": 1444,
+      "sha256": "6bd21520ccdaa84ec9d759a85b25db872e82e29fdf8503d55b8504e80c23ca94"
     },
     {
       "url": "/animations/localized-scenes.css",
-      "bytes": 6170,
-      "sha256": "59cacb69e713af7608d862d5e8bd0261217a6af98dbf24f944e5a968309bcc56"
+      "bytes": 8645,
+      "sha256": "15bef52d63172f5b9c8b08164b23f1d1979c0f40168a4b2e5e2fd20babd9c0b6"
     },
     {
       "url": "/animations/localized-scenes.js",
-      "bytes": 18079,
-      "sha256": "33cf69cbcae43007526449432d1eadb806e86a3909bef5977eb38992f62914bd"
+      "bytes": 18170,
+      "sha256": "246586b625803ee48a15e7d377fed1c43e5179bfcd5c622711159dbf6a3290fd"
     },
     {
       "url": "/animations/scenes.v1.json",
@@ -29,14 +29,14 @@
       "sha256": "0d3a07435463825f34cda0cd09727dca8a5e789cb223b34d2aeb466d1fdc7b5c"
     },
     {
-      "url": "/app-assets/index-JPhFjaIV.js",
-      "bytes": 285320,
-      "sha256": "6c952d2559e7ac9d86cc8c58f524edd278f9a5410064d7cf06094fbab843ee8c"
+      "url": "/app-assets/index-0lG9T-gN.css",
+      "bytes": 32950,
+      "sha256": "2313df327e6cae47a17cddfbaeda81fca7ab48e14381030257b7a3205b803678"
     },
     {
-      "url": "/app-assets/index-laR5XQxe.css",
-      "bytes": 30375,
-      "sha256": "95b2978068f15175ba6de3de24bac884a21f5c9849c54de7e69edc222ed3d135"
+      "url": "/app-assets/index-dXMXNhCT.js",
+      "bytes": 298503,
+      "sha256": "0db87e0110a860d5a61fbfbe248203620e85f0e0e280d40a9ffbd5ee61276f69"
     },
     {
       "url": "/app.html",
@@ -45,8 +45,8 @@
     },
     {
       "url": "/app.js",
-      "bytes": 51460,
-      "sha256": "ad7e1b435d4bec6b296b62a5636a020c0e44179cfb63abfbf0770fd4ccda1bee"
+      "bytes": 51530,
+      "sha256": "82ee15ab8f0dcd9bb8acce182e9b0a591e9a05736dda47dd7cb5181152acb764"
     },
     {
       "url": "/assets/photo-credits.json",
@@ -196,7 +196,7 @@
     {
       "url": "/index.html",
       "bytes": 735,
-      "sha256": "ab75b2a8b0f40bfee739749cd19dc0a1a1f44c2e835729a0ceab0a4592e09a89"
+      "sha256": "eb00dbf65f6eeb0e8f4f57abd870f38d2e28d044693ba19e58f7bf22f7a9bb98"
     },
     {
       "url": "/journey.css",
@@ -220,8 +220,8 @@
     },
     {
       "url": "/map/immersive-map.js",
-      "bytes": 26086,
-      "sha256": "d2765a0e061942f8176c775aff000e958f4c2b10ab2e8645facea70d76e0a771"
+      "bytes": 26550,
+      "sha256": "9d8c9b98812464da19a159e90f2a7aa68600224d62b785151aaac46a172646d4"
     },
     {
       "url": "/results/r10.json",
@@ -231,12 +231,12 @@
     {
       "url": "/results/r3-corridor.json",
       "bytes": 3903,
-      "sha256": "c9c9c466064cb5a019095354b492b6175ba2e88aaf6397cc7e42efc4ee29a6ae"
+      "sha256": "1aa1b0be00cbecbb164745023c197fb62499d668d58659d019911638e1560209"
     },
     {
       "url": "/results/r3.json",
-      "bytes": 76123,
-      "sha256": "76a0af49a024302b396bd916efc06a857cdafe53050eaca9a8d072841fd26d95"
+      "bytes": 154723,
+      "sha256": "ac711fc38541911256c8b9336c10712b2bc986e96de0c0852b3c21b568fefe69"
     },
     {
       "url": "/storage/drafts.js",

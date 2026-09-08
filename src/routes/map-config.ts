@@ -16,8 +16,7 @@ export async function mapConfig(request: Request, env: BackendEnv): Promise<Resp
     outdoorTiles: [`https://api.maptiler.com/maps/outdoor-v2/{z}/{x}/{y}.png?key=${encoded}`],
     darkTiles: [`https://api.maptiler.com/maps/dataviz-dark/{z}/{x}/{y}.png?key=${encoded}`],
     satelliteTiles: [`https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${encoded}`],
-    hybridLabelTiles: [`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${encoded}`],
     satelliteMaxZoom: 20,
-    hybridLabelOpacity: 0.35,
+    hybridLabelOpacity: 0.72,
   });
 }

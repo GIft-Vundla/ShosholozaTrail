@@ -1,9 +1,10 @@
-import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve, dirname } from 'node:path';
 import { createJourneyEngine, ENGINE_VERSION } from '../public/engine/journey.js';
 import { createReplaySource, parseTrace } from '../public/engine/replay.js';
 import { along } from '../public/vendor/turf.js';
+import { createHash } from 'node:crypto';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const traceDir = resolve(root, 'data/traces');
@@ -41,36 +42,59 @@ export async function generateFixtures() {
 }
 
 export async function runTraces() {
-  const fixture = JSON.parse(await readFile(resolve(traceDir, 'synthetic-route.json'), 'utf8'));
-  const result = { requirement: 'R3', status: 'RUNNING', executionScope: 'synthetic-laboratory-component',
+  const routeBytes = await readFile(resolve(root, 'data/route.geojson'));
+  const route = JSON.parse(routeBytes.toString('utf8'));
+  const hubs = JSON.parse(await readFile(resolve(root, 'data/hubs.json'), 'utf8'));
+  if (route.properties.railAlignmentVerified !== true || route.properties.unresolvedSegments?.length) {
+    throw new Error('Primary R3 requires the shipped, fully connected OSM rail candidate.');
+  }
+  if (hubs.version !== route.properties.routeVersion) throw new Error('Hub and route versions differ.');
+  const chapterHubs = new Set(JSON.parse(await readFile(resolve(root, 'data/pack.v1.json'), 'utf8')).chapters.map(chapter => chapter.hubId));
+  if (hubs.triggerZones.some(zone => !chapterHubs.has(zone.hubId))) throw new Error('Every story trigger must have a sourced pack chapter.');
+  const result = { requirement: 'R3', status: 'RUNNING', executionScope: 'synthetic-traces-on-shipped-osm-rail-candidate',
     runner: 'harness/run-traces.js', traceCount: 0,
     eligible: 0, fired: 0, correctHub: 0, wrongHub: 0, duplicates: 0, missed: 0,
     byProfile: {}, generatedAt: null, engineVersion: ENGINE_VERSION,
-    routeVersion: fixture.route.properties.version, provenance: 'synthetic',
+    routeVersion: route.properties.routeVersion, routeSha256: createHash('sha256').update(routeBytes).digest('hex'),
+    routePointCount: route.geometry.coordinates.length, routeLengthMetres: route.properties.lengthMetres,
+    routeReviewStatus: route.properties.reviewStatus,
+    provenance: 'synthetic positions sampled from the shipped OSM rail candidate',
     acceptance: { minimumEligible: 100, minimumCorrectFraction: 0.95, maximumWrongHub: 0, maximumDuplicates: 0 },
-    limitations: ['Analytic equatorial laboratory geometry only; no corridor geometry or phone GPS validation.',
-      'Synthetic trace performance does not establish real-device or relevant-environment TRL 5.'], encounters: [], failures: [] };
-  for (const name of (await readdir(traceDir)).filter(name => name.endsWith('.jsonl')).sort()) {
-    result.traceCount += 1;
-    const trace = parseTrace(await readFile(resolve(traceDir, name), 'utf8'));
-    const expected = trace.header.expectedHubIds;
-    if (!Array.isArray(expected) || !expected.length || new Set(expected).size !== expected.length) throw new Error(`Independent unique expectedHubIds missing in ${name}`);
-    if (trace.header.routeVersion !== fixture.route.properties.version) throw new Error(`Route version mismatch in ${name}; provide its own reviewed fixture and oracle`);
-    const events = [];
-    const engine = createJourneyEngine({ route: fixture.route, zones: fixture.zones, onEvent: event => events.push(event) });
-    await createReplaySource(trace).replayAll(fix => engine.push(fix));
-    const fired = events.filter(event => event.type === 'encounter' && event.fired);
-    const counts = new Map();
-    for (const event of fired) counts.set(event.hubId, (counts.get(event.hubId) ?? 0) + 1);
-    const correctHub = expected.filter(id => counts.has(id)).length;
-    const wrongHub = fired.filter(event => !expected.includes(event.hubId)).length;
-    const duplicates = [...counts.values()].reduce((sum, value) => sum + Math.max(0, value - 1), 0);
-    const metrics = { eligible: expected.length, fired: fired.length, correctHub, wrongHub, duplicates, missed: expected.length - correctHub };
-    const profile = `${trace.header.speedKmh}kmh/${trace.header.sampleGapS}s/${trace.header.direction === 1 ? 'forward' : 'reverse'}`;
-    result.byProfile[profile] ??= { eligible: 0, fired: 0, correctHub: 0, wrongHub: 0, duplicates: 0, missed: 0 };
-    for (const key of Object.keys(metrics)) { result[key] += metrics[key]; result.byProfile[profile][key] += metrics[key]; }
-    result.encounters.push(...events.filter(event => event.type === 'encounter').map(event => ({ ...event, correctHub: expected.includes(event.hubId) })));
-    if (metrics.missed || wrongHub || duplicates) result.failures.push({ traceId: trace.header.traceId, expected, actual: fired.map(event => event.hubId), ...metrics });
+    limitations: ['Positions are generated from mapped corridor geometry; they are not phone GPS or field observations.',
+      'This verifies production trigger behavior on the shipped curved alignment and does not establish an operating passenger service or TRL 5.'],
+    encounters: [], failures: [] };
+  const routeLength = route.properties.lengthMetres;
+  const pointAt = metres => {
+    const [lon, lat] = along(route, Math.max(0, Math.min(routeLength, metres)), { units: 'meters' }).geometry.coordinates;
+    return { lat, lon };
+  };
+  for (const speedKmh of [40, 80, 120]) for (const sampleGapS of [1, 5, 15]) for (const direction of [-1, 1]) {
+    const profile = `${speedKmh}kmh/${sampleGapS}s/${direction === 1 ? 'forward' : 'reverse'}`;
+    result.byProfile[profile] = { eligible: 0, fired: 0, correctHub: 0, wrongHub: 0, duplicates: 0, missed: 0 };
+    const step = speedKmh / 3.6 * sampleGapS;
+    for (const zone of hubs.triggerZones) {
+      const boundary = direction === 1 ? zone.sEnter : zone.sExit;
+      const traceId = `corridor-${zone.hubId}-${speedKmh}-${sampleGapS}-${direction === 1 ? 'forward' : 'reverse'}`;
+      const trace = { header: { traceId, provenance: 'synthetic-on-osm-rail-candidate', speedKmh, sampleGapS, direction,
+        routeVersion: route.properties.routeVersion, expectedHubIds: [zone.hubId] },
+        fixes: [-1.5, -.5, .5, 1.5, 2.5].map((offset, index) => ({ ...pointAt(boundary + direction * offset * step),
+          accuracy: 5, t: 1_700_000_000_000 + index * sampleGapS * 1000 })) };
+      const expected = trace.header.expectedHubIds;
+      const events = [];
+      const engine = createJourneyEngine({ route, zones: hubs.triggerZones, onEvent: event => events.push(event) });
+      await createReplaySource(trace).replayAll(value => engine.push(value));
+      const fired = events.filter(event => event.type === 'encounter' && event.fired);
+      const counts = new Map();
+      for (const event of fired) counts.set(event.hubId, (counts.get(event.hubId) ?? 0) + 1);
+      const correctHub = expected.filter(id => counts.has(id)).length;
+      const wrongHub = fired.filter(event => !expected.includes(event.hubId)).length;
+      const duplicates = [...counts.values()].reduce((sum, value) => sum + Math.max(0, value - 1), 0);
+      const metrics = { eligible: 1, fired: fired.length, correctHub, wrongHub, duplicates, missed: 1 - correctHub };
+      result.traceCount += 1;
+      for (const key of Object.keys(metrics)) { result[key] += metrics[key]; result.byProfile[profile][key] += metrics[key]; }
+      result.encounters.push(...events.filter(event => event.type === 'encounter').map(event => ({ ...event, correctHub: expected.includes(event.hubId) })));
+      if (metrics.missed || wrongHub || duplicates) result.failures.push({ traceId, expected, actual: fired.map(event => event.hubId), ...metrics });
+    }
   }
   result.correctFraction = result.eligible ? result.correctHub / result.eligible : null;
   result.passed = result.eligible >= 100 && result.correctFraction >= 0.95 && result.wrongHub === 0 && result.duplicates === 0;

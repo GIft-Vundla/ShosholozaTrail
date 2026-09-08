@@ -34,9 +34,10 @@ test('all requested basemaps exist and offline has no remote sources', () => {
   assert.equal(styles.satellite.maxUsefulZoom, 19);
   assert.equal(styles.satellite.style.metadata['shosholoza:provider'], 'esri-world-imagery');
   assert.match(styles.satellite.style.sources.base.attribution, /Esri.*Maxar.*GIS User Community/);
-  assert.match(styles.hybrid.style.sources.labels.tiles[0], /overlay_3857/);
+  assert.equal(styles.hybrid.style.sources.labels.url, 'https://tiles.openfreemap.org/planet');
+  assert.match(styles.hybrid.style.glyphs, /tiles\.openfreemap\.org\/fonts/);
   assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-imagery').paint['raster-saturation'], 0);
-  assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-reference').paint['raster-opacity'], 0.35);
+  assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-place-labels').paint['text-opacity'], 0.72);
   assert.match(styles.streets.style.sources.base.attribution, /OpenStreetMap/);
 });
 
@@ -67,5 +68,5 @@ test('configured MapTiler tiles receive required provider attribution without pe
   assert.match(styles.satellite.style.sources.base.attribution, /MapTiler/);
   assert.equal(styles.dark.style.metadata['shosholoza:provider'], 'configured');
   assert.equal(styles.satellite.style.metadata['shosholoza:provider'], 'configured');
-  assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-reference').paint['raster-opacity'], 0.35);
+  assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-place-labels').paint['text-opacity'], 0.72);
 });

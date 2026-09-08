@@ -197,6 +197,7 @@ test('Worker dispatches implemented APIs and adds security headers', async () =>
   assert.equal(response.headers.get('X-Frame-Options'), 'DENY');
   assert.match(response.headers.get('Content-Security-Policy') || '', /frame-ancestors 'none'/);
   assert.match(response.headers.get('Content-Security-Policy') || '', /worker-src 'self' blob:/);
+  assert.match(response.headers.get('Content-Security-Policy') || '', /https:\/\/tiles\.openfreemap\.org/);
   assert.equal(response.headers.get('Referrer-Policy'), 'strict-origin-when-cross-origin');
 });
 
@@ -219,7 +220,7 @@ test('map config keeps Esri as the keyless default and returns an uncached MapTi
   const configured = await configuredResponse.json() as any;
   assert.equal(configured.provider, 'maptiler');
   assert.equal(configured.satelliteMaxZoom, 20);
-  assert.equal(configured.hybridLabelOpacity, 0.35);
+  assert.equal(configured.hybridLabelOpacity, 0.72);
   assert.match(configured.satelliteTiles[0], /satellite-v2/);
   assert.equal(configured.satelliteTiles[0].includes(marker), true);
 });

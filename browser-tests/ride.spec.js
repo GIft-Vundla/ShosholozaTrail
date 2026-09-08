@@ -4,6 +4,7 @@ const routeFixture = {
   type: 'Feature',
   properties: {
     railAlignmentVerified: true,
+    routeVersion: '1.0.0-osm-rail-candidate',
     confidence: 'osm-resolved',
     geometryType: 'mapped-rail-alignment',
     resolvedSegments: ['pretoria-johannesburg'],
@@ -25,15 +26,18 @@ async function openFixtureRide(page, reducedMotion = false) {
     contentType: 'application/geo+json', body: JSON.stringify(routeFixture),
   }));
   await page.route('**/map/immersive-map.js', route => route.fulfill({ contentType: 'text/javascript', body: mapModule }));
-  await page.goto('/ride');
+  await page.goto('/ride?hub=pretoria');
   await expect(page.getByTestId('ride-source')).toContainText('osm resolved');
-  await expect(page.getByTestId('ride-source')).toContainText('2 of 8 arrivals matched');
+  await expect(page.getByTestId('ride-source')).toContainText('2 arrivals');
   await expect(page.getByLabel('Pretoria arrival')).toBeVisible();
 }
 
 test('ride uses verified route properties, arrival content and step/look controls', async ({ page }) => {
   await openFixtureRide(page);
   await expect(page.locator('.ride')).toHaveAttribute('data-route-state', 'ready');
+  await expect(page.locator('.ride')).toHaveAttribute('data-world-ready', 'true');
+  await expect(page.getByRole('navigation', { name: 'Ride speed' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Discovered places' })).toBeVisible();
   await expect(page.getByRole('img', { name: 'Pretoria place photograph' })).toHaveAttribute('src', '/assets/photos/pretoria.webp');
   await page.getByRole('button', { name: 'Return to the track' }).click();
   await expect(page.getByRole('button', { name: 'Step forward; hold for continuous ride' })).toBeEnabled();

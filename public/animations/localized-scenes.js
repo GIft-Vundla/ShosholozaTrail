@@ -77,11 +77,11 @@ export const LOCALIZED_SCENES = Object.freeze({
   },
   "de-aar": {
     title: "Lines from a junction",
-    description: "An interpretive illustration: parallel rail lines converge while a letter travels toward a wider world.",
+    description: "The licensed De Aar photograph comes alive as rail lines converge and a letter travels toward a wider world.",
     sourceIds: ["schreiner-de-aar"],
     colors: ["#151c2b", "#e2bb67", "#72b7ce"],
     art: () => `
-      <rect width="800" height="420" fill="#151c2b"/>
+      <rect width="800" height="420" fill="#151c2b" fill-opacity=".12"/>
       <g fill="none" stroke="#72b7ce" stroke-width="5" stroke-linecap="round">
         ${tags.junctionLines()}
       </g>
@@ -95,11 +95,11 @@ export const LOCALIZED_SCENES = Object.freeze({
   },
   "beaufort-west": {
     title: "Reading the layers",
-    description: "An interpretive illustration: Karoo-coloured strata shift to reveal an abstract fossil trace beneath the present landscape.",
+    description: "The licensed Karoo photograph moves through sunlit strata as a symbolic fossil trace emerges over the landscape.",
     sourceIds: ["sanparks-karoo"],
     colors: ["#241a18", "#d47d55", "#e8cf91"],
     art: () => `
-      <rect width="800" height="420" fill="#241a18"/>
+      <rect width="800" height="420" fill="#241a18" fill-opacity=".12"/>
       <path d="M0 145Q170 90 315 145T610 135T800 130V420H0Z" fill="#604133"/>
       <path class="scene-weave-a" d="M-20 220Q180 178 365 220T820 205V420H-20Z" fill="#9a5945"/>
       <path class="scene-weave-b" d="M-20 278Q180 232 390 278T820 260V420H-20Z" fill="#c77a54"/>
@@ -113,12 +113,12 @@ export const LOCALIZED_SCENES = Object.freeze({
   },
   matjiesfontein: {
     title: "Uses across a lifetime",
-    description: "An interpretive illustration: a stylised railway-era streetscape draws in and lamps illuminate one by one.",
+    description: "The licensed Matjiesfontein photograph glides down the historic streetscape as station lamps illuminate one by one.",
     sourceIds: ["matjiesfontein-history"],
     colors: ["#101e27", "#f0b958", "#b4d0cc"],
     art: () => `
       <defs><linearGradient id="mj-sky" x2="0" y2="1"><stop stop-color="#142b39"/><stop offset="1" stop-color="#6f5545"/></linearGradient></defs>
-      <rect width="800" height="420" fill="url(#mj-sky)"/>
+      <rect width="800" height="420" fill="url(#mj-sky)" fill-opacity=".14"/>
       <g class="scene-draw" style="--path-length:1400" fill="none" stroke="#b4d0cc" stroke-width="4" stroke-linejoin="round">
         <path d="M85 315V178h205v137M105 178l82-78 83 78M132 315v-72h43v72m45 0v-72h43v72M365 315V148h264v167M350 148h294M404 148V94h188v54M428 315V204h60v111m73 0V204h43v111"/>
         <path d="M30 316H752M36 348h716"/>
@@ -129,11 +129,11 @@ export const LOCALIZED_SCENES = Object.freeze({
   },
   worcester: {
     title: "A route of public memory",
-    description: "An interpretive illustration: woven paths meet public markers while protected spaces remain outside the route.",
+    description: "The licensed Hex River photograph opens through the valley as woven routes meet public heritage markers.",
     sourceIds: ["worcester-heritage"],
     colors: ["#17221f", "#e39a5c", "#6dc5a4"],
     art: () => `
-      <rect width="800" height="420" fill="#17221f"/>
+      <rect width="800" height="420" fill="#17221f" fill-opacity=".12"/>
       <g fill="none" stroke-linecap="round" stroke-width="13">
         <path class="scene-draw scene-weave-a" style="--path-length:1000" d="M38 100C183 32 244 352 405 209S636 79 770 155" stroke="#e39a5c"/>
         <path class="scene-draw scene-weave-b" style="--path-length:1000;--delay:.4s" d="M35 286C198 364 256 65 421 211S642 344 772 265" stroke="#6dc5a4"/>
@@ -146,11 +146,11 @@ export const LOCALIZED_SCENES = Object.freeze({
   },
   "cape-town": {
     title: "Streets remembered",
-    description: "An interpretive illustration: a street grid appears, recedes and returns in fragments around a field of remembered names.",
+    description: "The licensed Cape Town photograph approaches the mountain as a District Six street grid returns in remembered fragments.",
     sourceIds: ["district-six"],
     colors: ["#12172a", "#efb14b", "#78b9d4"],
     art: () => `
-      <rect width="800" height="420" fill="#12172a"/>
+      <rect width="800" height="420" fill="#12172a" fill-opacity=".12"/>
       <g class="scene-fade-memory" fill="none" stroke="#78b9d4" stroke-width="4">
         ${tags.verticalStreets()}
         ${tags.horizontalStreets()}

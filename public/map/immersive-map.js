@@ -104,14 +104,23 @@ export function createBasemapStyles(config = {}) {
   const satelliteTiles = config.satelliteTiles ?? [
     'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   ];
-  const hybridLabelTiles = config.hybridLabelTiles ?? [
-    'https://a.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
-    'https://b.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
-    'https://c.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
-  ];
   const terrainTiles = config.terrainTiles ?? ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'];
   const satelliteMaxZoom = config.satelliteMaxZoom ?? 19;
   const satelliteAttribution = config.satelliteAttribution ?? (config.satelliteTiles ? configuredAttribution(satelliteTiles, ATTRIBUTION.esri) : ATTRIBUTION.esri);
+  const hybridStyle = rasterStyle('hybrid', {
+    imagery: rasterSource(satelliteTiles, satelliteAttribution, satelliteMaxZoom),
+    labels: { type: 'vector', url: 'https://tiles.openfreemap.org/planet', attribution: ATTRIBUTION.osm },
+  }, [
+    { id: 'hybrid-imagery', type: 'raster', source: 'imagery', paint: { 'raster-saturation': 0, 'raster-contrast': 0.08 } },
+    { id: 'hybrid-place-labels', type: 'symbol', source: 'labels', 'source-layer': 'place', minzoom: 3, layout: {
+      'text-field': ['coalesce', ['get', 'name:en'], ['get', 'name']], 'text-font': ['Noto Sans Bold'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 4, 11, 14, 16], 'text-variable-anchor': ['center', 'top', 'bottom'],
+    }, paint: { 'text-color': '#fff7df', 'text-halo-color': '#14202c', 'text-halo-width': 2, 'text-opacity': config.hybridLabelOpacity ?? 0.72 } },
+    { id: 'hybrid-road-labels', type: 'symbol', source: 'labels', 'source-layer': 'transportation_name', minzoom: 8, layout: {
+      'symbol-placement': 'line', 'text-field': ['coalesce', ['get', 'name:en'], ['get', 'name']], 'text-font': ['Noto Sans Regular'], 'text-size': 11,
+    }, paint: { 'text-color': '#f6ecd4', 'text-halo-color': '#17212c', 'text-halo-width': 1.5, 'text-opacity': config.hybridLabelOpacity ?? 0.65 } },
+  ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'esri-world-imagery' });
+  hybridStyle.glyphs = 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf';
 
   return {
     streets: {
@@ -149,13 +158,7 @@ export function createBasemapStyles(config = {}) {
     },
     hybrid: {
       id: 'hybrid', label: 'Hybrid', online: true, maxUsefulZoom: satelliteMaxZoom,
-      style: rasterStyle('hybrid', {
-        imagery: rasterSource(satelliteTiles, satelliteAttribution, satelliteMaxZoom),
-        labels: rasterSource(hybridLabelTiles, config.hybridLabelTiles ? configuredAttribution(hybridLabelTiles, ATTRIBUTION.osm) : ATTRIBUTION.eoxOverlay, 19),
-      }, [
-        { id: 'hybrid-imagery', type: 'raster', source: 'imagery', paint: { 'raster-saturation': 0, 'raster-contrast': 0.08 } },
-        { id: 'hybrid-reference', type: 'raster', source: 'labels', paint: { 'raster-opacity': config.hybridLabelOpacity ?? 0.35, 'raster-contrast': config.hybridLabelTiles ? 0.28 : 0.08 } },
-      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'esri-world-imagery' }),
+      style: hybridStyle,
     },
     offline: {
       id: 'offline', label: 'Offline', online: false, maxUsefulZoom: 12,
