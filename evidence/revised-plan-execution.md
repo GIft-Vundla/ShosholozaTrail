@@ -59,7 +59,7 @@ The ride is explicitly labelled as a simulated camera over mapped geometry and s
 
 ## AI
 
-The Worker supports an experimental source-locked Workers AI mode. It may return only an exact excerpt from an eligible registered source. Deterministic challenge hints remain local; unsupported requests fail safely. `evidence/ai-live-smoke.json` records successful explain, icebreaker, draft, and unsupported-request behavior using `@cf/zai-org/glm-4.7-flash`.
+The Worker supports an experimental source-locked Workers AI mode. The `/ai` page provides a visible consultation interface with typed questions, conversation history, suggested questions, source links and explicit unsupported-question responses. It may return only an exact excerpt from an eligible registered source. Deterministic challenge hints remain local; unsupported requests fail safely. `evidence/ai-live-smoke.json` records successful explain, icebreaker, draft, and unsupported-request behavior using `@cf/zai-org/glm-4.7-flash`. `evidence/ai-guide-page.png` records the dedicated desktop interface.
 
 The fixed provider evaluation remains pending, so the product labels this mode experimental and keeps human source review visible.
 

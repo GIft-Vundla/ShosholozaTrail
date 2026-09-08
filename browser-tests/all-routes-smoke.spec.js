@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const routes = ['/', '/journey', '/destinations', '/stories', '/plan', '/credits', '/app'];
+const routes = ['/', '/journey', '/ride', '/ai', '/destinations', '/stories', '/plan', '/credits', '/app'];
 
 test('all public routes render without console errors or broken images', async ({ page }) => {
   const consoleErrors = [];

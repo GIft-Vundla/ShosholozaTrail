@@ -8,6 +8,7 @@ const LINKS: [string, string][] = [
   ['/ride', 'The Ride'],
   ['/destinations', 'Destinations'],
   ['/stories', 'Stories'],
+  ['/ai', 'AI Guide'],
   ['/plan', 'Plan Your Trip'],
 ];
 

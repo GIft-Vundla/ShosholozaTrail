@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "hash": "11cb0a4b6e0989140c191dfdd3addaf6d900425d99bbad3faa69b8c7a8f6e5ad",
-  "bytes": 3609500,
+  "hash": "a3c69bc7366bd0b368d395385b40610e22d88fdfbaef3791a03b8ddd3b3ba78d",
+  "bytes": 3620447,
   "assets": [
     {
       "url": "/animations/README.md",
@@ -29,14 +29,14 @@
       "sha256": "0d3a07435463825f34cda0cd09727dca8a5e789cb223b34d2aeb466d1fdc7b5c"
     },
     {
-      "url": "/app-assets/index-B-nslnRe.js",
-      "bytes": 279260,
-      "sha256": "db6c345e9673a5357d663f03a99cc654df0a5703592617affa7f2cc04ee1ec1b"
+      "url": "/app-assets/index-JPhFjaIV.js",
+      "bytes": 285320,
+      "sha256": "6c952d2559e7ac9d86cc8c58f524edd278f9a5410064d7cf06094fbab843ee8c"
     },
     {
-      "url": "/app-assets/index-DsAHnFCt.css",
-      "bytes": 25488,
-      "sha256": "10f40e666a10e95b36fbd7db3029a531f08c9c62c95222c356b3bab7e62055f9"
+      "url": "/app-assets/index-laR5XQxe.css",
+      "bytes": 30375,
+      "sha256": "95b2978068f15175ba6de3de24bac884a21f5c9849c54de7e69edc222ed3d135"
     },
     {
       "url": "/app.html",
@@ -196,7 +196,7 @@
     {
       "url": "/index.html",
       "bytes": 735,
-      "sha256": "19673c3668d4cc894abcafa92bd91b52271636f788e6f26a7c5f5ca940918cbf"
+      "sha256": "ab75b2a8b0f40bfee739749cd19dc0a1a1f44c2e835729a0ceab0a4592e09a89"
     },
     {
       "url": "/journey.css",
