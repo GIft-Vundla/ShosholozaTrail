@@ -80,6 +80,8 @@ test('unreviewed submissions stay private; moderator verifies rights and publish
 
 test('per-session and global AI budgets are enforced by SQL and persist across reservations', async () => {
   const { env, sqlite } = setup();
+  env.AI_GLOBAL_DAILY_LIMIT = '100';
+  env.AI_SESSION_DAILY_LIMIT = '10';
   for (let i = 0; i < 10; i++) await reserveAiBudget(env, 'session-a');
   await assert.rejects(() => reserveAiBudget(env, 'session-a'), /limit reached/);
   const bucket = Math.floor(Date.now() / 86400000);
@@ -134,6 +136,7 @@ test('experimental Workers AI serves source-locked editorial drafts to a quota-l
   const passage = 'Freedom Park is in Salvokop, Pretoria.';
   let calls = 0; let providerInput: Record<string, unknown> | undefined;
   env.AI_ENABLED = 'true'; env.AI_VALIDATED = 'false'; env.AI_EXPERIMENTAL = 'true';
+  env.AI_GUEST_DAILY_LIMIT = '5';
   env.AI_PROVIDER = 'workers-ai'; env.AI_MODEL = '@cf/zai-org/glm-4.7-flash';
   env.AI = { run: async (model, input) => {
     calls++; providerInput = input;

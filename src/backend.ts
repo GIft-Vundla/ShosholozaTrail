@@ -23,6 +23,9 @@ export interface BackendEnv {
   AI_EXPERIMENTAL?: string;
   AI_PROVIDER?: string;
   AI_MODEL?: string;
+  AI_GLOBAL_DAILY_LIMIT?: string;
+  AI_GUEST_DAILY_LIMIT?: string;
+  AI_SESSION_DAILY_LIMIT?: string;
   GEMINI_API_KEY?: string;
   GEMINI_MODEL?: string;
   MAPTILER_KEY?: string;

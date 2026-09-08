@@ -9,13 +9,18 @@ export interface SourceRecord { id: string; passage: string; reviewStatus: strin
 interface ProviderPayload { answer?: unknown; sourceIds?: unknown }
 interface ProviderConfig { id: 'workers-ai' | 'gemini'; model: string }
 
+function dailyLimit(value: string | undefined, fallback: number): number {
+  if (!value || !/^\d+$/.test(value)) return fallback;
+  return Math.max(1, Math.min(10_000, Number(value)));
+}
+
 export function fallback(reason: string): Response {
   return json({ status: 'fallback', enabled: false, reason, answer: 'AI assistance is unavailable. Use the cached sourced chapter, its three-step hint ladder, or the local creative prompt.', sourceIds: [] });
 }
 
-export async function reserveAiBudget(env: BackendEnv, identityHash: string, identityLimit = 10): Promise<void> {
+export async function reserveAiBudget(env: BackendEnv, identityHash: string, identityLimit = dailyLimit(env.AI_SESSION_DAILY_LIMIT, 100)): Promise<void> {
   const db = database(env);
-  await quota(db, 'ai:global', 100, 86400);
+  await quota(db, 'ai:global', dailyLimit(env.AI_GLOBAL_DAILY_LIMIT, 1000), 86400);
   await quota(db, `ai:identity:${identityHash}`, identityLimit, 86400);
 }
 
@@ -38,12 +43,12 @@ function eligibleSource(record: SourceRecord): boolean {
 async function aiIdentity(request: Request, env: BackendEnv): Promise<{ hash: string; limit: number; kind: 'session' | 'guest' }> {
   if (request.headers.has('Authorization')) {
     const session = await authenticate(request, env);
-    return { hash: session.token_hash, limit: 10, kind: 'session' };
+    return { hash: session.token_hash, limit: dailyLimit(env.AI_SESSION_DAILY_LIMIT, 100), kind: 'session' };
   }
   // Rotate the pseudonymous guest scope daily. Only the hash is stored in D1.
   const day = Math.floor(Date.now() / 86400000);
   const ip = request.headers.get('CF-Connecting-IP') || 'local-unidentified';
-  return { hash: await hash(`ai-guest:${day}:${ip}`), limit: 5, kind: 'guest' };
+  return { hash: await hash(`ai-guest:${day}:${ip}`), limit: dailyLimit(env.AI_GUEST_DAILY_LIMIT, 100), kind: 'guest' };
 }
 
 function parseWorkersPayload(result: unknown): ProviderPayload {
