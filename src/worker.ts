@@ -12,13 +12,18 @@ function secure(response: Response): Response {
     'https://*.tile.openstreetmap.org',
     'https://*.tile.opentopomap.org',
     'https://*.tiles.maps.eox.at',
+    'https://services.arcgisonline.com',
     'https://s3.amazonaws.com',
     'https://api.maptiler.com'
   ].join(' ');
   headers.set('X-Content-Type-Options', 'nosniff');
-  headers.set('Referrer-Policy', 'no-referrer');
+  // MapTiler's origin restrictions validate the cross-origin Referer. Send the
+  // origin only, never the path or query containing journey state.
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   headers.set('Permissions-Policy', 'geolocation=(self), camera=(), microphone=()');
-  headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self'; img-src 'self' data: blob: ${mapHosts}; connect-src 'self' ${mapHosts}; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'`);
+  // MapLibre positions its canvas, controls and markers with runtime style
+  // attributes. Permit those generated styles while keeping scripts self-only.
+  headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: ${mapHosts}; connect-src 'self' ${mapHosts}; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'`);
   headers.set('Strict-Transport-Security', 'max-age=31536000');
   headers.set('X-Frame-Options', 'DENY');
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });

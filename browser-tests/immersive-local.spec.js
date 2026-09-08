@@ -2,8 +2,9 @@ import { expect, test } from '@playwright/test';
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
-const HUB_IDS = [
+const SCENE_HUB_IDS = [
   'pretoria',
+  'johannesburg',
   'kimberley',
   'de-aar',
   'beaufort-west',
@@ -11,6 +12,7 @@ const HUB_IDS = [
   'worcester',
   'cape-town',
 ];
+const MAP_HUB_IDS = SCENE_HUB_IDS.filter((id) => id !== 'johannesburg');
 
 async function openShell(page) {
   await page.goto('/app');
@@ -56,11 +58,11 @@ test.describe('localized animation module', () => {
         };
       });
       return { catalogue, mounted };
-    }, HUB_IDS);
+    }, SCENE_HUB_IDS);
 
-    expect(result.catalogue.map((scene) => scene.hubId)).toEqual(HUB_IDS);
-    expect(new Set(result.catalogue.map((scene) => scene.title)).size).toBe(HUB_IDS.length);
-    expect(new Set(result.mounted.map((scene) => scene.svg)).size).toBe(HUB_IDS.length);
+    expect(result.catalogue.map((scene) => scene.hubId)).toEqual(SCENE_HUB_IDS);
+    expect(new Set(result.catalogue.map((scene) => scene.title)).size).toBe(SCENE_HUB_IDS.length);
+    expect(new Set(result.mounted.map((scene) => scene.svg)).size).toBe(SCENE_HUB_IDS.length);
     for (const scene of result.mounted) {
       expect(scene.title?.trim()).toBeTruthy();
       expect(scene.description?.trim()).toBeTruthy();
@@ -68,7 +70,7 @@ test.describe('localized animation module', () => {
       expect(scene.accessibleNameRefs?.trim().split(/\s+/)).toHaveLength(2);
       expect(scene.controlLabel).toMatch(/^Pause .+ animation$/);
     }
-    await expect(page.locator('figure.st-local-scene[data-hub]')).toHaveCount(HUB_IDS.length);
+    await expect(page.locator('figure.st-local-scene[data-hub]')).toHaveCount(SCENE_HUB_IDS.length);
   });
 
   test('reduced-motion users receive complete static scenes with no moving control', async ({ page }) => {
@@ -89,6 +91,32 @@ test.describe('localized animation module', () => {
     await expect.poll(() => scene.locator('.scene-draw').first().evaluate((element) => {
       return getComputedStyle(element).animationName;
     })).toBe('none');
+  });
+
+  test('uses matching licensed photographs, visible credits, and automatic pause states', async ({ page }) => {
+    await openShell(page);
+    await page.evaluate(async () => {
+      const { mountLocalizedAnimation } = await import('/animations/localized-scenes.js');
+      const host = document.createElement('div');
+      host.id = 'licensed-animation-host';
+      document.body.prepend(host);
+      window.__sceneAcceptance = mountLocalizedAnimation(host, 'kimberley', { controls: true });
+    });
+    const scene = page.locator('#licensed-animation-host .st-local-scene');
+    await expect(scene.locator('img')).toHaveAttribute('src', '/assets/photos/kimberley.webp');
+    await expect(scene.locator('.st-local-scene__credit')).toContainText(/Rudolph Botha.*CC BY-SA 3\.0.*cropped, colour graded and animated/i);
+    await expect(scene.locator('.st-local-scene__credit a')).toHaveCount(2);
+    await scene.getByRole('button', { name: /^Pause / }).click();
+    await expect(scene).toHaveAttribute('data-paused', 'true');
+    await page.evaluate(() => window.__sceneAcceptance.setWaiting(true));
+    await scene.getByRole('button', { name: /^Play / }).click();
+    await expect(scene).toHaveAttribute('data-paused', 'true');
+    await page.evaluate(() => window.__sceneAcceptance.setWaiting(false));
+    await expect(scene).toHaveAttribute('data-paused', 'false');
+    await page.evaluate(() => document.body.classList.add('low-power'));
+    await expect(scene).toHaveAttribute('data-paused', 'true');
+    await page.evaluate(() => document.body.classList.remove('low-power'));
+    await expect(scene).toHaveAttribute('data-paused', 'false');
   });
 });
 
@@ -115,7 +143,7 @@ test.describe('immersive map application contract', () => {
       await control.click();
       await expect(map).toHaveAttribute('data-active-style', style);
       await expect(control).toHaveAttribute('aria-pressed', 'true');
-      await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/OpenStreetMap|OpenMapTiles|OpenFreeMap|EOX|Copernicus/i);
+      await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/OpenStreetMap|OpenMapTiles|OpenFreeMap|EOX|Esri|Maxar/i);
     }
   });
 
@@ -146,7 +174,7 @@ test.describe('immersive map application contract', () => {
 
   test('opens the matching localized scene from each hub marker', async ({ page }) => {
     await requireImmersiveMap(page);
-    for (const hubId of HUB_IDS) {
+    for (const hubId of MAP_HUB_IDS) {
       await page.getByRole('button', { name: /fit whole route/i }).click();
       const marker = page.locator(`.immersive-hub[data-hub="${hubId}"], [data-hub-marker="${hubId}"]`).first();
       await expect(marker).toBeVisible();
@@ -209,7 +237,7 @@ test.describe('immersive map module contract', () => {
     const map = fixture.locator('#immersive-contract-map');
     await expect(map).toHaveAttribute('data-map-engine', 'maplibre');
     await expect(map).toHaveAttribute('data-active-style', 'offline');
-    await expect(fixture.locator('.immersive-hub[data-hub]')).toHaveCount(HUB_IDS.length);
+    await expect(fixture.locator('.immersive-hub[data-hub]')).toHaveCount(MAP_HUB_IDS.length);
 
     const follows = await page.evaluate(() => {
       const controller = window.__immersiveAcceptanceController;
@@ -217,7 +245,7 @@ test.describe('immersive map module contract', () => {
     });
     expect(follows).toEqual([false, false, true, true]);
     await fixture.locator('.immersive-hub[data-hub]').first().click();
-    await expect(fixture).toHaveAttribute('data-selected-hub', HUB_IDS[0]);
+    await expect(fixture).toHaveAttribute('data-selected-hub', MAP_HUB_IDS[0]);
 
     const dark = fixture.locator('[data-map-style="dark"]');
     await dark.click();
@@ -229,7 +257,7 @@ test.describe('immersive map module contract', () => {
     await page.evaluate(() => window.dispatchEvent(new Event('offline')));
     await expect(map).toHaveAttribute('data-active-style', 'offline');
     await expect(fixture.locator('.immersive-map-status')).toContainText(/offline map active/i);
-    await expect(fixture.locator('.immersive-hub[data-hub]')).toHaveCount(HUB_IDS.length);
+    await expect(fixture.locator('.immersive-hub[data-hub]')).toHaveCount(MAP_HUB_IDS.length);
   });
 });
 

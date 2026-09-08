@@ -16,6 +16,20 @@ type ImmersiveModule = {
   haversineMetres(a: [number, number], b: [number, number]): number;
 };
 
+let mapConfigPromise: Promise<Record<string, unknown>> | null = null;
+function loadMapConfig(): Promise<Record<string, unknown>> {
+  if (!mapConfigPromise) {
+    mapConfigPromise = fetch('/api/map-config', { cache: 'no-store', headers: { Accept: 'application/json' } })
+      .then(async response => {
+        const result = await response.json() as Record<string, unknown>;
+        if (!response.ok) throw new Error(String(result.reason || result.error || 'Map configuration unavailable'));
+        return result;
+      })
+      .catch(() => ({ provider: 'esri' }));
+  }
+  return mapConfigPromise;
+}
+
 function positionAt(progress: number): Position {
   const km = Math.max(0, Math.min(TOTAL_KM, progress * TOTAL_KM));
   let index = STOPS.findIndex(stop => stop.km >= km);
@@ -51,7 +65,10 @@ export function JourneyMap({ progress, focus, onSelect }: {
   useEffect(() => {
     let cancelled = false;
     const moduleUrl = '/map/immersive-map.js';
-    void import(/* @vite-ignore */ moduleUrl).then((module: ImmersiveModule) => {
+    void Promise.all([
+      import(/* @vite-ignore */ moduleUrl) as Promise<ImmersiveModule>,
+      loadMapConfig(),
+    ]).then(([module, mapConfig]) => {
       if (cancelled || !canvasRef.current || !controlsRef.current) return;
       const coordinates = STOPS.map(stop => [stop.lon, stop.lat] as [number, number]);
       const lengthMetres = coordinates.slice(1).reduce(
@@ -72,6 +89,7 @@ export function JourneyMap({ progress, focus, onSelect }: {
         initialStyle: 'satellite',
         follow: focusRef.current,
         cinematic: true,
+        mapConfig,
         reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
         onHubSelect: (hub: { index: number }) => onSelectRef.current(hub.index),
         onStatus: ({ status: nextStatus }: { status: string }) => {

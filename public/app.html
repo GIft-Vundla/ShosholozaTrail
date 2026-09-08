@@ -1,6 +1,46 @@
-﻿<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#183e36"><meta name="description" content="Offline stories and creative journeys along the Pretoria–Cape Town corridor."><title>ShosholozaTrail · Your journey companion</title><link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/vendor/maplibre-gl/maplibre-gl.css"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/journey.css"><link rel="stylesheet" href="/map/immersive-map.css"><link rel="stylesheet" href="/animations/localized-scenes.css"></head>
-<body><a class="skip" href="#main">Skip to content</a><header><a class="brand" href="/">SHOSHOLOZA<span>TRAIL</span></a><div class="statuses"><span id="position-label" class="badge">Manual exploration</span><span id="network" class="badge">Checking connection</span></div></header>
-<nav aria-label="Main"><a href="/app" data-nav>Journey</a><a href="/app/stories" data-nav>Stories</a><a href="/app/creative" data-nav>Postcards</a><a href="/app/carriage" data-nav>Carriage</a><a href="/app/contribute" data-nav>Contribute</a><a href="/app/evidence" data-nav>Evidence</a></nav>
-<div id="waiting" hidden role="status"></div><div id="message" role="status" aria-live="polite"></div><aside id="chapter-queue" class="queue" aria-live="polite" hidden></aside><main id="main" tabindex="-1"><p>Opening your journey…</p></main><footer>4GeeksSakes <span>Foreground journeys · English pilot · Working towards TRL 5</span></footer>
-<script src="/vendor/maplibre-gl/maplibre-gl.js"></script><script src="/app.js" type="module"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111a29">
+  <meta name="description" content="Offline stories and creative journeys along the Pretoria–Cape Town corridor.">
+  <title>Shosholoza Trail · Your journey companion</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/vendor/maplibre-gl/maplibre-gl.css">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/journey.css">
+  <link rel="stylesheet" href="/map/immersive-map.css">
+  <link rel="stylesheet" href="/animations/localized-scenes.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header light">
+    <div class="nav-shell">
+      <a class="brand" href="/"><span class="brand-mark">ST</span><span>Shosholoza Trail</span></a>
+      <nav class="desktop-nav" aria-label="Primary">
+        <a href="/">Home</a><a href="/journey">The Journey</a><a href="/destinations">Destinations</a><a href="/stories">Stories</a><a href="/plan">Plan Your Trip</a><a href="/app" data-nav aria-current="page">Live Journey</a><a class="start-pill" href="/app" data-nav>Start Journey</a>
+      </nav>
+      <button id="menu-toggle" class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+    <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile primary" hidden><a href="/">Home</a><a href="/journey">The Journey</a><a href="/destinations">Destinations</a><a href="/stories">Stories</a><a href="/plan">Plan Your Trip</a><a href="/app" data-nav aria-current="page">Live Journey</a></nav>
+  </header>
+  <div class="engine-chrome">
+    <div class="statuses" aria-label="Journey status"><span id="position-label" class="badge">Manual exploration</span><span id="network" class="badge">Checking connection</span></div>
+    <nav class="engine-tabs" aria-label="Journey tools"><a href="/app" data-nav>Journey</a><a href="/app/stories" data-nav>Stories</a><a href="/app/creative" data-nav>Postcards</a><a href="/app/carriage" data-nav>Carriage</a><a href="/app/contribute" data-nav>Contribute</a><a href="/app/evidence" data-nav>Evidence</a></nav>
+  </div>
+  <div id="waiting" hidden role="status"></div><div id="message" role="status" aria-live="polite"></div><aside id="chapter-queue" class="queue" aria-live="polite" hidden></aside>
+  <main id="main" tabindex="-1"><p>Opening your journey…</p></main>
+  <footer class="engine-footer"><b>Shosholoza Trail</b><span>4GeeksSakes · Foreground journeys · English pilot · Working towards TRL 5</span></footer>
+  <nav class="mobile-tabs" aria-label="Primary tabs">
+    <a href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8v10h-6v-6H9v6H3Z"/></svg><span>Home</span></a>
+    <a href="/app" data-nav aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Zm6-3v15m6-12v15"/></svg><span>Map</span></a>
+    <a href="/app/stories" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6a3 3 0 0 1 3 3v13a3 3 0 0 0-3-3H4Zm16 0h-4a3 3 0 0 0-3 3v13a3 3 0 0 1 3-3h4Z"/></svg><span>Stories</span></a>
+    <a href="/plan"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 4-4 2 2-4Z"/></svg><span>Plan</span></a>
+    <a href="/app/evidence" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span>More</span></a>
+  </nav>
+  <script src="/vendor/maplibre-gl/maplibre-gl.js"></script><script src="/app.js" type="module"></script>
+</body>
+</html>

@@ -36,6 +36,23 @@ const server = createServer(async (request, response) => {
     response.end(JSON.stringify({ readiness: 'working-towards-trl5', localHarness: true }));
     return;
   }
+  if (url.pathname === '/api/map-config') {
+    response.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+    response.end(JSON.stringify({ provider: 'esri' }));
+    return;
+  }
+  if (url.pathname === '/api' || url.pathname.startsWith('/api/')) {
+    response.writeHead(503, {
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store',
+    });
+    response.end(JSON.stringify({
+      status: 'preview-server-no-backend',
+      reason: 'preview-server-no-backend',
+      message: 'This static preview serves interface assets only. Run npm run dev for AI and carriage APIs.',
+    }));
+    return;
+  }
   const engineShell = url.pathname === '/app' || url.pathname.startsWith('/app/');
   let file = publicPath(url.pathname === '/' ? '/index.html' : url.pathname);
   try {

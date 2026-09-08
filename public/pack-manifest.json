@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "hash": "883e141c3057f7b075001fa880e4df4d0957e4410353debaff20529026ef5275",
-  "bytes": 3589459,
+  "hash": "411218544172a732325cf9fa06853e18526ba3ec5b3c798e5a3ef35481940098",
+  "bytes": 3452266,
   "assets": [
     {
       "url": "/animations/README.md",
@@ -15,118 +15,38 @@
     },
     {
       "url": "/animations/localized-scenes.css",
-      "bytes": 3942,
-      "sha256": "409582f5c67856787661e8525ede1d4c783ff335d5ba7b3a515ee6a2ddbd68db"
+      "bytes": 4655,
+      "sha256": "bebe48f5e2614dbde87ae37d0f1b1b5a3a3bcecc5a2979bf145db98b30277dbe"
     },
     {
       "url": "/animations/localized-scenes.js",
-      "bytes": 13279,
-      "sha256": "8fe1b843c717007233574b17ecfdb8f449d677d0edd1d91d8fa8e4e7c9027c4d"
+      "bytes": 18438,
+      "sha256": "a66aa2606a212f74673ab44021f538ba763dc5222e6fdd95428de1d6838e5af7"
     },
     {
       "url": "/animations/scenes.v1.json",
-      "bytes": 2478,
-      "sha256": "5b5f39ff4fef7e21ae29f8b75684043541b5e4fd141ce11ceadcce7d42fcb116"
+      "bytes": 2394,
+      "sha256": "d3684a277e96998e5d53745164bf4e8feefcd5082f580691514ea9c84dd6db51"
     },
     {
-      "url": "/app-assets/fraunces-latin-400-normal-6IfK1voy.woff2",
-      "bytes": 17968,
-      "sha256": "e558f39453a9c611908be04294b50dea5f21ae6c49b41c6e47f4115e91f90209"
+      "url": "/app-assets/index-Bh_LZmHX.js",
+      "bytes": 266756,
+      "sha256": "b2136970e9eef553fef68a5f0737779d481ebb6ea8f827d4a7985b02d6d2af58"
     },
     {
-      "url": "/app-assets/fraunces-latin-400-normal-NUPT2cO8.woff",
-      "bytes": 22480,
-      "sha256": "695442434f77c44190b48a022f943e052bb60d49ed3c7940ea60a16ac3faf8b3"
-    },
-    {
-      "url": "/app-assets/fraunces-latin-600-normal-BFCDtZfi.woff2",
-      "bytes": 18096,
-      "sha256": "3a1de7711d147bad4422825045f87597fd77cca72e7c96d3b0a81735d00dda82"
-    },
-    {
-      "url": "/app-assets/fraunces-latin-600-normal-DL5QCzvS.woff",
-      "bytes": 22512,
-      "sha256": "d78e988f844f474ce9b1cc10c72501add6c5056763bfe83ff2a8e2fcb6708ad0"
-    },
-    {
-      "url": "/app-assets/fraunces-latin-700-normal-CEOla-zY.woff2",
-      "bytes": 18212,
-      "sha256": "c38570d224b830056e69484bb9e768e1d3fa7ba4755c8891a3c6d366194d2ff3"
-    },
-    {
-      "url": "/app-assets/fraunces-latin-700-normal-DTjk5d1Q.woff",
-      "bytes": 22516,
-      "sha256": "1f9b0930f7a5e2b6aaba0df15f21bcdebebfcaff4b704daf3619589da69fd2a4"
-    },
-    {
-      "url": "/app-assets/index-BNLjyx6F.css",
-      "bytes": 19463,
-      "sha256": "316f8af9904d7e7bbc1eaa997bd19b995d387f26c3fe916c7519317587dab44e"
-    },
-    {
-      "url": "/app-assets/index-DIRQmpYH.js",
-      "bytes": 262094,
-      "sha256": "b3f6777e368b6ac5de9bcf89f9adc1fba5bdf9c00299e1cfedbd358d26947d23"
-    },
-    {
-      "url": "/app-assets/outfit-latin-300-normal-AWLfuCom.woff",
-      "bytes": 18196,
-      "sha256": "bcc41559359a3cb79105f71979b7e70f9bba8ee39460db790057d3f3c0cc77eb"
-    },
-    {
-      "url": "/app-assets/outfit-latin-300-normal-CRYTwY6m.woff2",
-      "bytes": 13956,
-      "sha256": "ef88e74f63ce75b54cce4d5a4087c6f180750b9ebae6ab6e5bf2a9939bf6958f"
-    },
-    {
-      "url": "/app-assets/outfit-latin-400-normal-BGsTXAXT.woff2",
-      "bytes": 14032,
-      "sha256": "71f028fd2349990b3f8aa643abe767e82e0f596be407ae66f0004ff164121bdb"
-    },
-    {
-      "url": "/app-assets/outfit-latin-400-normal-DMwTpYkH.woff",
-      "bytes": 18232,
-      "sha256": "f329dc36d2d9285431fb8322f5e951def9cac4a42c1cada679747f7c64b04916"
-    },
-    {
-      "url": "/app-assets/outfit-latin-500-normal-ClnHRwRh.woff",
-      "bytes": 17688,
-      "sha256": "40083be5d9c1935c562bfe9be662d5a2798910deee9e8049509142549a995626"
-    },
-    {
-      "url": "/app-assets/outfit-latin-500-normal-DKnIMDSk.woff2",
-      "bytes": 13528,
-      "sha256": "fc9bff941def6d924a71632bd8a93190528872eae6414844f3c367ff948d92fd"
-    },
-    {
-      "url": "/app-assets/outfit-latin-600-normal-B7SfZ07L.woff2",
-      "bytes": 14140,
-      "sha256": "8cfe15c2c6de6ef8efff3eedbd52a383ac9ef23d6c23f6cd9f9b838f5f37dc36"
-    },
-    {
-      "url": "/app-assets/outfit-latin-600-normal-BEfTtDA7.woff",
-      "bytes": 18412,
-      "sha256": "3d1cd1b42cb525acde934764b2adec41dddf7932e1a965392d285efd56f2c148"
-    },
-    {
-      "url": "/app-assets/outfit-latin-700-normal-Cu9v6i1X.woff2",
-      "bytes": 14060,
-      "sha256": "5d5e3734089a74707292ce8a3e186def34cd63e33879f9ac3689a8d8da9d0706"
-    },
-    {
-      "url": "/app-assets/outfit-latin-700-normal-D4itBLBr.woff",
-      "bytes": 18344,
-      "sha256": "fb730df77799be655b0028de3ff2952a6ebcd3ca85d32cbf188c6f3ea66f82b7"
+      "url": "/app-assets/index-CBsvlfJ1.css",
+      "bytes": 19184,
+      "sha256": "d1bdcbe0c485270f0c28a1f38a7953cf6c1d3de8177d5d3c13005ba34b6b875e"
     },
     {
       "url": "/app.html",
-      "bytes": 1762,
-      "sha256": "c41da78c613aa186038fa610014f86d4b5ae5023e827b02f541734259f913066"
+      "bytes": 3937,
+      "sha256": "04023f99c31af49d74035131b34579745abd9ae5a81b80a55eaa7a4e5656f9b9"
     },
     {
       "url": "/app.js",
-      "bytes": 48468,
-      "sha256": "b910f82d0edfa656e7382cdb32911d5de5cd1897ae02205c63f7bc3d5c4b1efe"
+      "bytes": 51177,
+      "sha256": "0b2333f8ddc192a01c32430c014839463f9750fe94e1a2720439b8a3c6ea304c"
     },
     {
       "url": "/assets/photo-credits.json",
@@ -229,19 +149,59 @@
       "sha256": "71f98c01603400bc2035c9868c926591c247e839f77835174e1c7140317422e5"
     },
     {
+      "url": "/fonts/fraunces-latin-400.woff2",
+      "bytes": 17968,
+      "sha256": "e558f39453a9c611908be04294b50dea5f21ae6c49b41c6e47f4115e91f90209"
+    },
+    {
+      "url": "/fonts/fraunces-latin-600.woff2",
+      "bytes": 18096,
+      "sha256": "3a1de7711d147bad4422825045f87597fd77cca72e7c96d3b0a81735d00dda82"
+    },
+    {
+      "url": "/fonts/fraunces-latin-700.woff2",
+      "bytes": 18212,
+      "sha256": "c38570d224b830056e69484bb9e768e1d3fa7ba4755c8891a3c6d366194d2ff3"
+    },
+    {
+      "url": "/fonts/outfit-latin-300.woff2",
+      "bytes": 13956,
+      "sha256": "ef88e74f63ce75b54cce4d5a4087c6f180750b9ebae6ab6e5bf2a9939bf6958f"
+    },
+    {
+      "url": "/fonts/outfit-latin-400.woff2",
+      "bytes": 14032,
+      "sha256": "71f028fd2349990b3f8aa643abe767e82e0f596be407ae66f0004ff164121bdb"
+    },
+    {
+      "url": "/fonts/outfit-latin-500.woff2",
+      "bytes": 13528,
+      "sha256": "fc9bff941def6d924a71632bd8a93190528872eae6414844f3c367ff948d92fd"
+    },
+    {
+      "url": "/fonts/outfit-latin-600.woff2",
+      "bytes": 14140,
+      "sha256": "8cfe15c2c6de6ef8efff3eedbd52a383ac9ef23d6c23f6cd9f9b838f5f37dc36"
+    },
+    {
+      "url": "/fonts/outfit-latin-700.woff2",
+      "bytes": 14060,
+      "sha256": "5d5e3734089a74707292ce8a3e186def34cd63e33879f9ac3689a8d8da9d0706"
+    },
+    {
       "url": "/icon.svg",
       "bytes": 232,
       "sha256": "720be68ca4dda88e282c1b5bf2574e0c5fa3f69c50d3968141118f30517fb2d8"
     },
     {
       "url": "/index.html",
-      "bytes": 650,
-      "sha256": "9a9f3ce3526c085da9cb7aad7998b21bf6de4d34d6015a0f2f6bbe2f45955bc9"
+      "bytes": 735,
+      "sha256": "fdea48c2cc7810f5c2220974fe2d76bd4dd13305c9b193b33e271c3dbb317f31"
     },
     {
       "url": "/journey.css",
-      "bytes": 12357,
-      "sha256": "70656a44100d570854f7274f31f8de2e60f0e1ef4c0540870bb7693514059054"
+      "bytes": 13016,
+      "sha256": "313a9d6e1d23d60909e73dd98e6bde93e06311d4d713706da2793e0f47449669"
     },
     {
       "url": "/manifest.webmanifest",
@@ -255,13 +215,13 @@
     },
     {
       "url": "/map/immersive-map.css",
-      "bytes": 4752,
-      "sha256": "accd1f4b2bd44803fd47e9c53230540db83145ec9c2bd50172357cc413abebe0"
+      "bytes": 5027,
+      "sha256": "4abf3a906f54909cd4bce49f590572a6b854311736ae0a23ee12d947c0b327b2"
     },
     {
       "url": "/map/immersive-map.js",
-      "bytes": 25156,
-      "sha256": "827245730c8c0ab21bf272422249095e7a0b726442033f2a4343e349842ef667"
+      "bytes": 25784,
+      "sha256": "335c07c1f2b81950478cb087b790e52debc8ad904d2a17cca5a9ef68f120e72f"
     },
     {
       "url": "/results/r10.json",
@@ -285,8 +245,13 @@
     },
     {
       "url": "/style.css",
-      "bytes": 4868,
-      "sha256": "45a17549d9107fa45ea155e6bd0db39efd58519e304b36bfb6c7566a2abceb85"
+      "bytes": 7810,
+      "sha256": "aa19f505eb4aac5f023c9eba7302546b62c8ff33c80ded863571f9e4756710b6"
+    },
+    {
+      "url": "/theme.css",
+      "bytes": 1543,
+      "sha256": "960200fccee0708779d326f9549419c406b4f6854c0d76a78c5473876560911c"
     },
     {
       "url": "/vendor/TURF-LICENSE",

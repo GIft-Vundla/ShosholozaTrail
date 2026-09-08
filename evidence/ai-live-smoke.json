@@ -1,0 +1,83 @@
+{
+  "baseUrl": "http://127.0.0.1:4177",
+  "testedAt": "2026-09-08T09:47:34.993Z",
+  "authenticatedSession": true,
+  "results": [
+    {
+      "name": "explain",
+      "statusCode": 200,
+      "body": {
+        "status": "source-excerpt",
+        "enabled": true,
+        "label": "Experimental AI-selected source excerpt; answers are source-locked and human review is still pending.",
+        "answer": "Freedom Park is in Salvokop, Pretoria. Its heritage spaces commemorate people who gave their lives for South Africa's freedom. The institution describes its purpose as remembering and celebrating South Africa's heritage and cultures.",
+        "sourceIds": [
+          "freedom-park"
+        ],
+        "sourceReview": "editorial-draft-human-review-pending",
+        "mode": "experimental-source-locked",
+        "provider": "workers-ai",
+        "modelId": "@cf/zai-org/glm-4.7-flash",
+        "quotaIdentity": "session"
+      }
+    },
+    {
+      "name": "hint",
+      "statusCode": 200,
+      "body": {
+        "status": "fallback",
+        "enabled": false,
+        "reason": "challenge-hints-are-deterministic-and-stored-in-the-pack",
+        "answer": "AI assistance is unavailable. Use the cached sourced chapter, its three-step hint ladder, or the local creative prompt.",
+        "sourceIds": []
+      }
+    },
+    {
+      "name": "icebreaker",
+      "statusCode": 200,
+      "body": {
+        "status": "source-excerpt",
+        "enabled": true,
+        "label": "Experimental AI-selected source excerpt; answers are source-locked and human review is still pending.",
+        "answer": "Freedom Park is in Salvokop, Pretoria. Its heritage spaces commemorate people who gave their lives for South Africa's freedom. The institution describes its purpose as remembering and celebrating South Africa's heritage and cultures.",
+        "sourceIds": [
+          "freedom-park"
+        ],
+        "sourceReview": "editorial-draft-human-review-pending",
+        "mode": "experimental-source-locked",
+        "provider": "workers-ai",
+        "modelId": "@cf/zai-org/glm-4.7-flash",
+        "quotaIdentity": "session"
+      }
+    },
+    {
+      "name": "draft",
+      "statusCode": 200,
+      "body": {
+        "status": "source-excerpt",
+        "enabled": true,
+        "label": "Experimental AI-selected source excerpt; answers are source-locked and human review is still pending.",
+        "answer": "Freedom Park is in Salvokop, Pretoria. Its heritage spaces commemorate people who gave their lives for South Africa's freedom. The institution describes its purpose as remembering and celebrating South Africa's heritage and cultures.",
+        "sourceIds": [
+          "freedom-park"
+        ],
+        "sourceReview": "editorial-draft-human-review-pending",
+        "mode": "experimental-source-locked",
+        "provider": "workers-ai",
+        "modelId": "@cf/zai-org/glm-4.7-flash",
+        "quotaIdentity": "session"
+      }
+    },
+    {
+      "name": "unanswerable",
+      "statusCode": 200,
+      "body": {
+        "status": "fallback",
+        "enabled": false,
+        "reason": "insufficient-source-evidence",
+        "answer": "AI assistance is unavailable. Use the cached sourced chapter, its three-step hint ladder, or the local creative prompt.",
+        "sourceIds": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+@font-face{font-family:Fraunces;font-style:normal;font-display:swap;font-weight:400;src:url('/fonts/fraunces-latin-400.woff2') format('woff2')}
+@font-face{font-family:Fraunces;font-style:normal;font-display:swap;font-weight:600;src:url('/fonts/fraunces-latin-600.woff2') format('woff2')}
+@font-face{font-family:Fraunces;font-style:normal;font-display:swap;font-weight:700;src:url('/fonts/fraunces-latin-700.woff2') format('woff2')}
+@font-face{font-family:Outfit;font-style:normal;font-display:swap;font-weight:300;src:url('/fonts/outfit-latin-300.woff2') format('woff2')}
+@font-face{font-family:Outfit;font-style:normal;font-display:swap;font-weight:400;src:url('/fonts/outfit-latin-400.woff2') format('woff2')}
+@font-face{font-family:Outfit;font-style:normal;font-display:swap;font-weight:500;src:url('/fonts/outfit-latin-500.woff2') format('woff2')}
+@font-face{font-family:Outfit;font-style:normal;font-display:swap;font-weight:600;src:url('/fonts/outfit-latin-600.woff2') format('woff2')}
+@font-face{font-family:Outfit;font-style:normal;font-display:swap;font-weight:700;src:url('/fonts/outfit-latin-700.woff2') format('woff2')}
+
+:root{
+  color-scheme:light;
+  font-family:Outfit,ui-sans-serif,system-ui,sans-serif;
+  color:#1e2635;
+  background:#f8f2e8;
+  --ink:#111a29;
+  --ink2:#1c2b40;
+  --cream:#f8f2e8;
+  --gold:#f4bd4f;
+  --gold2:#d87c3e;
+  --muted:#737988;
+  --border:#ded8ce;
+  --surface:#fff;
+  --text:#1e2635;
+  --font-body:Outfit,ui-sans-serif,system-ui,sans-serif;
+  --font-display:Fraunces,Georgia,serif;
+  --focus:#d87c3e;
+}

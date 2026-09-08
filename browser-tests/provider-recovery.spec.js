@@ -35,48 +35,48 @@ test.describe('live keyless map provider recovery', () => {
     expect(providerResponses.filter((response) => response.status >= 400)).toEqual([]);
   });
 
-  test('Satellite loads real EOxCloudless image tiles instead of a dark error canvas', async ({ page }) => {
+  test('Satellite loads high-resolution Esri World Imagery instead of the coarse annual mosaic', async ({ page }) => {
     const tileResponses = [];
     const tileFailures = [];
     page.on('response', (response) => {
-      if (/[abc]\.tiles\.maps\.eox\.at\/wmts\//i.test(response.url())) {
+      if (/services\.arcgisonline\.com\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\//i.test(response.url())) {
         tileResponses.push({ url: response.url(), status: response.status(), type: response.headers()['content-type'] || '' });
       }
     });
     page.on('requestfailed', (request) => {
-      if (/[abc]\.tiles\.maps\.eox\.at\/wmts\//i.test(request.url())) tileFailures.push(request.failure()?.errorText || 'request failed');
+      if (/services\.arcgisonline\.com\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\//i.test(request.url())) tileFailures.push(request.failure()?.errorText || 'request failed');
     });
 
     const map = await openJourney(page);
     const firstImage = page.waitForResponse((response) => {
-      return /[abc]\.tiles\.maps\.eox\.at\/wmts\/.+\/s2cloudless-2025_3857\/.+\.jpg(?:\?|$)/i.test(response.url())
+      return /services\.arcgisonline\.com\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\/\d+\/\d+\/\d+/i.test(response.url())
         && response.ok()
-        && /^image\/jpeg/i.test(response.headers()['content-type'] || '');
+        && /^image\/(?:jpeg|png)/i.test(response.headers()['content-type'] || '');
     });
     await page.locator('[data-map-style="satellite"]').click();
     await firstImage;
     await expect(map).toHaveAttribute('data-active-style', 'satellite');
-    await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/EOxCloudless.*EOX/i);
+    await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/Esri.*Maxar.*GIS User Community/i);
     await page.waitForTimeout(2_000);
 
     expect(tileResponses.length).toBeGreaterThanOrEqual(4);
     expect(tileResponses.filter((response) => response.status >= 400)).toEqual([]);
-    expect(tileResponses.every((response) => /^image\/jpeg/i.test(response.type))).toBe(true);
+    expect(tileResponses.every((response) => /^image\/(?:jpeg|png)/i.test(response.type))).toBe(true);
     // MapLibre cancels obsolete in-flight tiles as the React playback camera
     // moves. Those ERR_ABORTED requests are expected; transport failures are not.
     expect(tileFailures.filter((failure) => failure !== 'net::ERR_ABORTED')).toEqual([]);
   });
 
-  test('Hybrid combines EOxCloudless imagery with its transparent reference overlay', async ({ page }) => {
+  test('Hybrid combines Esri imagery with a transparent EOX reference overlay', async ({ page }) => {
     const map = await openJourney(page);
-    const imagery = page.waitForResponse((response) => /s2cloudless-2025_3857\/.+\.jpg(?:\?|$)/i.test(response.url()) && response.ok());
+    const imagery = page.waitForResponse((response) => /services\.arcgisonline\.com\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\//i.test(response.url()) && response.ok());
     const overlay = page.waitForResponse((response) => /overlay_3857\/.+\.png(?:\?|$)/i.test(response.url()) && response.ok());
     await page.locator('[data-map-style="hybrid"]').click();
     await Promise.all([imagery, overlay]);
 
     await expect(map).toHaveAttribute('data-active-style', 'hybrid');
-    await expect(map).toHaveAttribute('data-map-provider', 'eox-cloudless-2025');
-    await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/EOxCloudless.*EOX/i);
+    await expect(map).toHaveAttribute('data-map-provider', 'esri-world-imagery');
+    await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText(/Esri.*EOX/i);
   });
 
   test('React StrictMode leaves one live map and cleans it up across route remounts', async ({ page }) => {
@@ -180,7 +180,7 @@ test.describe('AI interface recovery', () => {
     await page.goto('/app/stories/pretoria');
     await page.getByRole('button', { name: /ask ai|assistive/i }).click();
     const result = page.locator('#ai-result, [data-ai-result]').first();
-    await expect(result).toContainText(/AI assistance is unavailable/i);
+    await expect(result).toContainText(/provider did not return a grounded source excerpt/i);
     await expect(page.locator('.story-sources')).toBeVisible();
     await expect(page.locator('.story-sources a').first()).toBeVisible();
   });

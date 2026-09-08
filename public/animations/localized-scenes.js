@@ -1,6 +1,17 @@
 const NS = "http://www.w3.org/2000/svg";
 const STYLE_ID = "st-localized-scenes-style";
 
+const PHOTO_CREDITS = Object.freeze({
+  pretoria: { author: "Paul Saad", licence: "CC BY-SA 4.0", licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Jacaranda_Trees,_Becket_Street_Pretoria.jpg" },
+  johannesburg: { author: "Andrew Moore", licence: "CC BY-SA 2.0", licenceUrl: "https://creativecommons.org/licenses/by-sa/2.0", source: "https://commons.wikimedia.org/wiki/File:Johannesburg%27s_inner_city.jpg" },
+  kimberley: { author: "Rudolph Botha", licence: "CC BY-SA 3.0", licenceUrl: "http://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:Big_Hole_Kimberley.jpg" },
+  "de-aar": { author: "Graham Maclachlan", licence: "CC BY-SA 3.0", licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:De_Aar,_South_Africa_-_panoramio.jpg" },
+  "beaufort-west": { author: "Mike Peel", licence: "CC BY-SA 4.0", licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Karoo_National_Park_2014_05.jpg" },
+  matjiesfontein: { author: "Tottelme", licence: "CC BY-SA 3.0", licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Matjiesfontein_1.JPG" },
+  worcester: { author: "South African Tourism", licence: "CC BY 2.0", licenceUrl: "https://creativecommons.org/licenses/by/2.0", source: "https://commons.wikimedia.org/wiki/File:Hex_River_Valley_-_Western_Cape,_South_Africa_(3880658723).jpg" },
+  "cape-town": { author: "Azral", licence: "CC BY-SA 3.0", licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0", source: "https://commons.wikimedia.org/wiki/File:Cape_Town_-_view_from_Table_Mountain_2.jpg" },
+});
+
 const tags = {
   pretoriaRays: () => [225, 280, 340, 400, 460, 520, 575].map((x, i) => `<path class="scene-draw" style="--delay:${i * .13}s;--path-length:160" d="M400 270 Q${x} ${215 - i % 2 * 20} ${x} 122" fill="none" stroke="#f2b84b" stroke-width="4" stroke-linecap="round"/>`).join(""),
   dots: () => [150, 250, 350, 450, 550, 650].map((x) => `<circle cx="${x}" cy="312" r="4"/>`).join(""),
@@ -15,9 +26,9 @@ const tags = {
 
 export const LOCALIZED_SCENES = Object.freeze({
   pretoria: {
-    title: "A light for remembrance",
-    description: "An interpretive illustration: a warm light rises behind a remembrance arc and seven quiet rays begin the journey.",
-    sourceIds: ["freedom-park"],
+    title: "Jacarandas at departure",
+    description: "A licensed Pretoria jacaranda photograph comes alive as an interpretive canopy blooms outward.",
+    sourceIds: [],
     colors: ["#0d2035", "#f2b84b", "#f8f1df"],
     art: () => `
       <defs><radialGradient id="pt-glow"><stop stop-color="#f9d47c"/><stop offset="1" stop-color="#f2b84b" stop-opacity="0"/></radialGradient></defs>
@@ -25,14 +36,29 @@ export const LOCALIZED_SCENES = Object.freeze({
       <circle class="scene-rise" cx="400" cy="265" r="118" fill="url(#pt-glow)"/>
       <circle class="scene-rise scene-glow" cx="400" cy="268" r="34" fill="#f2b84b"/>
       <path d="M135 310 Q400 102 665 310" fill="none" stroke="#f8f1df" stroke-opacity=".62" stroke-width="3"/>
-      ${tags.pretoriaRays()}
+      <g class="scene-bloom">${tags.pretoriaRays()}</g>
       <path d="M110 312 H690" stroke="#f8f1df" stroke-opacity=".3"/>
       <g fill="#f8f1df">${tags.dots()}</g>
     `
   },
+  johannesburg: {
+    title: "The city rises",
+    description: "A licensed Johannesburg city photograph is layered with an interpretive skyline rising block by block.",
+    sourceIds: [],
+    colors: ["#111a29", "#f4bd4f", "#f8f2e8"],
+    art: () => `
+      <rect width="800" height="420" fill="#111a29" fill-opacity=".18"/>
+      <g class="scene-skyline" fill="#f4bd4f" fill-opacity=".72">
+        <rect x="88" y="238" width="70" height="122"/><rect x="174" y="174" width="76" height="186"/>
+        <rect x="270" y="214" width="58" height="146"/><rect x="346" y="116" width="92" height="244"/>
+        <rect x="456" y="196" width="68" height="164"/><rect x="544" y="146" width="82" height="214"/>
+        <rect x="644" y="248" width="66" height="112"/>
+      </g><path d="M60 360H740" stroke="#f8f2e8" stroke-width="4" opacity=".8"/>
+    `
+  },
   kimberley: {
     title: "Words, earth and industry",
-    description: "An interpretive illustration: lines of writing orbit an abstract earth spiral while a symbolic headgear frame draws into view.",
+    description: "The licensed Big Hole photograph gains inward-moving rings and a rising interpretive headgear silhouette.",
     sourceIds: ["sol-plaatje", "big-hole"],
     colors: ["#24170f", "#df8d45", "#8bd6c7"],
     art: () => `
@@ -160,8 +186,10 @@ export function listLocalizedScenes() {
     hubId,
     title: scene.title,
     description: scene.description,
-    sourceIds: [...scene.sourceIds],
-    colors: [...scene.colors]
+    photoId: hubId,
+    sourceIds: [...new Set([...scene.sourceIds, `photo:${hubId}`])],
+    colors: [...scene.colors],
+    credit: { ...PHOTO_CREDITS[hubId] }
   }));
 }
 
@@ -179,54 +207,101 @@ export function createLocalizedAnimation(hubId, options = {}) {
   root.className = `st-local-scene st-local-scene--${normalizedId}`;
   root.dataset.hub = normalizedId;
   root.dataset.static = String(Boolean(reduced));
+  root.dataset.paused = "false";
+  root.dataset.intersecting = "true";
   root.style.setProperty("--scene-duration", `${Math.max(4, Number(options.durationSeconds) || 9)}s`);
   root.style.setProperty("--scene-ground", scene.colors[0]);
   root.style.setProperty("--scene-accent", scene.colors[1]);
-  root.innerHTML = `<svg viewBox="0 0 800 420" role="img" aria-labelledby="${titleId} ${descId}" preserveAspectRatio="xMidYMid slice"><title id="${titleId}">${scene.title}</title><desc id="${descId}">${scene.description}</desc>${scene.art()}</svg>`;
+  root.innerHTML = `<img class="st-local-scene__photo scene-photo" src="/assets/photos/${normalizedId}.webp" alt="" loading="lazy"><span class="st-local-scene__shade" aria-hidden="true"></span><svg viewBox="0 0 800 420" role="img" aria-labelledby="${titleId} ${descId}" preserveAspectRatio="xMidYMid slice"><title id="${titleId}">${scene.title}</title><desc id="${descId}">${scene.description}</desc>${scene.art()}</svg>`;
 
   const caption = document.createElement("figcaption");
   caption.className = "st-local-scene__caption";
   const copy = document.createElement("small");
-  copy.textContent = `Interpretive illustration · ${scene.title}`;
+  copy.textContent = `Place-specific animated scene · ${scene.title}. Added motion is interpretive.`;
   caption.append(copy);
 
-  let paused = false;
+  const credit = PHOTO_CREDITS[normalizedId];
+  const creditLine = document.createElement("span");
+  creditLine.className = "st-local-scene__credit";
+  creditLine.append("Photo: ");
+  const author = document.createElement("a");
+  author.href = credit.source;
+  author.target = "_blank";
+  author.rel = "noopener noreferrer";
+  author.textContent = credit.author;
+  const licence = document.createElement("a");
+  licence.href = credit.licenceUrl;
+  licence.target = "_blank";
+  licence.rel = "noopener noreferrer";
+  licence.textContent = credit.licence;
+  creditLine.append(author, " · ", licence, " · cropped, colour graded and animated");
+  caption.append(creditLine);
+
+  let manualPaused = false;
+  let intersecting = true;
+  let waiting = Boolean(options.waiting);
+  let lowPower = document.body.classList.contains("low-power");
   let control = null;
+  const applyPauseState = () => {
+    const paused = manualPaused || !intersecting || document.hidden || waiting || lowPower;
+    root.dataset.paused = String(paused);
+    root.dataset.intersecting = String(intersecting);
+    if (control) {
+      control.textContent = manualPaused ? "Play" : "Pause";
+      control.setAttribute("aria-label", `${manualPaused ? "Play" : "Pause"} ${scene.title} animation`);
+    }
+  };
+
   if (!reduced && options.controls !== false) {
     control = document.createElement("button");
     control.type = "button";
     control.className = "st-local-scene__control";
-    control.textContent = "Ⅱ";
+    control.textContent = "Pause";
     control.setAttribute("aria-label", `Pause ${scene.title} animation`);
-    control.addEventListener("click", () => paused ? controller.play() : controller.pause());
+    control.addEventListener("click", () => manualPaused ? controller.play() : controller.pause());
     caption.append(control);
   }
   root.append(caption);
 
+  const onVisibility = () => applyPauseState();
+  const observer = reduced || typeof IntersectionObserver === "undefined" ? null : new IntersectionObserver((entries) => {
+    intersecting = Boolean(entries[0]?.isIntersecting);
+    applyPauseState();
+  }, { threshold: 0.08 });
+  const bodyObserver = reduced || typeof MutationObserver === "undefined" ? null : new MutationObserver(() => {
+    lowPower = document.body.classList.contains("low-power");
+    applyPauseState();
+  });
+
   const controller = {
     element: root,
     hubId: normalizedId,
-    metadata: { title: scene.title, description: scene.description, sourceIds: [...scene.sourceIds] },
-    play() {
-      paused = false;
-      root.dataset.paused = "false";
-      if (control) { control.textContent = "Ⅱ"; control.setAttribute("aria-label", `Pause ${scene.title} animation`); }
+    metadata: {
+      title: scene.title,
+      description: scene.description,
+      photoId: normalizedId,
+      sourceIds: [...new Set([...scene.sourceIds, `photo:${normalizedId}`])],
+      credit: { ...credit }
     },
-    pause() {
-      paused = true;
-      root.dataset.paused = "true";
-      if (control) { control.textContent = "▶"; control.setAttribute("aria-label", `Play ${scene.title} animation`); }
-    },
+    play() { manualPaused = false; applyPauseState(); },
+    pause() { manualPaused = true; applyPauseState(); },
+    setWaiting(value) { waiting = Boolean(value); applyPauseState(); },
     restart() {
-      const svg = root.querySelector("svg");
-      if (!svg) return;
-      svg.style.display = "none";
-      void svg.getBoundingClientRect();
-      svg.style.display = "";
+      root.dataset.restart = String(Number(root.dataset.restart || 0) + 1);
       this.play();
     },
-    destroy() { root.remove(); }
+    destroy() {
+      observer?.disconnect();
+      bodyObserver?.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      root.remove();
+    }
   };
+
+  document.addEventListener("visibilitychange", onVisibility);
+  observer?.observe(root);
+  bodyObserver?.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  applyPauseState();
   return controller;
 }
 

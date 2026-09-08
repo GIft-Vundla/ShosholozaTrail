@@ -19,9 +19,18 @@
 .credits-list a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .credits-list a:hover{color:var(--gold)}
 .footer-link{display:inline-block;margin-top:.75rem;color:var(--cream);text-decoration:underline;text-underline-offset:3px;font-size:.9rem}
+:root{font-family:var(--font-body);color:var(--text);background:var(--cream)}
+.brand,.hero h1,.hero-stats dd,.section-lead h2,.content-page>h1,.destination-card h3,.footer b,.dest-list h2,.story-list h2,.dark-cta h2,.plan-stats h3,.timetable-title,.timetable h3,.route-summary h3,.route-summary b,.context-title h2,.journey-readout>b,.panel-title h2,.attraction-list h3,.panel-body h3,.panel-body blockquote,.credits-shell h1,.credits-list h2{font-family:var(--font-display)}
 .footer-link:hover{color:var(--gold)}
+.react-localized-scene{margin:22px 28px 4px}.react-localized-scene .st-local-scene{min-height:260px}
+.ai-companion{margin-top:2rem;padding:1.25rem;border:1px solid var(--border);border-radius:18px;background:color-mix(in srgb,var(--gold) 10%,var(--cream))}
+.ai-companion .eyebrow{display:flex;align-items:center;gap:.45rem}.ai-companion .eyebrow svg{width:1rem;height:1rem}
+.ai-companion h3{font-family:var(--font-display);font-size:1.6rem;margin:.35rem 0}.ai-companion>p{color:var(--muted)}
+.ai-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}.ai-actions button{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--ink);border-radius:999px;background:var(--ink);color:var(--cream);padding:.65rem .85rem;font:inherit;font-weight:600;cursor:pointer}.ai-actions button:disabled{opacity:.55;cursor:wait}.ai-actions svg{width:1rem;height:1rem}
+.ai-answer{min-height:2.2rem;border-left:3px solid var(--gold);padding-left:.85rem}.ai-answer p{margin:.25rem 0}.ai-answer small{display:block;color:var(--muted);margin-top:.4rem}
 @media(max-width:620px){
   .credits-shell{padding:5.5rem 1.1rem 5rem}
   .credits-list li{grid-template-columns:1fr}
   .credits-list img{height:11rem}
+  .react-localized-scene{margin:16px 20px 4px}
 }

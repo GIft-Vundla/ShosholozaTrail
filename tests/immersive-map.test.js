@@ -30,10 +30,13 @@ test('all requested basemaps exist and offline has no remote sources', () => {
   const styles = createBasemapStyles();
   assert.deepEqual(Object.keys(styles), ['streets', 'outdoor', 'dark', 'satellite', 'hybrid', 'offline']);
   assert.deepEqual(styles.offline.style.sources, {});
-  assert.match(styles.satellite.style.sources.base.tiles[0], /tiles\.maps\.eox\.at\/wmts\/1\.0\.0\/s2cloudless-2025_3857\/default\/g\/\{z\}\/\{y\}\/\{x\}\.jpg/);
-  assert.equal(styles.satellite.maxUsefulZoom, 14);
-  assert.equal(styles.satellite.style.metadata['shosholoza:provider'], 'eox-cloudless-2025');
+  assert.match(styles.satellite.style.sources.base.tiles[0], /services\.arcgisonline\.com\/ArcGIS\/rest\/services\/World_Imagery\/MapServer\/tile\/\{z\}\/\{y\}\/\{x\}/);
+  assert.equal(styles.satellite.maxUsefulZoom, 19);
+  assert.equal(styles.satellite.style.metadata['shosholoza:provider'], 'esri-world-imagery');
+  assert.match(styles.satellite.style.sources.base.attribution, /Esri.*Maxar.*GIS User Community/);
   assert.match(styles.hybrid.style.sources.labels.tiles[0], /overlay_3857/);
+  assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-imagery').paint['raster-saturation'], 0);
+  assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-reference').paint['raster-opacity'], 0.35);
   assert.match(styles.streets.style.sources.base.attribution, /OpenStreetMap/);
 });
 
@@ -64,4 +67,5 @@ test('configured MapTiler tiles receive required provider attribution without pe
   assert.match(styles.satellite.style.sources.base.attribution, /MapTiler/);
   assert.equal(styles.dark.style.metadata['shosholoza:provider'], 'configured');
   assert.equal(styles.satellite.style.metadata['shosholoza:provider'], 'configured');
+  assert.equal(styles.hybrid.style.layers.find(layer => layer.id === 'hybrid-reference').paint['raster-opacity'], 0.35);
 });

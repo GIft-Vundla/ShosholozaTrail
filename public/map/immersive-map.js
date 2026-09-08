@@ -5,6 +5,7 @@ const ATTRIBUTION = Object.freeze({
   osm: '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>',
   topo: 'Map style: <a href="https://opentopomap.org" target="_blank" rel="noopener">© OpenTopoMap</a>',
   eox: 'Imagery: <a href="https://cloudless.eox.at" target="_blank" rel="noopener">EOxCloudless</a> by <a href="https://eox.at" target="_blank" rel="noopener">EOX IT Services GmbH</a> (modified Copernicus Sentinel data 2025)',
+  esri: 'Imagery: Esri, Maxar, Earthstar Geographics, and the GIS User Community',
   eoxOverlay: 'Labels: <a href="https://maps.eox.at" target="_blank" rel="noopener">© EOX and MapServer</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>',
 });
 
@@ -101,9 +102,7 @@ export function createBasemapStyles(config = {}) {
   // standard OSM raster with a restrained night treatment for a keyless view.
   const darkTiles = config.darkTiles ?? streetsTiles;
   const satelliteTiles = config.satelliteTiles ?? [
-    'https://a.tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg',
-    'https://b.tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg',
-    'https://c.tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2025_3857/default/g/{z}/{y}/{x}.jpg',
+    'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   ];
   const hybridLabelTiles = config.hybridLabelTiles ?? [
     'https://a.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
@@ -111,8 +110,8 @@ export function createBasemapStyles(config = {}) {
     'https://c.tiles.maps.eox.at/wmts/1.0.0/overlay_3857/default/g/{z}/{y}/{x}.png',
   ];
   const terrainTiles = config.terrainTiles ?? ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'];
-  const satelliteMaxZoom = config.satelliteMaxZoom ?? 14;
-  const satelliteAttribution = config.satelliteAttribution ?? (config.satelliteTiles ? configuredAttribution(satelliteTiles, ATTRIBUTION.eox) : ATTRIBUTION.eox);
+  const satelliteMaxZoom = config.satelliteMaxZoom ?? 19;
+  const satelliteAttribution = config.satelliteAttribution ?? (config.satelliteTiles ? configuredAttribution(satelliteTiles, ATTRIBUTION.esri) : ATTRIBUTION.esri);
 
   return {
     streets: {
@@ -146,7 +145,7 @@ export function createBasemapStyles(config = {}) {
       id: 'satellite', label: 'Satellite', online: true, maxUsefulZoom: satelliteMaxZoom,
       style: rasterStyle('satellite', { base: rasterSource(satelliteTiles, satelliteAttribution, satelliteMaxZoom) }, [
         { id: 'satellite-raster', type: 'raster', source: 'base', paint: { 'raster-saturation': 0.12, 'raster-contrast': 0.09, 'raster-brightness-max': 1 } },
-      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'eox-cloudless-2025' }),
+      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'esri-world-imagery' }),
     },
     hybrid: {
       id: 'hybrid', label: 'Hybrid', online: true, maxUsefulZoom: satelliteMaxZoom,
@@ -154,9 +153,9 @@ export function createBasemapStyles(config = {}) {
         imagery: rasterSource(satelliteTiles, satelliteAttribution, satelliteMaxZoom),
         labels: rasterSource(hybridLabelTiles, config.hybridLabelTiles ? configuredAttribution(hybridLabelTiles, ATTRIBUTION.osm) : ATTRIBUTION.eoxOverlay, 19),
       }, [
-        { id: 'hybrid-imagery', type: 'raster', source: 'imagery', paint: { 'raster-saturation': 0.05, 'raster-contrast': 0.08 } },
-        { id: 'hybrid-reference', type: 'raster', source: 'labels', paint: { 'raster-opacity': config.hybridLabelOpacity ?? (config.hybridLabelTiles ? 0.38 : 0.92), 'raster-contrast': config.hybridLabelTiles ? 0.28 : 0.08 } },
-      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'eox-cloudless-2025' }),
+        { id: 'hybrid-imagery', type: 'raster', source: 'imagery', paint: { 'raster-saturation': 0, 'raster-contrast': 0.08 } },
+        { id: 'hybrid-reference', type: 'raster', source: 'labels', paint: { 'raster-opacity': config.hybridLabelOpacity ?? 0.35, 'raster-contrast': config.hybridLabelTiles ? 0.28 : 0.08 } },
+      ], { 'shosholoza:provider': config.satelliteTiles ? 'configured' : 'esri-world-imagery' }),
     },
     offline: {
       id: 'offline', label: 'Offline', online: false, maxUsefulZoom: 12,
@@ -361,6 +360,16 @@ export function createImmersiveMap(options) {
     return true;
   }
 
+  function flyToAttraction(attractionId, flyOptions = {}) {
+    const attraction = (options.attractions ?? []).find(item => item.id === attractionId);
+    if (!attraction) return false;
+    map.flyTo({ center: [attraction.lon ?? attraction.longitude, attraction.lat ?? attraction.latitude], zoom: flyOptions.zoom ?? 15, pitch: cinematic ? 48 : 0,
+      bearing: flyOptions.bearing ?? 0, duration: options.reducedMotion ? 0 : (flyOptions.duration ?? 1800), essential: true });
+    markers.get(`attraction:${attractionId}`)?.getElement()?.classList.add('immersive-attraction--pulse');
+    setTimeout(() => markers.get(`attraction:${attractionId}`)?.getElement()?.classList.remove('immersive-attraction--pulse'), 2200);
+    return true;
+  }
+
   function playRoutePreview({ duration = 12000, onComplete } = {}) {
     cancelAnimationFrame(previewFrame);
     const total = Number(route.properties?.lengthMetres) || route.geometry.coordinates.slice(1).reduce((sum, point, index) => sum + haversineMetres(route.geometry.coordinates[index], point), 0);
@@ -432,6 +441,7 @@ export function createImmersiveMap(options) {
     updatePosition,
     fitRoute,
     flyToHub,
+    flyToAttraction,
     playRoutePreview,
     setFollow(value) { follow = Boolean(value); if (follow && lastPosition) updatePosition({ lon: lastPosition[0], lat: lastPosition[1] }, { duration: 700 }); return follow; },
     setCinematic(value) { cinematic = Boolean(value); map.easeTo({ pitch: cinematic && !options.reducedMotion ? 52 : 0, duration: options.reducedMotion ? 0 : 700 }); return cinematic; },

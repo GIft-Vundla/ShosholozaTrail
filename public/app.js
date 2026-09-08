@@ -15,6 +15,7 @@ const $ = s => document.querySelector(s);
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const main = $('#main');
 let pack, hubs, route, sources, engine, positionSource, map, latestFix, currentMode = 'manual', engineMode = 'gps', waiting = false, draftDirty = false, mapFollowing = true, mapPreviewStop = null, activeScene = null;
+let remoteMapConfigPromise = null;
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const say = text => { $('#message').textContent = text; };
 const json = async url => { const r = await fetch(url); if (!r.ok) throw new Error(`${url} unavailable`); return r.json(); };
@@ -26,6 +27,12 @@ function sourceCards(ids = []) {
 }
 function network() { $('#network').textContent = navigator.onLine ? 'Online' : 'Offline · local pack'; }
 window.addEventListener('online', network); window.addEventListener('offline', network);
+const menuToggle = $('#menu-toggle'), mobileMenu = $('#mobile-menu');
+menuToggle?.addEventListener('click', () => {
+ const expanded = menuToggle.getAttribute('aria-expanded') !== 'true';
+ menuToggle.setAttribute('aria-expanded', String(expanded));
+ mobileMenu.hidden = !expanded;
+});
 function setMode(mode) {
  currentMode = mode;
  $('#position-label').textContent = mode === 'replay' ? 'SIMULATED REPLAY · 120×' : mode === 'gps' ? 'LIVE GPS · foreground' : 'Manual exploration';
@@ -60,7 +67,7 @@ function showAttractionCard(attraction) {
  card.hidden = false;
  card.innerHTML = `<button id="close-story-preview" class="story-preview-close" type="button" aria-label="Close attraction preview">×</button><div id="map-local-scene" class="map-local-scene"></div><p class="eyebrow">Nearby attraction · ${escape(c.title.split(':')[0])}</p><h2>${escape(attraction.name)}</h2><p>This place is associated with the story hub. Visibility from the train and rail access are not established.</p><div class="story-preview-meta"><span>Localized scene</span><span>Mapped attraction</span><span>Location not field verified</span></div><a class="button" data-nav href="${chapterLink(c)}">Open the hub chapter</a>${attraction.coordinateSourceUrl ? `<p><small><a href="${escape(attraction.coordinateSourceUrl)}" target="_blank" rel="noopener noreferrer">View coordinate source ↗</a></small></p>` : ''}`;
  mountHubScene('#map-local-scene', attraction.hubId);
- map?.flyToHub?.(attraction.hubId, { zoom: 12 });
+ map?.flyToAttraction?.(attraction.id, { zoom: 12 });
  $('#close-story-preview')?.addEventListener('click', () => { activeScene?.pause?.(); card.hidden = true; });
 }
 function updateJourneyMap(fix, snapshot) {
@@ -102,6 +109,7 @@ async function consume(fix) {
  const state = typeof snapshot.state === 'object' ? snapshot.state.state : snapshot.state;
  if ($('#journey-state')) $('#journey-state').textContent = `Journey state: ${state || 'unknown'}`;
  waiting = state === 'waiting';
+ activeScene?.setWaiting?.(waiting);
  document.body.classList.toggle('low-power', waiting);
  $('#waiting').hidden = !waiting;
  positionSource?.setSampleInterval?.(waiting ? 30000 : 5000);
@@ -127,7 +135,7 @@ async function startJourney(mode) {
  renderChapterQueue();
  say(mode === 'replay' ? 'Synthetic replay started. This is not a field test or a live train location.' : 'GPS started. Keep this page visible. Precise positions stay on this device.');
 }
-function stopJourney() { positionSource?.stop(); positionSource = null; mapPreviewStop?.(); mapPreviewStop = null; waiting = false; if ($('#waiting')) $('#waiting').hidden = true; document.body.classList.remove('low-power'); map?.setCinematic?.(!reducedMotion()); setMode('manual'); say('Position updates stopped. Explore any story stop on the map.'); }
+function stopJourney() { positionSource?.stop(); positionSource = null; mapPreviewStop?.(); mapPreviewStop = null; waiting = false; activeScene?.setWaiting?.(false); if ($('#waiting')) $('#waiting').hidden = true; document.body.classList.remove('low-power'); map?.setCinematic?.(!reducedMotion()); setMode('manual'); say('Position updates stopped. Explore any story stop on the map.'); }
 function localMapConfig() {
  const browserKey = sessionStorage.getItem('shosholoza-maptiler-browser-key')?.trim();
  if (!browserKey) return {};
@@ -142,6 +150,16 @@ function localMapConfig() {
    satelliteAttribution: 'MapTiler / OpenStreetMap contributors',
  };
 }
+function remoteMapConfig() {
+ if (!remoteMapConfigPromise) remoteMapConfigPromise = fetch('/api/map-config', { cache: 'no-store', headers: { Accept: 'application/json' } })
+  .then(async response => {
+   const result = await response.json();
+   if (!response.ok) throw new Error(result.reason || result.error || 'Map configuration unavailable');
+   return result && typeof result === 'object' ? result : { provider: 'esri' };
+  })
+  .catch(() => ({ provider: 'esri' }));
+ return remoteMapConfigPromise;
+}
 function setPreviewProgress(distanceMetres) {
  const total = Number(route.properties?.lengthMetres) || 1;
  const percent = Math.max(0, Math.min(100, Number(distanceMetres) / total * 100));
@@ -151,8 +169,11 @@ function setPreviewProgress(distanceMetres) {
  $('#map')?.setAttribute('data-route-progress', String(percent));
 }
 async function renderJourney() {
- const status = await packStatus();
- const hasMapTiler = Boolean(sessionStorage.getItem('shosholoza-maptiler-browser-key'));
+ const [status, serverMapConfig] = await Promise.all([packStatus(), remoteMapConfig()]);
+ const localConfig = localMapConfig();
+ const hasLocalMapTiler = Boolean(sessionStorage.getItem('shosholoza-maptiler-browser-key'));
+ const hasMapTiler = hasLocalMapTiler || serverMapConfig.provider === 'maptiler';
+ const activeMapConfig = { ...serverMapConfig, ...localConfig };
  main.innerHTML = `<section class="journey-hero"><div><p class="eyebrow">Pretoria to Cape Town / Seven story stops</p><h1>Watch the landscape.<br>Meet its stories.</h1><p class="intro">Explore a cinematic route, switch between street, terrain, dark, satellite and hybrid views, then open a scene drawn for each place.</p></div><div class="journey-compass" aria-hidden="true"><span>N</span><i></i><small>1,356 km schematic</small></div></section>
  <section id="journey-stage" class="journey-stage" aria-label="Interactive journey map">
   <div class="stage-bar"><div><span id="journey-mode" class="journey-mode manual">EXPLORE MAP</span><strong id="journey-progress">Move the route preview or choose a position source</strong></div><div class="stage-tools"><label class="follow-control"><input id="follow-map" type="checkbox" checked> Follow train</label><label class="follow-control"><input id="cinematic-camera" type="checkbox" ${reducedMotion() ? '' : 'checked'}> Cinematic camera</label></div></div>
@@ -163,7 +184,7 @@ async function renderJourney() {
   <p class="map-key"><span class="key-line schematic"></span>Unverified schematic corridor <span class="key-line travelled"></span>Previewed or traversed section <span class="key-stop">01</span>Story stop <span class="key-attraction" aria-hidden="true">?</span>Nearby attraction. Satellite images and terrain tiles are visual context; rail alignment, train visibility and safe access are not established.</p>
  </section>
  <div class="journey-controls">
-  <section class="panel map-provider-panel"><p class="section-label">Optional sharper imagery</p><h2>Use your free MapTiler browser key locally.</h2><p>The built-in views need no account. A MapTiler key improves imagery and is held in this tab only; it is never committed or added to the offline pack. Restrict it to your local origin in MapTiler.</p><label for="maptiler-key">MapTiler browser key</label><input id="maptiler-key" type="password" autocomplete="off" placeholder="Paste a restricted browser key"><div class="actions"><button id="apply-maptiler" type="button">${hasMapTiler ? 'Replace local key' : 'Use key for this tab'}</button><button id="clear-maptiler" class="secondary" type="button">Clear local key</button></div><p id="map-provider-state" class="muted">${hasMapTiler ? 'MapTiler is configured for this tab.' : 'Keyless OpenStreetMap streets and night, OpenTopoMap outdoor, and EOX cloudless Satellite/Hybrid views are active.'}</p></section>
+  <section class="panel map-provider-panel"><p class="section-label">High-resolution map imagery</p><h2>${hasMapTiler ? 'MapTiler imagery is active.' : 'Esri World Imagery is active.'}</h2><p>Satellite and hybrid views load automatically. You can also use a free, origin-restricted MapTiler browser key for this tab; it is never committed or added to the offline pack.</p><label for="maptiler-key">Optional MapTiler browser key</label><input id="maptiler-key" type="password" autocomplete="off" placeholder="Paste a restricted browser key"><div class="actions"><button id="apply-maptiler" type="button">${hasLocalMapTiler ? 'Replace local key' : 'Use key for this tab'}</button><button id="clear-maptiler" class="secondary" type="button">Clear local key</button></div><p id="map-provider-state" class="muted">${hasMapTiler ? `MapTiler is configured ${hasLocalMapTiler ? 'for this tab' : 'by the Worker'}.` : 'Keyless OpenStreetMap streets and night, OpenTopoMap terrain, and Esri World Imagery satellite/hybrid views are active.'}</p></section>
   <section class="panel pack-panel"><p class="section-label">Before you board</p><h2>Take the stories with you.</h2><p>Download the chapters, local animations, route overview and activities for disconnected reading. External basemap tiles are not bulk-downloaded.</p><button id="install">${status ? 'Check and install pack update' : 'Download offline pack'}</button><progress id="download-progress" value="0" max="1" hidden></progress><p id="pack-state" class="muted">${status ? `Ready / ${(status.installedBytes/1048576).toFixed(1)} MB / installed ${escape(status.installedAt)}` : 'No complete pack installed yet.'}</p></section>
   <section class="panel position-panel"><p class="section-label">Choose your position source</p><h2>Travel with the map.</h2><p>Live GPS needs your permission and a visible page. Positions stay on this device. Replay uses synthetic coordinates and is not a field test.</p><div class="actions"><button id="gps">Start live GPS</button><button id="replay" class="secondary">Run labelled replay</button><button id="stop" class="secondary">Stop</button></div><p id="journey-state">Journey state: unknown</p></section>
  </div>
@@ -171,7 +192,7 @@ async function renderJourney() {
  const stage = $('#journey-stage');
  map = createImmersiveMap({
    container: 'map', controlsContainer: $('#map'), route, hubs: hubs.stations, attractions: hubs.attractions,
-   initialStyle: navigator.onLine ? 'streets' : 'offline', reducedMotion: reducedMotion(), cinematic: !reducedMotion(), mapConfig: localMapConfig(),
+   initialStyle: navigator.onLine ? 'streets' : 'offline', reducedMotion: reducedMotion(), cinematic: !reducedMotion(), mapConfig: activeMapConfig,
    onHubSelect: station => showJourneyStoryCard(station.hubId),
    onAttractionSelect: attraction => showAttractionCard(attraction),
    onProgress: ({ distanceMetres }) => setPreviewProgress(distanceMetres),
@@ -226,7 +247,7 @@ async function renderStories(hubId) {
  let hint = 0;
  bind('#hint',()=>{ $('#hint-text').hidden=false; $('#hint-text').textContent=c.activity.hints[Math.min(hint++,2)]; $('#hint').textContent=`Hint ${Math.min(hint,3)} of 3`; });
  bind('#challenge',async e=>{ e.preventDefault(); const normalize=s=>s.trim().normalize('NFKC').toLocaleLowerCase('en').replace(/[.,!?]/g,''); const accepted=[c.activity.answer,...(c.activity.acceptedAnswers||[])].some(a=>normalize(String(a))===normalize($('#answer').value)); if(accepted)await put('state',progressKey,{complete:true,at:new Date().toISOString(),positionMode:currentMode}); $('#answer-result').textContent=accepted?`Correct. ${currentMode === 'replay' ? 'Replay' : currentMode === 'gps' ? 'Live-GPS journey' : 'Manual'} progress saved on this device.`:'Not quite. Try a prepared hint and read the source.'; },'submit');
- bind('#ai-check',async()=>{const t=performance.now(),target=$('#ai-result');target.textContent='Finding a source excerpt…';try{const result=await api('/api/ai',{action:'explain',question:`Explain ${c.title}`});target.replaceChildren();for(const text of [result.label,result.answer||result.message||result.reason||'AI unavailable. Read the source passages above.']){if(!text)continue;const p=document.createElement('p');p.textContent=text;target.append(p);}if(result.sourceIds?.length){const source=document.createElement('small');source.textContent=`Source: ${result.sourceIds.join(', ')}${result.sourceReview==='editorial-draft-human-review-pending'?' · human review pending':''}`;target.append(source);}}catch(error){target.textContent=`AI unavailable. Use the cached story and hints. ${error.message}`;}await measure('ai-assistance',performance.now()-t,{online:navigator.onLine});});
+ bind('#ai-check',async()=>{const t=performance.now(),target=$('#ai-result');target.textContent='Finding a source excerpt…';try{const result=await api('/api/ai',{action:'explain',question:`Find a sourced excerpt about ${c.title}.`});target.replaceChildren();for(const text of [result.label,result.status==='fallback'?assistanceMessage(result.reason):result.answer]){if(!text)continue;const p=document.createElement('p');p.textContent=text;target.append(p);}if(result.sourceIds?.length){const source=document.createElement('small');source.textContent=`Source: ${result.sourceIds.join(', ')}${result.sourceReview==='editorial-draft-human-review-pending'?' · human review pending':''}`;target.append(source);}}catch(error){target.textContent=assistanceMessage(error.message);}await measure('ai-assistance',performance.now()-t,{online:navigator.onLine});});
  await measure('chapter-open',performance.now()-started,{online:navigator.onLine,hubId});
 }
 async function renderCreative() {
@@ -244,8 +265,9 @@ async function renderCreative() {
  bind('#export-png',async()=>{
    const canvas=document.createElement('canvas');canvas.width=1200;const measureCtx=canvas.getContext('2d');
    const lines=(text,font,maxWidth=1000)=>{measureCtx.font=font;const output=[];for(const paragraph of String(text).split('\n')){let line='';for(const word of paragraph.split(/\s+/).filter(Boolean)){const candidate=line?`${line} ${word}`:word;if(measureCtx.measureText(candidate).width<=maxWidth){line=candidate;continue;}if(line){output.push(line);line='';}if(measureCtx.measureText(word).width<=maxWidth){line=word;continue;}let fragment='';for(const character of word){const next=fragment+character;if(measureCtx.measureText(next).width>maxWidth&&fragment){output.push(fragment);fragment=character;}else fragment=next;}line=fragment;}output.push(line||' ');}return output;};
-   const sections=[{text:'SHOSHOLOZA TRAIL · PERSONAL POSTCARD',font:'24px sans-serif',lineHeight:38,gap:35},{text:$('#draft-title').value,font:'42px Georgia',lineHeight:56,gap:30},{text:$('#draft-body').value,font:'28px Georgia',lineHeight:44,gap:30},{text:credit,font:'20px sans-serif',lineHeight:32,gap:0}].map(section=>({...section,lines:lines(section.text,section.font)}));
-   canvas.height=Math.max(1500,100+sections.reduce((height,section)=>height+section.lines.length*section.lineHeight+section.gap,0)+100);const ctx=canvas.getContext('2d');ctx.fillStyle='#183e36';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#f3efe5';let y=100;
+   const sections=[{text:'SHOSHOLOZA TRAIL · PERSONAL POSTCARD',font:'24px Outfit, sans-serif',lineHeight:38,gap:35},{text:$('#draft-title').value,font:'42px Fraunces, serif',lineHeight:56,gap:30},{text:$('#draft-body').value,font:'28px Fraunces, serif',lineHeight:44,gap:30},{text:credit,font:'20px Outfit, sans-serif',lineHeight:32,gap:0}].map(section=>({...section,lines:lines(section.text,section.font)}));
+   const theme=getComputedStyle(document.documentElement),ink=theme.getPropertyValue('--ink').trim(),cream=theme.getPropertyValue('--cream').trim();
+   canvas.height=Math.max(1500,100+sections.reduce((height,section)=>height+section.lines.length*section.lineHeight+section.gap,0)+100);const ctx=canvas.getContext('2d');ctx.fillStyle=ink;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle=cream;let y=100;
    for(const section of sections){ctx.font=section.font;for(const line of section.lines){ctx.fillText(line,100,y);y+=section.lineHeight;}y+=section.gap;}
    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw new Error('PNG export failed');const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`shosholoza-${c.hubId}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);say('Postcard exported with source credit.');
  });
@@ -253,7 +275,20 @@ async function renderCreative() {
 function session(){try{return JSON.parse(sessionStorage.getItem('trail-room')||'null');}catch{return null;}}
 async function api(path,body,token=session()?.token){
  const response=await fetch(path,{method:body===undefined?'GET':'POST',headers:{...(body!==undefined?{'Content-Type':'application/json'}:{}),...(token?{Authorization:`Bearer ${token}`}:{})},...(body!==undefined?{body:JSON.stringify(body)}:{}),cache:'no-store',signal:AbortSignal.timeout(18000)});
- const result=await response.json();if(!response.ok)throw new Error(result.error||result.message||`Service returned ${response.status}`);return result;
+ const result=await response.json();if(!response.ok)throw new Error(result.reason||result.error||result.message||`Service returned ${response.status}`);return result;
+}
+function assistanceMessage(reason) {
+ const messages = {
+  'preview-server-no-backend': 'This static preview has no AI backend. Run npm run dev to use the Worker-powered assistant.',
+  'daily-assistance-budget-reached': "Today's free AI allowance has been used. The cached sourced chapter and local activities still work.",
+  'challenge-hints-are-deterministic-and-stored-in-the-pack': 'Hints are built into this chapter so they stay available offline.',
+  'provider-not-configured': 'The AI provider is not configured in this build. The sourced chapter remains available.',
+  'provider-circuit-open': 'The AI provider is recovering from repeated failures. Try again shortly or use the sourced chapter.',
+  'provider-failed-or-output-not-grounded': 'The provider did not return a grounded source excerpt, so the app withheld it.',
+  'insufficient-source-evidence': 'The registered sources do not support that request, so the assistant declined to invent an answer.',
+  'no-eligible-source-passages': 'No eligible source passages are available for AI selection in this build.',
+ };
+ return messages[reason] || `AI assistance is unavailable (${reason || 'unknown reason'}). Use the cached sourced chapter.`;
 }
 async function renderCarriage(){
  const room=session();main.innerHTML=`<p class="eyebrow">Shared carriage board</p><h1>A conversation<br>along the way.</h1><p class="intro">Share the private room code with your group. Messages require a server-validated session. This pilot has no automatic matching.</p><section class="panel">${room?`<h2>Carriage ${escape(room.code)}</h2><p>Online-only board. Refresh manually; no background polling.</p><div class="actions"><button id="refresh-room">Refresh messages</button><button id="leave-room" class="secondary">Leave and clear session</button></div><div id="messages"></div><form id="post-message"><label for="message-text">Message</label><input id="message-text" maxlength="500" required><button>Post to this carriage</button></form>`:`<div class="actions"><button id="create-room">Create a private carriage</button></div><form id="join-room"><label for="room-code">Or enter a carriage code</label><input id="room-code" required autocomplete="off"><button class="secondary">Join carriage</button></form>`}</section>`;
@@ -282,7 +317,7 @@ async function renderEvidence(){
  bind('#evidence-export',async()=>{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),r3,r10,status,metrics,events,endurance},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shosholoza-evidence.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);});
 }
 async function navigate(path){if(draftDirty&&!confirm('Leave this postcard without saving your latest changes?'))return;draftDirty=false;history.pushState({},'',path);await render();}
-async function render(){if(map){mapPreviewStop?.();mapPreviewStop=null;map.destroy?.();map=null;}activeScene?.destroy?.();activeScene=null;const path=stripBase(location.pathname);for(const a of document.querySelectorAll('nav a')){const t=stripBase(a.pathname);if(t==='/'?path==='/':path.startsWith(t))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}try{if(path.startsWith('/stories'))await renderStories(path.split('/')[2]);else if(path==='/creative')await renderCreative();else if(path==='/carriage')await renderCarriage();else if(path==='/contribute')await renderContribute();else if(path==='/evidence')await renderEvidence();else await renderJourney();}catch(error){main.innerHTML='<h1>This screen could not open.</h1><p id="screen-error"></p><a href="/app">Return to journey</a>';$('#screen-error').textContent=error.message;} }
+async function render(){if(map){mapPreviewStop?.();mapPreviewStop=null;map.destroy?.();map=null;}activeScene?.destroy?.();activeScene=null;const path=stripBase(location.pathname);for(const a of document.querySelectorAll('.engine-tabs a[data-nav],.mobile-tabs a[data-nav]')){const t=stripBase(a.pathname);if(t==='/'?path==='/':path.startsWith(t))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}if(menuToggle&&mobileMenu){menuToggle.setAttribute('aria-expanded','false');mobileMenu.hidden=true;}try{if(path.startsWith('/stories'))await renderStories(path.split('/')[2]);else if(path==='/creative')await renderCreative();else if(path==='/carriage')await renderCarriage();else if(path==='/contribute')await renderContribute();else if(path==='/evidence')await renderEvidence();else await renderJourney();}catch(error){main.innerHTML='<h1>This screen could not open.</h1><p id="screen-error"></p><a href="/app">Return to journey</a>';$('#screen-error').textContent=error.message;} }
 window.addEventListener('popstate',()=>{draftDirty=false;render();});document.addEventListener('click',e=>{const a=e.target.closest('a[data-nav]');if(a&&!e.ctrlKey&&!e.metaKey){e.preventDefault();navigate(a.href);}});window.addEventListener('beforeunload',e=>{if(draftDirty){e.preventDefault();e.returnValue='';}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&currentMode==='gps'){positionSource?.stop();positionSource=null;waiting=false;$('#waiting').hidden=true;document.body.classList.remove('low-power');say('Live GPS paused while hidden. Restart it when ready.');setMode('manual');}});
 try{

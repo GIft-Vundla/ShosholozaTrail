@@ -166,6 +166,22 @@ test('Workers AI output still rejects invented prose and citations', async () =>
   assert.equal((await response.json() as any).reason, 'provider-failed-or-output-not-grounded');
 });
 
+test('draft assistance is accepted as the creative source-selection action', async () => {
+  const { env, request } = setup();
+  const passage = 'Freedom Park is in Salvokop, Pretoria.';
+  let requestedAction = '';
+  env.AI_ENABLED = 'true'; env.AI_EXPERIMENTAL = 'true'; env.AI_PROVIDER = 'workers-ai';
+  env.AI = { run: async (_model, input) => {
+    const messages = input.messages as { content: string }[];
+    requestedAction = JSON.parse(messages[1].content).action;
+    return { response: { answer: passage, sourceIds: ['freedom-park'] } };
+  } };
+  env.ASSETS = { fetch: async () => Response.json({ records: [{ id: 'freedom-park', passage, reviewStatus: 'automated-source-review; human-review-pending' }] }) };
+  const response = await ai(request('/api/ai', { action: 'draft', question: 'Find a Pretoria postcard source.' }, undefined, { 'CF-Connecting-IP': '192.0.2.27' }), env);
+  assert.equal((await response.json() as any).status, 'source-excerpt');
+  assert.equal(requestedAction, 'creative');
+});
+
 test('Worker dispatches implemented APIs and adds security headers', async () => {
   const { env } = setup();
   const workerEnv = { ...env, ASSETS: { fetch: async () => new Response('asset') } };
@@ -181,6 +197,31 @@ test('Worker dispatches implemented APIs and adds security headers', async () =>
   assert.equal(response.headers.get('X-Frame-Options'), 'DENY');
   assert.match(response.headers.get('Content-Security-Policy') || '', /frame-ancestors 'none'/);
   assert.match(response.headers.get('Content-Security-Policy') || '', /worker-src 'self' blob:/);
+  assert.equal(response.headers.get('Referrer-Policy'), 'strict-origin-when-cross-origin');
+});
+
+test('map config keeps Esri as the keyless default and returns an uncached MapTiler upgrade', async () => {
+  const { env } = setup();
+  const fallbackResponse = await worker.fetch(new Request('https://trail.example/api/map-config'), {
+    ...env,
+    ASSETS: { fetch: async () => new Response('asset') },
+  });
+  assert.equal(fallbackResponse.status, 200);
+  assert.equal(fallbackResponse.headers.get('Cache-Control'), 'no-store');
+  assert.deepEqual(await fallbackResponse.json(), { provider: 'esri' });
+
+  const marker = ['test', 'map', 'key'].join('-');
+  const configuredResponse = await worker.fetch(new Request('https://trail.example/api/map-config'), {
+    ...env,
+    MAPTILER_KEY: marker,
+    ASSETS: { fetch: async () => new Response('asset') },
+  });
+  const configured = await configuredResponse.json() as any;
+  assert.equal(configured.provider, 'maptiler');
+  assert.equal(configured.satelliteMaxZoom, 20);
+  assert.equal(configured.hybridLabelOpacity, 0.35);
+  assert.match(configured.satelliteTiles[0], /satellite-v2/);
+  assert.equal(configured.satelliteTiles[0].includes(marker), true);
 });
 
 test('Worker health and route matching report configuration without false provider claims', async () => {

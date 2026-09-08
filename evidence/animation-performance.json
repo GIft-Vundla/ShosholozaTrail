@@ -1,0 +1,58 @@
+{
+  "capturedAt": "2026-09-08T10:03:04.839Z",
+  "environment": "Playwright headless Chromium requestAnimationFrame sample in a separate no-video context; not a DevTools Performance-panel recording",
+  "captures": [
+    {
+      "hubId": "kimberley",
+      "reducedMotion": false,
+      "errors": []
+    },
+    {
+      "hubId": "matjiesfontein",
+      "reducedMotion": false,
+      "errors": []
+    },
+    {
+      "hubId": "johannesburg",
+      "reducedMotion": false,
+      "errors": []
+    },
+    {
+      "hubId": "kimberley",
+      "reducedMotion": true,
+      "errors": []
+    }
+  ],
+  "performance": [
+    {
+      "hubId": "kimberley",
+      "frameStats": {
+        "frames": 180,
+        "measuredMs": 3000,
+        "approximateFps": 60,
+        "p95FrameMs": 16.8
+      },
+      "errors": []
+    },
+    {
+      "hubId": "matjiesfontein",
+      "frameStats": {
+        "frames": 180,
+        "measuredMs": 3000,
+        "approximateFps": 60,
+        "p95FrameMs": 16.7
+      },
+      "errors": []
+    },
+    {
+      "hubId": "johannesburg",
+      "frameStats": {
+        "frames": 180,
+        "measuredMs": 3000,
+        "approximateFps": 60,
+        "p95FrameMs": 16.7
+      },
+      "errors": []
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { rooms, authenticate } from './routes/rooms.ts';
 import { contributions } from './routes/contrib.ts';
 import { ai } from './routes/ai.ts';
+import { mapConfig } from './routes/map-config.ts';
 
 export interface Statement {
   bind(...values: unknown[]): Statement;
@@ -24,6 +25,7 @@ export interface BackendEnv {
   AI_MODEL?: string;
   GEMINI_API_KEY?: string;
   GEMINI_MODEL?: string;
+  MAPTILER_KEY?: string;
 }
 export class ApiError extends Error { status: number; constructor(status: number, message: string) { super(message); this.status = status; } }
 export function json(body: unknown, status = 200): Response {
@@ -74,12 +76,14 @@ export async function handleBackend(request: Request, env: BackendEnv): Promise<
     || path === '/api/moderation'
     || path.startsWith('/api/moderation/')
     || path === '/api/packs/community'
-    || path === '/api/ai';
+    || path === '/api/ai'
+    || path === '/api/map-config';
   if (!isBackendRoute) return null;
   try {
     const origin = request.headers.get('Origin');
     if ((origin && origin !== new URL(request.url).origin) || request.headers.get('Sec-Fetch-Site') === 'cross-site') throw new ApiError(403, 'Origin is not allowed');
     if (path === '/api/ai') return await ai(request, env);
+    if (path === '/api/map-config') return await mapConfig(request, env);
     const db = database(env);
     if (request.method !== 'GET') {
       // CF-Connecting-IP is supplied by Cloudflare, never a client body field.
