@@ -14,7 +14,7 @@ The selected `@cf/zai-org/glm-4.7-flash` model is active, optimized for fast mul
 - The model receives a strict named JSON schema and can return one source ID and an exact contiguous excerpt from that source. Server code still rejects added prose, unknown citations, multiple citations, malformed output, and excerpts shorter than 12 characters.
 - Existing source records are automated editorial drafts awaiting human review. Experimental responses expose `sourceReview: editorial-draft-human-review-pending`, and their label says human review is pending.
 - `AI_VALIDATED` stays `false`. `AI_EXPERIMENTAL=true` is a separate, visible runtime mode and does not satisfy the release validation gate.
-- Guests do not need a carriage room. A daily rotating hash of Cloudflare's connection IP receives 100 requests per day. Valid carriage sessions also receive 100 requests per day. The global application budget is 1,000 requests per day; all three limits are deployment variables.
+- Guests do not need a carriage room. A daily rotating hash of Cloudflare's connection IP receives 20 requests per day. Valid carriage sessions also receive 20 requests per day. The global application budget is 1,000 requests per day; all three limits are deployment variables.
 - Prepared stories, deterministic hints, activities, and saved work still operate without the AI service.
 
 ## Local smoke result

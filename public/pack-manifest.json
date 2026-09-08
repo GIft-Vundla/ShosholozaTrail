@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "hash": "9d12947d44fc271d459977f836cdafaedcf7c9c4129d76e3b8880a3f9532a5e0",
-  "bytes": 3717932,
+  "hash": "8676b7cf236aea4cadc2eb4e116739bed50bfc7b014a03ae5650b6f30625ab25",
+  "bytes": 3717939,
   "assets": [
     {
       "url": "/animations/README.md",
@@ -34,9 +34,9 @@
       "sha256": "2313df327e6cae47a17cddfbaeda81fca7ab48e14381030257b7a3205b803678"
     },
     {
-      "url": "/app-assets/index-D7J4IIyR.js",
-      "bytes": 298498,
-      "sha256": "ff8b771897216f0ef4aca5734cace4fb48f0dfc12350abd76baf8d76ecdc2db0"
+      "url": "/app-assets/index-DtN9EDDP.js",
+      "bytes": 298505,
+      "sha256": "1416b3356c153f49831ed800bfb595ccf952cc82c4e9861ffd7e2b3061b6b031"
     },
     {
       "url": "/app.html",
@@ -196,7 +196,7 @@
     {
       "url": "/index.html",
       "bytes": 735,
-      "sha256": "a363171425620a74d0c6a30748a473263eb35a0d2af6438d261c69905c522e44"
+      "sha256": "cc6c2ed505252f8f406c456fb62649e692fa1f763e40a844d43553d1ade51981"
     },
     {
       "url": "/journey.css",

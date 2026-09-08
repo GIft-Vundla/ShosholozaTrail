@@ -99,7 +99,7 @@ export function AiGuide() {
         <p className="eyebrow gold-dark"><Sparkles /> Live trail intelligence</p>
         <h1>Ask the AI Guide.</h1>
         <p>Consult the trail's source library before, during or after the journey. Answers are restricted to registered evidence and unsupported questions are declined.</p>
-        <small>Experimental Workers AI · generous demo allowance · human editorial review pending</small>
+        <small>Experimental Workers AI · 20 questions per visitor daily · human editorial review pending</small>
       </section>
 
       <section className="ai-chat" aria-label="Conversation with the Shosholoza Trail AI Guide">
